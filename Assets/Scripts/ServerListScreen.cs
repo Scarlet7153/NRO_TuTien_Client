@@ -30,17 +30,17 @@ public class ServerListScreen : mScreen, IActionListener
 
 	private int lY;
 
-	public static string smartPhoneVN = "Dragon Boy:127.0.0.1:14445:0,0,0";
+	public static string smartPhoneVN = "Tu Tiên:127.0.0.1:14445:0,0,0";
 
 	public static string javaVN = smartPhoneVN;
 
-	public static string smartPhoneIn = "Dragon Boy:127.0.0.1:14445:0,0,0";
+	public static string smartPhoneIn = "Tu Tiên:127.0.0.1:14445:0,0,0";
 
-	public static string javaIn = "Dragon Boy:127.0.0.1:14445:0,0,0";
+	public static string javaIn = "Tu Tiên:127.0.0.1:14445:0,0,0";
 
-	public static string smartPhoneE = "Dragon Boy:127.0.0.1:14445:0,0,0";
+	public static string smartPhoneE = "Tu Tiên:127.0.0.1:14445:0,0,0";
 
-	public static string javaE = "Dragon Boy:127.0.0.1:14445:0,0,0";
+	public static string javaE = "Tu Tiên:127.0.0.1:14445:0,0,0";
 
 	public static string linkGetHost = "https://ngocrongtutien.online";
 
@@ -400,6 +400,10 @@ public class ServerListScreen : mScreen, IActionListener
 				}
 				for (int i = 0; i < cmd.Length; i++)
 				{
+					if (i == 2 + nCmdPlay)
+					{
+						cmd[i].isFocus = false;
+					}
 					cmd[i].paint(g);
 				}
 				g.setClip(0, 0, GameCanvas.w, GameCanvas.h);
@@ -531,7 +535,14 @@ public class ServerListScreen : mScreen, IActionListener
 	{
 		if (loadScreen)
 		{
-			center = new Command(string.Empty, this, cmd[selected].idAction, null);
+			if (selected == 2 + nCmdPlay)
+			{
+				center = null;
+			}
+			else
+			{
+				center = new Command(string.Empty, this, cmd[selected].idAction, null);
+			}
 		}
 		else
 		{
@@ -567,18 +578,20 @@ public class ServerListScreen : mScreen, IActionListener
 			}
 			for (int i = 0; i < cmd.Length; i++)
 			{
-				if (cmd[i] == null || !cmd[i].isPointerPressInside())
+				if (cmd[i] == null)
 				{
 					continue;
 				}
-				if (testConnect == -1 || testConnect == 0)
+				if (i == 2 + nCmdPlay || (cmd[i].caption != null && cmd[i].caption.IndexOf(mResources.server) != -1))
 				{
-					if (cmd[i].caption.IndexOf(mResources.server) != -1)
-					{
-						cmd[i].performAction();
-					}
+					cmd[i].isFocus = false;
+					continue;
 				}
-				else
+				if (!cmd[i].isPointerPressInside())
+				{
+					continue;
+				}
+				if (testConnect != -1 && testConnect != 0)
 				{
 					cmd[i].performAction();
 				}
@@ -591,6 +604,10 @@ public class ServerListScreen : mScreen, IActionListener
 				int num = ((mGraphics.zoomLevel <= 1) ? 4 : 2);
 				GameCanvas.keyPressed[8] = false;
 				selected++;
+				if (selected == 2 + nCmdPlay)
+				{
+					selected++;
+				}
 				if (selected > num)
 				{
 					selected = 0;
@@ -602,6 +619,10 @@ public class ServerListScreen : mScreen, IActionListener
 				int num2 = ((mGraphics.zoomLevel <= 1) ? 4 : 2);
 				GameCanvas.keyPressed[2] = false;
 				selected--;
+				if (selected == 2 + nCmdPlay)
+				{
+					selected--;
+				}
 				if (selected < 0)
 				{
 					selected = num2;
@@ -1015,44 +1036,34 @@ public class ServerListScreen : mScreen, IActionListener
 		}
 		if (idAction == 17)
 		{
-			if (nameServer.Length <= 1)
-			{
-				return;
-			}
-			MyVector myVector = new MyVector(string.Empty);
-			for (int i = 0; i < nameServer.Length; i++)
-			{
-				myVector.addElement(new Command(nameServer[i], this, 6, null));
-			}
-			GameCanvas.menu.startAt(myVector, 0);
-			if (!GameCanvas.isTouch)
-			{
-				GameCanvas.menu.menuSelectedItem = ipSelect;
-			}
+			return;
 		}
 		if (idAction == 18)
 		{
 			GameCanvas.endDlg();
 			InfoDlg.hide();
-			if (GameCanvas.serverScr == null)
-			{
-				GameCanvas.serverScr = new ServerScr();
-			}
-			GameCanvas.serverScr.switchToMe();
+			GameCanvas.currentDialog = null;
+			countDieConnect = 0;
+			testConnect = 0;
+			isAutoConect = true;
+			flagServer = 0;
+			GameCanvas.startWaitDlg(mResources.PLEASEWAIT);
+			GameCanvas.connect();
 		}
 		if (idAction == 19)
 		{
-			if (mSystem.clientType == 1)
+			GameCanvas.endDlg();
+			InfoDlg.hide();
+			GameCanvas.currentDialog = null;
+			countDieConnect = 0;
+			testConnect = 0;
+			isAutoConect = false;
+			flagServer = 0;
+			if (GameCanvas.serverScreen == null)
 			{
-				InfoDlg.hide();
-				GameCanvas.currentDialog = null;
+				GameCanvas.serverScreen = new ServerListScreen();
 			}
-			else
-			{
-				countDieConnect = 0;
-				testConnect = 0;
-				isAutoConect = true;
-			}
+			GameCanvas.serverScreen.switchToMe();
 		}
 	}
 

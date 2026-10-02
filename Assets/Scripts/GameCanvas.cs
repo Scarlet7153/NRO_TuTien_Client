@@ -589,10 +589,6 @@ public class GameCanvas : IActionListener
                     {
                         new Thread(new ThreadStart(CharFunctions.AutoLogin)).Start();
                     }
-                    else
-                    {
-                        GameCanvas.startOKDlg(mResources.maychutathoacmatsong);
-                    }
                 }
                 gameTick = 0;
 			}
@@ -820,21 +816,6 @@ public class GameCanvas : IActionListener
         {
             new Thread(new ThreadStart(CharFunctions.AutoLogin)).Start();
         }
-        else
-        {
-            GameCanvas.startOKDlg(mResources.maychutathoacmatsong);
-        }
-
-       
-            bool isAutoLogin2 = CharFunctions.isAutoLogin;
-            if (isAutoLogin2)
-            {
-                new Thread(new ThreadStart(CharFunctions.AutoLogin)).Start();
-            }
-            else
-            {
-                GameCanvas.startOKDlg(mResources.maychutathoacmatsong);
-            }
         
         instance.resetToLoginScrz();
 		mSystem.endKey();

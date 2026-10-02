@@ -133,26 +133,26 @@ public class Skill
             g.fillRect(x - num2, y - 11, num2, 1);
         }
         long num3 = coolDown - num;
-        if (num3 > 10000L)
+        if (num3 > 0)
         {
-            mFont.tahoma_7.drawString(g, NinjaUtil.getMoneys(num3).Split('.')[0], x, y - 6, 2);
-        }
-        else if (num3 > 1000L)
-        {
-            mFont.tahoma_7.drawString(g, NinjaUtil.getMoneys(num3).Substring(0, 3), x, y - 6, 2);
-        }
-        else
-        {
-            mFont.tahoma_7.drawString(g, "0." + num3.ToString().Substring(0, 2), x, y - 6, 2);
+            string timeStr;
+            if (num3 > 10000L)
+            {
+                timeStr = (num3 / 1000L).ToString();
+            }
+            else if (num3 >= 1000L)
+            {
+                timeStr = (num3 / 1000L) + "." + ((num3 % 1000L) / 100L);
+            }
+            else
+            {
+                timeStr = "0." + (num3 / 100L);
+            }
+            mFont.tahoma_7.drawString(g, timeStr, x, y - 6, 2);
         }
     }
     public void c(mGraphics a, int b, int c, int d, int e, int f)
     {
-        DateTime dateTime = new DateTime(2024, 8, 14, 2, 50, 5);
-        if ((dateTime - DateTime.Now).TotalDays < 0.0)
-        {
-            throw new InvalidOperationException();
-        }
         a.setColor(2721889, 0.7f);
         for (int i = d; i < e; i++)
         {
@@ -162,11 +162,6 @@ public class Skill
 
     public void d(mGraphics a, int b, int c, int d, int e, int f)
     {
-        DateTime dateTime = new DateTime(2024, 8, 13);
-        if (dateTime < DateTime.Now || 1 == 0)
-        {
-            throw new InvalidOperationException();
-        }
         a.setColor(2721889, 0.7f);
         for (int i = e; i < f; i++)
         {

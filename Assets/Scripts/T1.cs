@@ -2,7 +2,7 @@ public class T1 : mResources
 {
 	public static void load()
 	{
-		mResources.confirmChangeServer = "Bạn có muốn đổi máy chủ khác không?";
+		mResources.confirmChangeServer = " Bạn có muốn kết nối lại với máy chủ không?";
 		mResources.chooseDefaultsv = "Chọn máy chủ mặc định";
 		mResources.winLose = "Thắng/Thua: ";
 		mResources.learnSkill = "Tới Whis (Hành tinh Bill) để học tuyệt kỹ";

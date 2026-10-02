@@ -187,10 +187,6 @@ public class mGraphics
 
 	public void drawLine(int x1, int y1, int x2, int y2)
 	{
-		x1 *= zoomLevel;
-		y1 *= zoomLevel;
-		x2 *= zoomLevel;
-		y2 *= zoomLevel;
 		if (y1 == y2)
 		{
 			if (x1 > x2)
@@ -213,6 +209,10 @@ public class mGraphics
 			fillRect(x1, y1, 1, y2 - y1);
 			return;
 		}
+		x1 *= zoomLevel;
+		y1 *= zoomLevel;
+		x2 *= zoomLevel;
+		y2 *= zoomLevel;
 		if (isTranslate)
 		{
 			x1 += translateX;
@@ -220,12 +220,12 @@ public class mGraphics
 			x2 += translateX;
 			y2 += translateY;
 		}
-		string key = "dl" + r + g + b;
+		string key = "dl" + r + g + b + a;
 		Texture2D texture2D = (Texture2D)cachedTextures[key];
 		if (texture2D == null)
 		{
 			texture2D = new Texture2D(1, 1);
-			Color color = new Color(r, g, b);
+			Color color = new Color(r, g, b, a);
 			texture2D.SetPixel(0, 0, color);
 			texture2D.Apply();
 			cache(key, texture2D);
@@ -233,13 +233,8 @@ public class mGraphics
 		Vector2 vector = new Vector2(x1, y1);
 		Vector2 vector2 = new Vector2(x2, y2);
 		Vector2 vector3 = vector2 - vector;
-		float num3 = 57.29578f * Mathf.Atan(vector3.y / vector3.x);
-		if (vector3.x < 0f)
-		{
-			num3 += 180f;
-		}
+		float num3 = 57.29578f * Mathf.Atan2(vector3.y, vector3.x);
 		int num4 = (int)Mathf.Ceil(0f);
-		GUIUtility.RotateAroundPivot(num3, vector);
 		int num5 = 0;
 		int num6 = 0;
 		int num7 = 0;
@@ -256,16 +251,24 @@ public class mGraphics
 				num6 += clipTY;
 			}
 		}
-		if (isClip)
+		Matrix4x4 matrix = GUI.matrix;
+		try
 		{
-			GUI.BeginGroup(new Rect(num5, num6, num7, num8));
+			if (isClip)
+			{
+				GUI.BeginGroup(new Rect(num5, num6, num7, num8));
+			}
+			GUIUtility.RotateAroundPivot(num3, vector - new Vector2(num5, num6));
+			GUI.DrawTexture(new Rect(vector.x - (float)num5, vector.y - (float)num4 - (float)num6, vector3.magnitude, 1f * (float)zoomLevel), texture2D);
+			if (isClip)
+			{
+				GUI.EndGroup();
+			}
 		}
-		Graphics.DrawTexture(new Rect(vector.x - (float)num5, vector.y - (float)num4 - (float)num6, vector3.magnitude, 1f), texture2D);
-		if (isClip)
+		finally
 		{
-			GUI.EndGroup();
+			GUI.matrix = matrix;
 		}
-		GUIUtility.RotateAroundPivot(0f - num3, vector);
 	}
 
 	public Color setColorMiniMap(int rgb)
