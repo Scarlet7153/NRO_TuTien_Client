@@ -6,6 +6,7 @@ namespace Assets.src.g
     {
         public TField tfUser;   // Họ và tên
         public TField tfSodt;   // Tài khoản (số ĐT)
+        public TField tfPass2;  // Nhập lại mật khẩu
 
         public static bool isContinueToLogin = false;
 
@@ -39,11 +40,18 @@ namespace Assets.src.g
             if (haveName == 1) tfSodt.setText("01234567890");
 
             tfUser = new TField();
-            tfUser.setIputType(TField.INPUT_TYPE_ANY);
+            tfUser.setIputType(TField.INPUT_TYPE_PASSWORD);
             tfUser.width = 220;
             tfUser.height = mScreen.ITEM_HEIGHT + 2;
             tfUser.isFocus = true;
             tfUser.name = "Mật khẩu";
+
+            tfPass2 = new TField();
+            tfPass2.setIputType(TField.INPUT_TYPE_PASSWORD);
+            tfPass2.width = 220;
+            tfPass2.height = mScreen.ITEM_HEIGHT + 2;
+            tfPass2.isFocus = false;
+            tfPass2.name = "Nhập lại mật khẩu";
             if (haveName == 1) tfUser.setText("Nguyễn Văn A");
 
             // --- Nút ---
@@ -65,6 +73,7 @@ namespace Assets.src.g
             focus = 0;
             tfUser.isFocus = true;
             tfSodt.isFocus = false;
+            if (tfPass2 != null) tfPass2.isFocus = false;
 
             if (GameCanvas.isTouch)
             {
@@ -100,6 +109,7 @@ namespace Assets.src.g
         {
             tfUser.update();
             tfSodt.update();
+            if (tfPass2 != null) tfPass2.update();
 
             // Camera nền như cũ
             GameScr.cmx++;
@@ -122,6 +132,7 @@ namespace Assets.src.g
         {
             if (tfUser.isFocus) tfUser.keyPressed(keyCode);
             else if (tfSodt.isFocus) tfSodt.keyPressed(keyCode);
+            else if (tfPass2 != null && tfPass2.isFocus) tfPass2.keyPressed(keyCode);
             base.keyPress(keyCode);
         }
 
@@ -134,23 +145,18 @@ namespace Assets.src.g
             {
                 if (tfUser.isFocus) right = tfUser.cmdClear;
                 else if (tfSodt.isFocus) right = tfSodt.cmdClear;
+                else if (tfPass2 != null && tfPass2.isFocus) right = tfPass2.cmdClear;
             }
 
             // Điều hướng trái/phải giữa 2 field
             if (GameCanvas.keyPressed[21] || GameCanvas.keyPressed[22])
             {
-                if (focus == 0)
-                {
-                    focus = 1;
-                    tfUser.isFocus = false;
-                    tfSodt.isFocus = true;
-                }
-                else
-                {
-                    focus = 0;
-                    tfUser.isFocus = true;
-                    tfSodt.isFocus = false;
-                }
+                focus++;
+                if (focus > 2) focus = 0;
+                
+                tfUser.isFocus = (focus == 0);
+                tfSodt.isFocus = (focus == 1);
+                if (tfPass2 != null) tfPass2.isFocus = (focus == 2);
                 GameCanvas.clearKeyPressed();
             }
 
@@ -162,12 +168,21 @@ namespace Assets.src.g
                     focus = 0;
                     tfUser.isFocus = true;
                     tfSodt.isFocus = false;
+                    if (tfPass2 != null) tfPass2.isFocus = false;
                 }
                 else if (GameCanvas.isPointerHoldIn(tfSodt.x, tfSodt.y, tfSodt.width, tfSodt.height))
                 {
                     focus = 1;
                     tfUser.isFocus = false;
                     tfSodt.isFocus = true;
+                    if (tfPass2 != null) tfPass2.isFocus = false;
+                }
+                else if (tfPass2 != null && GameCanvas.isPointerHoldIn(tfPass2.x, tfPass2.y, tfPass2.width, tfPass2.height))
+                {
+                    focus = 2;
+                    tfUser.isFocus = false;
+                    tfSodt.isFocus = false;
+                    tfPass2.isFocus = true;
                 }
             }
 
@@ -184,8 +199,8 @@ namespace Assets.src.g
             {
                 // ====== Tham số layout gọn ======
                 int popupW = 240;
-                int padTop = 10;
-                int padBottom = 10;
+                int padTop = 35;
+                int padBottom = 20;
                 int gap = 26;                                // khoảng cách giữa 2 ô
                 int fieldH = mScreen.ITEM_HEIGHT + 2;
 
@@ -199,17 +214,23 @@ namespace Assets.src.g
 
                 tfUser.x = tfSodt.x;
                 tfUser.y = tfSodt.y + gap;
+                
+                if (tfPass2 != null) {
+                    tfPass2.x = tfSodt.x;
+                    tfPass2.y = tfUser.y + gap;
+                }
 
-                // ====== Tính chiều cao khung đúng theo nội dung ======
-                int contentBottom = tfUser.y + fieldH;       // đáy sau ô thứ 2
+                int contentBottom = (tfPass2 != null) ? (tfPass2.y + fieldH) : (tfUser.y + fieldH);
                 int popupH = (contentBottom - y) + padBottom;
 
-                // vẽ khung gọn đúng kích thước
                 PopUp.paintPopUp(g, x, y, popupW, popupH, -1, true);
+
+                mFont.tahoma_7b_dark.drawString(g, "Đăng ký", x + popupW / 2, y + 10, mFont.CENTER);
 
                 // vẽ 2 ô
                 tfSodt.paint(g);
                 tfUser.paint(g);
+                if (tfPass2 != null) tfPass2.paint(g);
 
                 // (tùy chọn) đưa version ra ngoài khung để không phải tăng chiều cao
                 string ver = GameMidlet.VERSION;
@@ -262,9 +283,14 @@ namespace Assets.src.g
                     break;
 
                 case 2008: // OK
-                    if (tfSodt.getText().Equals(string.Empty) || tfUser.getText().Equals(string.Empty))
+                    if (tfSodt.getText().Equals(string.Empty) || tfUser.getText().Equals(string.Empty) || (tfPass2 != null && tfPass2.getText().Equals(string.Empty)))
                     {
                         GameCanvas.startOKDlg("Vui lòng điền đầy đủ thông tin");
+                        break;
+                    }
+                    if (tfPass2 != null && !tfUser.getText().Equals(tfPass2.getText())) 
+                    {
+                        GameCanvas.startOKDlg("Mật khẩu nhập lại không khớp!");
                         break;
                     }
 
@@ -292,6 +318,7 @@ namespace Assets.src.g
             // Quay lại login hoặc menu đơn giản
             tfUser.isFocus = true;
             tfSodt.isFocus = false;
+            if (tfPass2 != null) tfPass2.isFocus = false;
             left = cmdMenu;
         }
 

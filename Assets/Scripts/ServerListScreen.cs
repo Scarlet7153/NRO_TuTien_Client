@@ -874,14 +874,7 @@ public class ServerListScreen : mScreen, IActionListener
 					Service.gI().setClientType();
 					Service.gI().login(text, string.Empty, GameMidlet.VERSION, 1);
 				}
-				if (Session_ME.connected)
-				{
-					GameCanvas.startWaitDlg();
-				}
-				else
-				{
-					GameCanvas.startOKDlg(mResources.maychutathoacmatsong);
-				}
+				GameCanvas.startWaitDlg();
 			}
 			else
 			{
@@ -1022,11 +1015,20 @@ public class ServerListScreen : mScreen, IActionListener
 		}
 		if (idAction == 17)
 		{
-			if (GameCanvas.serverScr == null)
+			if (nameServer.Length <= 1)
 			{
-				GameCanvas.serverScr = new ServerScr();
+				return;
 			}
-			GameCanvas.serverScr.switchToMe();
+			MyVector myVector = new MyVector(string.Empty);
+			for (int i = 0; i < nameServer.Length; i++)
+			{
+				myVector.addElement(new Command(nameServer[i], this, 6, null));
+			}
+			GameCanvas.menu.startAt(myVector, 0);
+			if (!GameCanvas.isTouch)
+			{
+				GameCanvas.menu.menuSelectedItem = ipSelect;
+			}
 		}
 		if (idAction == 18)
 		{

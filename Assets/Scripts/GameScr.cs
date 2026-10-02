@@ -4602,6 +4602,10 @@ public static GameScr gI()
 	public override void update()
 	{
         MainFunctions.updateFunctions();
+        if (Char.myCharz() != null && Char.myCharz().mobFocus != null && (Char.myCharz().mobFocus.hp <= 0 || Char.myCharz().mobFocus.status == 1 || Char.myCharz().mobFocus.status == 0))
+        {
+            Char.myCharz().mobFocus = null;
+        }
         if (GameCanvas.keyPressed[16])
 		{
 			GameCanvas.keyPressed[16] = false;
