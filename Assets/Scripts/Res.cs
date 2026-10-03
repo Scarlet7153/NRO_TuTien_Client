@@ -170,10 +170,10 @@ public class Res
 
     public static void log(string s)
     {
-        //if (mSystem.isTest)
-        //{
+        if (mSystem.isTest)
+        {
             Debug.Log(s);
-        //}
+        }
     }
 
     public static void outz(string s)

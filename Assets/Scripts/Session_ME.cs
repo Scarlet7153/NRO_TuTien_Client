@@ -92,10 +92,8 @@ public class Session_ME : ISession
 					}
 				}
 			}
-			catch (Exception ex3)
+			catch (Exception)
 			{
-				Debug.Log("error read message!");
-				Debug.Log(ex3.Message.ToString());
 			}
 			if (!connected)
 			{
@@ -214,9 +212,8 @@ public class Session_ME : ISession
 				}
 				return new Message(b, array);
 			}
-			catch (Exception ex)
+			catch (Exception)
 			{
-				Debug.Log(ex.StackTrace.ToString());
 			}
 			return null;
 		}
@@ -280,7 +277,6 @@ public class Session_ME : ISession
 
 	public Session_ME()
 	{
-		Debug.Log("init Session_ME");
 	}
 
 	public void clearSendingMessage()
@@ -320,9 +316,6 @@ public class Session_ME : ISession
 			this.port = port;
 			getKeyComplete = false;
 			close();
-			Debug.Log("connecting...!");
-			Debug.Log("host: " + host);
-			Debug.Log("port: " + port);
 			initThread = new Thread(NetworkInit);
 			initThread.Start();
 		}
@@ -431,9 +424,8 @@ public class Session_ME : ISession
 			}
 			dos.Flush();
 		}
-		catch (Exception ex)
+		catch (Exception)
 		{
-			Debug.Log(ex.StackTrace);
 			dos.Flush();
 		}
 	}

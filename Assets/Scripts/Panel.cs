@@ -1735,11 +1735,9 @@ public class Panel : IActionListener, IChatable
 		int num2 = t.info2.IndexOf(mResources.armor + " ") + 5;
 		int length2 = t.info2.IndexOf(":") - num2;
 		string text3 = t.info2.Substring(num2, length2);
-		Debug.Log("numberWin1:" + text3);
 		int num3 = text3.IndexOf("\n") + 1;
 		int length3 = text3.Length - num3;
 		text3 = text3.Substring(num3, length3);
-		Debug.Log("numberWin2:" + text3);
 		if (NinjaUtil.checkNumber(text3) && NinjaUtil.checkNumber(text2))
 		{
 			text = Res.replace(text, text3 + ":" + text2, mResources.winLose + text3 + "/" + text2);
@@ -9199,6 +9197,8 @@ public class Panel : IActionListener, IChatable
 		{
 			TopInfo topInfo = (TopInfo)p;
 			Service.gI().sendThachDau(topInfo.pId);
+			timeShow = 0;
+			hideNow();
 		}
         if (idAction == 3144)
         {

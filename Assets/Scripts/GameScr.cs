@@ -469,13 +469,15 @@ public class GameScr : mScreen, IChatable
 
 	public static bool isUseTouch;
 
-	public const int numSkill = 10;
+	public const int numSkill = 5;
 
 	public const int numSkill_2 = 5;
 
-	public static Skill[] keySkill = new Skill[10];
+	public static Skill[] keySkill = new Skill[5];
 
-	public static Skill[] onScreenSkill = new Skill[10];
+	public static Skill[] onScreenSkill = new Skill[5];
+
+	public static bool isLoadedFromRMS;
 
 	public Command cmdMenu;
 
@@ -1169,50 +1171,111 @@ public class GameScr : mScreen, IChatable
 
 	public void loadSkillShortcut()
 	{
+		try
+		{
+			keySkill = new Skill[5];
+			onScreenSkill = new Skill[5];
+			isLoadedFromRMS = false;
+			if (Char.myCharz() == null || Char.myCharz().vSkillFight == null || Char.myCharz().vSkillFight.size() == 0)
+			{
+				return;
+			}
+			sbyte[] array = Rms.loadRMS("NR_skill_shortcut_" + Char.myCharz().charID);
+			if (array != null && array.Length >= 5)
+			{
+				bool hasAnySkill = false;
+				for (int i = 0; i < 5; i++)
+				{
+					keySkill[i] = null;
+					onScreenSkill[i] = null;
+					if (array[i] != -1)
+					{
+						for (int j = 0; j < Char.myCharz().vSkillFight.size(); j++)
+						{
+							Skill skill = (Skill)Char.myCharz().vSkillFight.elementAt(j);
+							if (skill.template.id == array[i])
+							{
+								keySkill[i] = skill;
+								onScreenSkill[i] = skill;
+								hasAnySkill = true;
+								break;
+							}
+						}
+					}
+				}
+				if (hasAnySkill)
+				{
+					isLoadedFromRMS = true;
+					Service.gI().changeOnKeyScr(array);
+					return;
+				}
+			}
+			loadDefaultKeySkill();
+		}
+		catch (Exception ex)
+		{
+			Cout.println("Error loadSkillShortcut: " + ex.Message);
+			loadDefaultKeySkill();
+		}
 	}
 
 	public void onOSkill(sbyte[] oSkillID)
 	{
-		Cout.println("GET onScreenSkill!");
-		onScreenSkill = new Skill[10];
-		if (oSkillID == null)
-		{
-			loadDefaultonScreenSkill();
-			return;
-		}
-		for (int i = 0; i < oSkillID.Length; i++)
-		{
-			for (int j = 0; j < Char.myCharz().vSkillFight.size(); j++)
-			{
-				Skill skill = (Skill)Char.myCharz().vSkillFight.elementAt(j);
-				if (skill.template.id == oSkillID[i])
-				{
-					onScreenSkill[i] = skill;
-					break;
-				}
-			}
-		}
+		onKSkill(oSkillID);
 	}
 
 	public void onKSkill(sbyte[] kSkillID)
 	{
 		Cout.println("GET KEYSKILL!");
-		keySkill = new Skill[10];
-		if (kSkillID == null)
+		if (isLoadedFromRMS)
 		{
-			loadDefaultKeySkill();
 			return;
 		}
-		for (int i = 0; i < kSkillID.Length; i++)
+		keySkill = new Skill[5];
+		onScreenSkill = new Skill[5];
+		if (kSkillID == null || kSkillID.Length == 0)
 		{
-			for (int j = 0; j < Char.myCharz().vSkillFight.size(); j++)
+			loadSkillShortcut();
+			return;
+		}
+		bool hasAny = false;
+		for (int i = 0; i < 5 && i < kSkillID.Length; i++)
+		{
+			if (kSkillID[i] != -1)
 			{
-				Skill skill = (Skill)Char.myCharz().vSkillFight.elementAt(j);
-				if (skill.template.id == kSkillID[i])
+				for (int j = 0; j < Char.myCharz().vSkillFight.size(); j++)
 				{
-					keySkill[i] = skill;
-					break;
+					Skill skill = (Skill)Char.myCharz().vSkillFight.elementAt(j);
+					if (skill.template.id == kSkillID[i])
+					{
+						keySkill[i] = skill;
+						onScreenSkill[i] = skill;
+						hasAny = true;
+						break;
+					}
 				}
+			}
+		}
+		if (!hasAny)
+		{
+			loadSkillShortcut();
+		}
+		else
+		{
+			try
+			{
+				sbyte[] array = new sbyte[5];
+				for (int k = 0; k < 5; k++)
+				{
+					array[k] = (sbyte)((keySkill[k] != null) ? keySkill[k].template.id : -1);
+				}
+				if (Char.myCharz() != null)
+				{
+					Rms.saveRMS("NR_skill_shortcut_" + Char.myCharz().charID, array);
+				}
+			}
+			catch (Exception)
+			{
 			}
 		}
 	}
@@ -1248,22 +1311,19 @@ public class GameScr : mScreen, IChatable
 
 	private void loadDefaultonScreenSkill()
 	{
-		Cout.println("LOAD DEFAULT ONmScreen SKILL");
-		for (int i = 0; i < onScreenSkill.Length && i < Char.myCharz().vSkillFight.size(); i++)
-		{
-			Skill skill = (Skill)Char.myCharz().vSkillFight.elementAt(i);
-			onScreenSkill[i] = skill;
-		}
-		saveonScreenSkillToRMS();
+		loadDefaultKeySkill();
 	}
 
 	private void loadDefaultKeySkill()
 	{
 		Cout.println("LOAD DEFAULT KEY SKILL");
-		for (int i = 0; i < keySkill.Length && i < Char.myCharz().vSkillFight.size(); i++)
+		keySkill = new Skill[5];
+		onScreenSkill = new Skill[5];
+		for (int i = 0; i < 5 && i < Char.myCharz().vSkillFight.size(); i++)
 		{
 			Skill skill = (Skill)Char.myCharz().vSkillFight.elementAt(i);
 			keySkill[i] = skill;
+			onScreenSkill[i] = skill;
 		}
 		saveKeySkillToRMS();
 	}
@@ -1272,7 +1332,7 @@ public class GameScr : mScreen, IChatable
 	{
 		Skill skill = Char.myCharz().getSkill(skillTemplate);
 		MyVector myVector = new MyVector();
-		for (int i = 0; i < 10; i++)
+		for (int i = 0; i < 5; i++)
 		{
 			Command command = new Command(p: new object[2]
 			{
@@ -1295,7 +1355,7 @@ public class GameScr : mScreen, IChatable
 		Skill skill = Char.myCharz().getSkill(skillTemplate);
 		string[] array = ((!TField.isQwerty) ? mResources.key_skill : mResources.key_skill_qwerty);
 		MyVector myVector = new MyVector();
-		for (int i = 0; i < 10; i++)
+		for (int i = 0; i < 5; i++)
 		{
 			myVector.addElement(new Command(p: new object[2]
 			{
@@ -1308,25 +1368,14 @@ public class GameScr : mScreen, IChatable
 
 	public void saveonScreenSkillToRMS()
 	{
-		sbyte[] array = new sbyte[onScreenSkill.Length];
-		for (int i = 0; i < onScreenSkill.Length; i++)
-		{
-			if (onScreenSkill[i] == null)
-			{
-				array[i] = -1;
-			}
-			else
-			{
-				array[i] = onScreenSkill[i].template.id;
-			}
-		}
-		Service.gI().changeOnKeyScr(array);
+		saveKeySkillToRMS();
 	}
 
 	public void saveKeySkillToRMS()
 	{
-		sbyte[] array = new sbyte[keySkill.Length];
-		for (int i = 0; i < keySkill.Length; i++)
+		isLoadedFromRMS = true;
+		sbyte[] array = new sbyte[5];
+		for (int i = 0; i < 5; i++)
 		{
 			if (keySkill[i] == null)
 			{
@@ -1336,6 +1385,18 @@ public class GameScr : mScreen, IChatable
 			{
 				array[i] = keySkill[i].template.id;
 			}
+			onScreenSkill[i] = keySkill[i];
+		}
+		try
+		{
+			if (Char.myCharz() != null)
+			{
+				Rms.saveRMS("NR_skill_shortcut_" + Char.myCharz().charID, array);
+			}
+		}
+		catch (Exception ex)
+		{
+			Cout.println("Error save skill shortcut RMS: " + ex.Message);
 		}
 		Service.gI().changeOnKeyScr(array);
 	}
@@ -1347,19 +1408,12 @@ public class GameScr : mScreen, IChatable
 	public void addSkillShortcut(Skill skill)
 	{
 		Cout.println("ADD SKILL SHORTCUT TO SKILL " + skill.template.id);
-		for (int i = 0; i < onScreenSkill.Length; i++)
+		for (int i = 0; i < 5; i++)
 		{
-			if (onScreenSkill[i] == null)
+			if (keySkill[i] == null)
 			{
+				keySkill[i] = skill;
 				onScreenSkill[i] = skill;
-				break;
-			}
-		}
-		for (int j = 0; j < keySkill.Length; j++)
-		{
-			if (keySkill[j] == null)
-			{
-				keySkill[j] = skill;
 				break;
 			}
 		}
@@ -1368,7 +1422,6 @@ public class GameScr : mScreen, IChatable
 			Char.myCharz().myskill = skill;
 		}
 		saveKeySkillToRMS();
-		saveonScreenSkillToRMS();
 	}
 
 	public bool isBagFull()
@@ -1593,49 +1646,36 @@ public class GameScr : mScreen, IChatable
     public void readSkill()
     {
         DataInputStream dataInputStream = null;
-        StreamWriter writer = null;
         try
         {
-            // Mở DataInputStream để đọc dữ liệu từ RMS
             dataInputStream = new DataInputStream(Rms.loadRMS("NR_skill"));
 
-            // Tạo một StreamWriter để ghi dữ liệu vào tệp văn bản
-            writer = new StreamWriter("output.txt");
-
-            // Đọc số lượng kỹ năng từ dữ liệu đầu vào
             int num = dataInputStream.readShort();
             int num2 = Skills.skills.size();
             sks = new SkillPaint[num2];
 
-            // Vòng lặp để đọc từng kỹ năng
             for (int i = 0; i < num; i++)
             {
                 short skillId = dataInputStream.readShort();
 
-                // Nếu skillId là 1111, giả sử là kỹ năng cuối cùng trong danh sách
                 if (skillId == 1111)
                 {
                     skillId = (short)(num - 1);
                 }
 
-                // Tạo một đối tượng SkillPaint để lưu trữ thông tin về kỹ năng
                 sks[skillId] = new SkillPaint();
                 sks[skillId].id = skillId;
                 sks[skillId].effectHappenOnMob = dataInputStream.readShort();
 
-                // Xử lý trường hợp nếu effectHappenOnMob <= 0
                 if (sks[skillId].effectHappenOnMob <= 0)
                 {
                     sks[skillId].effectHappenOnMob = 80;
                 }
 
-                // Đọc số lượng hiệu ứng cho kỹ năng đứng yên
                 sks[skillId].numEff = dataInputStream.readByte();
 
-                // Tạo mảng để lưu trữ thông tin về hiệu ứng kỹ năng đứng yên
                 sks[skillId].skillStand = new SkillInfoPaint[dataInputStream.readByte()];
 
-                // Vòng lặp để đọc từng hiệu ứng kỹ năng đứng yên
                 for (int j = 0; j < sks[skillId].skillStand.Length; j++)
                 {
                     sks[skillId].skillStand[j] = new SkillInfoPaint();
@@ -1654,10 +1694,8 @@ public class GameScr : mScreen, IChatable
                     sks[skillId].skillStand[j].ady = dataInputStream.readShort();
                 }
 
-                // Đọc số lượng hiệu ứng cho kỹ năng di chuyển
                 sks[skillId].skillfly = new SkillInfoPaint[dataInputStream.readByte()];
 
-                // Vòng lặp để đọc từng hiệu ứng kỹ năng di chuyển
                 for (int k = 0; k < sks[skillId].skillfly.Length; k++)
                 {
                     sks[skillId].skillfly[k] = new SkillInfoPaint();
@@ -1675,13 +1713,6 @@ public class GameScr : mScreen, IChatable
                     sks[skillId].skillfly[k].adx = dataInputStream.readShort();
                     sks[skillId].skillfly[k].ady = dataInputStream.readShort();
                 }
-
-                // Ghi thông tin về kỹ năng vào tệp văn bản
-                writer.WriteLine("Skill ID: " + sks[skillId].id);
-                writer.WriteLine("Effect Happen On Mob: " + sks[skillId].effectHappenOnMob);
-                // Ghi các thông tin khác về kỹ năng vào tệp văn bản ở đây
-
-                writer.WriteLine(); // Thêm một dòng trống sau mỗi kỹ năng
             }
         }
         catch (Exception ex)
@@ -1692,14 +1723,8 @@ public class GameScr : mScreen, IChatable
         {
             try
             {
-                // Đóng DataInputStream và StreamWriter
                 if (dataInputStream != null)
                     dataInputStream.close();
-                if (writer != null)
-                {
-                    writer.Close();
-                    Cout.LogError("Dữ liệu đã được xuất ra tệp văn bản.");
-                }
             }
             catch (Exception ex2)
             {
@@ -2784,41 +2809,6 @@ public static GameScr gI()
 								doSelectSkill(keySkill[4], true);
 							}
 						}
-						else if (GameCanvas.keyPressed[6])
-						{
-							if (keySkill[5] != null)
-							{
-								doSelectSkill(keySkill[5], true);
-							}
-						}
-						else if (GameCanvas.keyPressed[7])
-						{
-							if (keySkill[6] != null)
-							{
-								doSelectSkill(keySkill[6], true);
-							}
-						}
-						else if (GameCanvas.keyPressed[8])
-						{
-							if (keySkill[7] != null)
-							{
-								doSelectSkill(keySkill[7], true);
-							}
-						}
-						else if (GameCanvas.keyPressed[9])
-						{
-							if (keySkill[8] != null)
-							{
-								doSelectSkill(keySkill[8], true);
-							}
-						}
-						else if (GameCanvas.keyPressed[0])
-						{
-							if (keySkill[9] != null)
-							{
-								doSelectSkill(keySkill[9], true);
-							}
-						}
 						else if (GameCanvas.keyAsciiPress == 114)
 						{
 							ChatTextField.gI().startChat(this, string.Empty);
@@ -2844,7 +2834,7 @@ public static GameScr gI()
 					}
 					else if (GameCanvas.keyAsciiPress == 57)
 					{
-						if (keySkill[(!Main.isPC) ? 2 : 21] != null)
+						if (keySkill[2] != null)
 						{
 							doSelectSkill(keySkill[2], true);
 						}
@@ -6128,12 +6118,8 @@ public static GameScr gI()
 				{
 					if (Main.isPC)
 					{
-						string[] array2 = (TField.isQwerty ? new string[10] { "1", "2", "3", "4", "5", "6", "7", "8", "9", "0" } : new string[5] { "7", "8", "9", "10", "11" });
+						string[] array2 = (TField.isQwerty ? new string[5] { "1", "2", "3", "4", "5" } : new string[5] { "7", "8", "9", "10", "11" });
 						int num5 = -13;
-						if (num4 > 5 && i < 5)
-						{
-							num5 = 27;
-						}
 						mFont.tahoma_7b_dark.drawString(g, array2[i], xSkill + xS[i] + 14, yS[i] + num5, mFont.CENTER);
 						mFont.tahoma_7b_white.drawString(g, array2[i], xSkill + xS[i] + 14, yS[i] + num5 + 1, mFont.CENTER);
 					}
@@ -6947,15 +6933,23 @@ public static GameScr gI()
 			object[] array2 = (object[])p;
 			Skill skill4 = (Skill)array2[0];
 			int num2 = int.Parse((string)array2[1]);
-			for (int j = 0; j < onScreenSkill.Length; j++)
+			if (num2 >= 0 && num2 < 5)
 			{
-				if (onScreenSkill[j] == skill4)
+				for (int j = 0; j < 5; j++)
 				{
-					onScreenSkill[j] = null;
+					if (onScreenSkill[j] == skill4)
+					{
+						onScreenSkill[j] = null;
+					}
+					if (keySkill[j] == skill4)
+					{
+						keySkill[j] = null;
+					}
 				}
+				onScreenSkill[num2] = skill4;
+				keySkill[num2] = skill4;
+				saveonScreenSkillToRMS();
 			}
-			onScreenSkill[num2] = skill4;
-			saveonScreenSkillToRMS();
 			break;
 		}
 		case 11121:
@@ -6963,15 +6957,23 @@ public static GameScr gI()
 			object[] array = (object[])p;
 			Skill skill3 = (Skill)array[0];
 			int num = int.Parse((string)array[1]);
-			for (int i = 0; i < keySkill.Length; i++)
+			if (num >= 0 && num < 5)
 			{
-				if (keySkill[i] == skill3)
+				for (int i = 0; i < 5; i++)
 				{
-					keySkill[i] = null;
+					if (keySkill[i] == skill3)
+					{
+						keySkill[i] = null;
+					}
+					if (onScreenSkill[i] == skill3)
+					{
+						onScreenSkill[i] = null;
+					}
 				}
+				keySkill[num] = skill3;
+				onScreenSkill[num] = skill3;
+				saveKeySkillToRMS();
 			}
-			keySkill[num] = skill3;
-			saveKeySkillToRMS();
 			break;
 		}
 		case 110001:

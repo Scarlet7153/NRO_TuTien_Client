@@ -3020,9 +3020,10 @@ public class Service
 		try
 		{
 			message = new Message((sbyte)(-113));
-			for (int i = 0; i < GameScr.onScreenSkill.Length; i++)
+			for (int i = 0; i < 5; i++)
 			{
-				message.writer().writeByte(skill[i]);
+				sbyte b = (sbyte)((skill != null && i < skill.Length) ? skill[i] : -1);
+				message.writer().writeByte(b);
 			}
 			session.sendMessage(message);
 		}

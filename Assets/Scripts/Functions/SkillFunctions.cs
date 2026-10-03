@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -71,12 +71,6 @@ namespace Functions
 						SkillFunctions.AutoUseSkill(i);
 					}
 				}
-			}
-			bool flag5 = SkillFunctions.isLoadKeySkill && GameCanvas.gameTick % 20 == 0;
-			if (flag5)
-			{
-				SkillFunctions.isLoadKeySkill = false;
-				SkillFunctions.LoadKeySkills();
 			}
 			bool flag6 = SkillFunctions.isAutoChangeFocus;
 			if (flag6)
@@ -408,17 +402,6 @@ namespace Functions
 		// Token: 0x06000A77 RID: 2679 RVA: 0x000A9B44 File Offset: 0x000A7D44
 		private static void LoadKeySkills()
 		{
-			for (int i = 0; i < global::Char.myCharz().nClass.skillTemplates.Length; i++)
-			{
-				SkillTemplate skillTemplate = global::Char.myCharz().nClass.skillTemplates[i];
-				Skill skill = global::Char.myCharz().getSkill(skillTemplate);
-				bool flag = skill != null;
-				if (flag)
-				{
-					GameScr.keySkill[i] = skill;
-				}
-				GameScr.gI().saveKeySkillToRMS();
-			}
 		}
 
 		// Token: 0x06000A78 RID: 2680 RVA: 0x000A9BB4 File Offset: 0x000A7DB4
@@ -792,7 +775,7 @@ namespace Functions
 		private static SkillFunctions _Instance;
 
 		// Token: 0x04001350 RID: 4944
-		public static bool isLoadKeySkill = true;
+		public static bool isLoadKeySkill = false;
 
 		// Token: 0x04001351 RID: 4945
 		public static bool isAutoSendAttack;

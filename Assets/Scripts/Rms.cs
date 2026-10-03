@@ -213,6 +213,10 @@ public class Rms
         {
             try
             {
+                if (fileInfo.Name.StartsWith("NR_skill_shortcut_"))
+                {
+                    continue;
+                }
                 fileInfo.Delete();
             }
             catch
