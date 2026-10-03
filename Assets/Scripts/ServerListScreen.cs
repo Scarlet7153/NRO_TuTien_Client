@@ -30,17 +30,17 @@ public class ServerListScreen : mScreen, IActionListener
 
 	private int lY;
 
-	public static string smartPhoneVN = "Tu Tiên:127.0.0.1:14445:0,0,0";
+	public static string smartPhoneVN = "Tu Tiên:192.168.2.4:14445:0,0,0";
 
 	public static string javaVN = smartPhoneVN;
 
-	public static string smartPhoneIn = "Tu Tiên:127.0.0.1:14445:0,0,0";
+	public static string smartPhoneIn = "Tu Tiên:192.168.2.4:14445:0,0,0";
 
-	public static string javaIn = "Tu Tiên:127.0.0.1:14445:0,0,0";
+	public static string javaIn = "Tu Tiên:192.168.2.4:14445:0,0,0";
 
-	public static string smartPhoneE = "Tu Tiên:127.0.0.1:14445:0,0,0";
+	public static string smartPhoneE = "Tu Tiên:192.168.2.4:14445:0,0,0";
 
-	public static string javaE = "Tu Tiên:127.0.0.1:14445:0,0,0";
+	public static string javaE = "Tu Tiên:192.168.2.4:14445:0,0,0";
 
 	public static string linkGetHost = "https://ngocrongtutien.online";
 
