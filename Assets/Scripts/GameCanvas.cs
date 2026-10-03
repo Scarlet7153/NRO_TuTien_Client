@@ -163,6 +163,18 @@ public class GameCanvas : IActionListener
 
 	public static bool isFocusPanel2;
 
+	public static bool isShowFPS = true;
+
+	public static int fpsReal = 120;
+
+	private static int frameCountFPS = 0;
+
+	private static long lastFPSTime = 0;
+
+	private static GUIStyle fpsStyle;
+
+	private static GUIStyle fpsStyleBorder;
+
 	public static int fps = 0;
 
 	public static int max;
@@ -956,7 +968,52 @@ public class GameCanvas : IActionListener
 		inputDlg = new InputDlg();
 		debug("SP2i6", 0);
 		listPoint = new MyVector();
+		int savedFPS = Rms.loadRMSInt("showFPS");
+		isShowFPS = (savedFPS == -1 || savedFPS == 1);
 		debug("SP2i7", 0);
+	}
+
+	public static void toggleShowFPS()
+	{
+		isShowFPS = !isShowFPS;
+		Rms.saveRMSInt("showFPS", isShowFPS ? 1 : 0);
+		SoundMn.gI().getStrOption();
+	}
+
+	public static void paintFPS()
+	{
+		if (!isShowFPS)
+		{
+			return;
+		}
+		frameCountFPS++;
+		long nowFPS = mSystem.currentTimeMillis();
+		if (nowFPS - lastFPSTime >= 500)
+		{
+			fpsReal = (int)(frameCountFPS * 1000L / (nowFPS - lastFPSTime));
+			frameCountFPS = 0;
+			lastFPSTime = nowFPS;
+		}
+		if (fpsStyle == null)
+		{
+			fpsStyle = new GUIStyle(GUI.skin.label);
+			fpsStyle.fontStyle = FontStyle.Bold;
+			fpsStyle.normal.textColor = Color.yellow;
+			fpsStyleBorder = new GUIStyle(GUI.skin.label);
+			fpsStyleBorder.fontStyle = FontStyle.Bold;
+			fpsStyleBorder.normal.textColor = Color.black;
+		}
+		int fontSize = (mGraphics.zoomLevel > 1) ? 11 : 9;
+		fpsStyle.fontSize = fontSize;
+		fpsStyleBorder.fontSize = fontSize;
+		int drawX = 6;
+		int drawY = Screen.height - (fontSize + 12);
+		string text = fpsReal.ToString();
+		GUI.Label(new Rect(drawX - 1, drawY, 120, 25), text, fpsStyleBorder);
+		GUI.Label(new Rect(drawX + 1, drawY, 120, 25), text, fpsStyleBorder);
+		GUI.Label(new Rect(drawX, drawY - 1, 120, 25), text, fpsStyleBorder);
+		GUI.Label(new Rect(drawX, drawY + 1, 120, 25), text, fpsStyleBorder);
+		GUI.Label(new Rect(drawX, drawY, 120, 25), text, fpsStyle);
 	}
 
 	public void start()
@@ -2521,6 +2578,7 @@ public class GameCanvas : IActionListener
 				mFont.tahoma_7_yellow.drawString(g, thongBaoTest, xThongBaoTranslate, num, 0);
 				g.setClip(0, 0, w, h);
 			}
+			paintFPS();
 		}
 		catch (Exception)
 		{

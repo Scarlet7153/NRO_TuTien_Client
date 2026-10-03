@@ -506,11 +506,11 @@ public class ServerListScreen : mScreen, IActionListener
 		{
 			return;
 		}
-		if (countDieConnect < ((mSystem.clientType != 1) ? 5 : 2))
+		if (countDieConnect < 10)
 		{
 			if (flagServer <= 0)
 			{
-				flagServer = 30;
+				flagServer = 180;
 				GameCanvas.startWaitDlg(mResources.PLEASEWAIT);
 				GameCanvas.connect();
 			}
@@ -522,7 +522,7 @@ public class ServerListScreen : mScreen, IActionListener
 				Command cmdYes = new Command(mResources.YES, GameCanvas.serverScreen, 18, null);
 				Command cmdNo = new Command(mResources.NO, GameCanvas.serverScreen, 19, null);
 				GameCanvas.startYesNoDlg(mResources.maychutathoacmatsong + "." + mResources.confirmChangeServer, cmdYes, cmdNo);
-				flagServer = 30;
+				flagServer = 180;
 			}
 		}
 		else if (flagServer <= 0)

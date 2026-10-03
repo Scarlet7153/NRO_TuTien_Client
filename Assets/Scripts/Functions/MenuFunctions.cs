@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -255,7 +255,8 @@ namespace Functions
                 {
                     int num4 = int.Parse(ChatTextField.gI().tfChat.getText());
                     num4 = Math.max(35, num4);
-                    num4 = Math.min(60, num4);
+                    num4 = Math.min(120, num4);
+                    QualitySettings.vSyncCount = 0;
                     Application.targetFrameRate = num4;
                     GameScr.info1.addInfo("|7|FPS Hiện Tại: " + Application.targetFrameRate, 0);
                     MainFunctions.ResetTF();

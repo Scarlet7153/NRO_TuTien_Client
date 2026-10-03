@@ -156,7 +156,7 @@ public class Main : MonoBehaviour
 			checkInput();
 			Session_ME.update();
 			Session_ME2.update();
-			if (Event.current.type.Equals(EventType.Repaint) && paintCount <= updateCount)
+			if (Event.current.type.Equals(EventType.Repaint))
 			{
 				GameMidlet.gameCanvas.paint(g);
 				paintCount++;
@@ -171,7 +171,8 @@ public class Main : MonoBehaviour
 		{
 			Screen.orientation = ScreenOrientation.AutoRotation;
 			Application.runInBackground = true;
-			Application.targetFrameRate = 60;
+			QualitySettings.vSyncCount = 0;
+			Application.targetFrameRate = 120;
 			base.useGUILayout = false;
 			isCompactDevice = detectCompactDevice();
 			if (main == null)

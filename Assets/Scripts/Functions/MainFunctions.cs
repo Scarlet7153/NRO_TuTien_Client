@@ -1,4 +1,4 @@
-﻿using Functions.AutoFunctions;
+using Functions.AutoFunctions;
 using Functions.HandlerFunctions;
 using System;
 using System.Collections.Generic;
@@ -16,7 +16,7 @@ namespace Functions
                 "Nhập Cheat:",
                 "Cheat (1 - 20)"
             };
-            inputFPS = new string[] {"Nhập FPS:","FPS (35-60)" };
+            inputFPS = new string[] {"Nhập FPS:","FPS (35-120)" };
             MainFunctions.listBosses = new List<BossFunctions>();
             isSanBoss = true;
         }

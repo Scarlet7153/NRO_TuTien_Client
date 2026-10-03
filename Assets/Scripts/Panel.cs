@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Assets.src.g;
 using CilentModify;
@@ -170,12 +170,13 @@ public class Panel : IActionListener, IChatable
 		mResources.change_account
 	};
 
-	public static string[] strCauhinh = new string[4]
+	public static string[] strCauhinh = new string[5]
 	{
 		(!GameCanvas.isPlaySound) ? mResources.turnOnSound : mResources.turnOffSound,
 		mResources.increase_vga,
 		mResources.analog,
-		(mGraphics.zoomLevel <= 1) ? mResources.x2Screen : mResources.x1Screen
+		(mGraphics.zoomLevel <= 1) ? mResources.x2Screen : mResources.x1Screen,
+		"Hiển thị FPS"
 	};
 
 	public static string[] strAccount = new string[5]
@@ -10517,6 +10518,16 @@ public class Panel : IActionListener, IChatable
 	{
 		if (selected < 0)
 		{
+			return;
+		}
+		if (Main.isPC && selected == 4)
+		{
+			GameCanvas.toggleShowFPS();
+			return;
+		}
+		if (!Main.isPC && selected == 5)
+		{
+			GameCanvas.toggleShowFPS();
 			return;
 		}
 		switch (selected)

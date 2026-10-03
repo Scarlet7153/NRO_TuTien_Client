@@ -383,7 +383,7 @@ public class LoginScr : mScreen, IActionListener
 		}
 		else
 		{
-			GameCanvas.msgdlg.setInfo(mResources.plsCheckAcc + ((num != 1) ? (mResources.email + ": ") : (mResources.phone + ": ")) + tfUser.getText() + "\n" + mResources.password + ": " + tfPass.getText(), new Command(mResources.ACCEPT, this, 4000, null), null, new Command(mResources.NO, GameCanvas.instance, 8882, null));
+			GameCanvas.msgdlg.setInfo(mResources.plsCheckAcc + ((num != 1) ? (mResources.email + ": ") : (mResources.phone + ": ")) + tfUser.getText() + "\n" + mResources.password + ": ******", new Command(mResources.ACCEPT, this, 4000, null), null, new Command(mResources.NO, GameCanvas.instance, 8882, null));
 		}
 		GameCanvas.currentDialog = GameCanvas.msgdlg;
 	}
@@ -395,9 +395,12 @@ public class LoginScr : mScreen, IActionListener
 		GameCanvas.connect();
 		GameCanvas.startWaitDlg(mResources.REGISTERING);
 		passRe = tfPass.getText();
-		Service.gI().requestRegister(user, tfPass.getText(), Rms.loadRMSString("userAo" + ServerListScreen.ipSelect), Rms.loadRMSString("passAo" + ServerListScreen.ipSelect), GameMidlet.VERSION);
+		// Hash MD5 trước khi gửi đăng ký — ngăn plaintext truyền qua mạng
+		string hashedPass = PasswordUtil.Md5Hash(tfPass.getText());
+		Service.gI().requestRegister(user, hashedPass, Rms.loadRMSString("userAo" + ServerListScreen.ipSelect), Rms.loadRMSString("passAo" + ServerListScreen.ipSelect), GameMidlet.VERSION);
 		Rms.saveRMSString("acc", user);
-		Rms.saveRMSString("pass", tfPass.getText());
+		// Lưu MD5 hash vào RMS, không lưu plaintext
+		Rms.saveRMSString("pass", hashedPass);
 		t = 20;
 		isRegistering = true;
 	}
@@ -482,8 +485,9 @@ public class LoginScr : mScreen, IActionListener
 		{
 			GameCanvas.connect();
 		}
-		Res.outz("ccccccc " + text + " " + text2 + " " + GameMidlet.VERSION + " " + (sbyte)(isLogin2 ? 1 : 0));
-		Service.gI().login(text, text2, GameMidlet.VERSION, (sbyte)(isLogin2 ? 1 : 0));
+		Res.outz("ccccccc " + text + " [pass_hidden] " + GameMidlet.VERSION + " " + (sbyte)(isLogin2 ? 1 : 0));
+		// text2 từ RMS đã được lưu dạng MD5, PrepareForSend đảm bảo không hash 2 lần
+		Service.gI().login(text, PasswordUtil.PrepareForSend(text2), GameMidlet.VERSION, (sbyte)(isLogin2 ? 1 : 0));
 		if (Session_ME.connected)
 		{
 			GameCanvas.startWaitDlg();
@@ -506,7 +510,8 @@ public class LoginScr : mScreen, IActionListener
 		{
 			Rms.saveRMSInt("check", 1);
 			Rms.saveRMSString("acc", tfUser.getText().ToLower().Trim());
-			Rms.saveRMSString("pass", tfPass.getText().ToLower().Trim());
+			// Lưu MD5 hash thay vì plaintext vào bộ nhớ local (tránh hash 2 lần nếu đã là MD5)
+			Rms.saveRMSString("pass", PasswordUtil.PrepareForSend(tfPass.getText().ToLower().Trim()));
 		}
 		else
 		{
@@ -979,7 +984,8 @@ public class LoginScr : mScreen, IActionListener
 			break;
 		case 2008:
 			Rms.saveRMSString("acc", tfUser.getText().Trim());
-			Rms.saveRMSString("pass", tfPass.getText().Trim());
+			// Hash MD5 trước khi lưu RMS để bảo mật và tránh lưu plaintext
+			Rms.saveRMSString("pass", PasswordUtil.PrepareForSend(tfPass.getText().Trim()));
 			if (ServerListScreen.loadScreen)
 			{
 				GameCanvas.serverScreen.switchToMe();
