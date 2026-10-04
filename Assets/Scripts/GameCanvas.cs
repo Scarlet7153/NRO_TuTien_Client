@@ -163,7 +163,7 @@ public class GameCanvas : IActionListener
 
 	public static bool isFocusPanel2;
 
-	public static bool isShowFPS = true;
+	public static bool isShowFPS = false;
 
 	public static int fpsReal = 120;
 
@@ -969,7 +969,7 @@ public class GameCanvas : IActionListener
 		debug("SP2i6", 0);
 		listPoint = new MyVector();
 		int savedFPS = Rms.loadRMSInt("showFPS");
-		isShowFPS = (savedFPS == -1 || savedFPS == 1);
+		isShowFPS = (savedFPS == 1);
 		debug("SP2i7", 0);
 	}
 

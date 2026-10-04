@@ -24,7 +24,7 @@ namespace Functions
                 paintInfo(g);
             }
             if (Application.platform == RuntimePlatform.Android || Application.platform == RuntimePlatform.IPhonePlayer) {
-				g.drawImage(imgSettings, 160, 3); 
+				g.drawImage(imgSettings, 216, 3); 
 			}
             g.drawImage(imgLogo, GameCanvas.w / 2, 29, 3);
 
@@ -179,6 +179,10 @@ namespace Functions
 		};
 		private static void drawString(mGraphics g)
         {
+            if (GameCanvas.panel.isShow || (GameCanvas.panel2 != null && GameCanvas.panel2.isShow))
+            {
+                return;
+            }
             if(GameCanvas.gameTick % 20 == 0)
             {
 				index++;
@@ -188,7 +192,7 @@ namespace Functions
 					index = 0;
                 }
 			}
-            mFont.tahoma_7b_white.drawStringBd(g, caption.Substring(0, index), 85, 30, mFont.LEFT, mFont.tahoma_7b_dark);
+            mFont.tahoma_7b_white.drawStringBd(g, caption.Substring(0, index), 141, 30, mFont.LEFT, mFont.tahoma_7b_dark);
             //mFont.bigNumber_red.drawString(g, "Cheat: " + Time.timeScale.ToString(), 85, 30, mFont.LEFT);
             //mFont.bigNumber_yellow.drawString(g, "Chữ Nháy", 85, 30, mFont.LEFT);
             mFont.tahoma_7_white.drawStringBd(g, string.Concat(new object[] {
@@ -200,8 +204,6 @@ namespace Functions
 			TileMap.zoneID
 			}), 7, 80, mFont.LEFT, mFont.tahoma_7_grey);
 			mFont.tahoma_7_white.drawStringBd(g, DateTime.Now.ToString(), 7, 90, mFont.LEFT, mFont.tahoma_7_grey);
-			mFont.tahoma_7b_yellowSmall2.drawString(g, NinjaUtil.formatShortNumber(global::Char.myCharz().cHP), 90, 5, mFont.LEFT);
-			mFont.tahoma_7b_yellowSmall2.drawString(g, NinjaUtil.formatShortNumber(global::Char.myCharz().cMP), 90, 17, mFont.LEFT);
 		}
 		
 		private static void paintUpgrade(mGraphics g)

@@ -2104,7 +2104,7 @@ public static GameScr gI()
 	{
 		auto = 0;
 		GameCanvas.clearKeyHold();
-		if (Char.myCharz().charFocus.charID < 0 || Char.myCharz().charID < 0)
+		if (Char.myCharz().charFocus.charID < 0 || Char.myCharz().charID < 0 || Char.myCharz().charFocus.cTypePk == 5 || Char.myCharz().isMeCanAttackOtherPlayer(Char.myCharz().charFocus))
 		{
 			return;
 		}
@@ -2476,7 +2476,7 @@ public static GameScr gI()
 			if (num11 < 60 && num12 < 40)
 			{
 				playerMenu(Char.myCharz().charFocus);
-				if (!GameCanvas.isTouch && Char.myCharz().charFocus.charID >= 0 && TileMap.mapID != 51 && TileMap.mapID != 52 && popUpYesNo == null)
+				if (!GameCanvas.isTouch && Char.myCharz().charFocus.charID >= 0 && Char.myCharz().charFocus.cTypePk != 5 && !Char.myCharz().isMeCanAttackOtherPlayer(Char.myCharz().charFocus) && TileMap.mapID != 51 && TileMap.mapID != 52 && popUpYesNo == null)
 				{
 					GameCanvas.panel.setTypePlayerMenu(Char.myCharz().charFocus);
 					GameCanvas.panel.show();
@@ -5254,7 +5254,7 @@ public static GameScr gI()
 		GameCanvas.debug("PA16", 1);
 		paintArrowPointToNPC(g);
 		GameCanvas.debug("PA17", 1);
-		if (!isPaintOther && isPaintRada == 1 && !GameCanvas.panel.isShow)
+		if (!isPaintOther && isPaintRada == 1 && !GameCanvas.panel.isShow && (GameCanvas.panel2 == null || !GameCanvas.panel2.isShow))
 		{
 			paintInfoBar(g);
 		}
@@ -5806,6 +5806,11 @@ public static GameScr gI()
 		g.setClip((int)(GameCanvas.w / 2 + 60 - 83 - mpBarW + hpBarW - num2), 20, num2, 6);
 		g.drawImage(imgMP, GameCanvas.w / 2 + 60 - 83, 20, mGraphics.RIGHT | mGraphics.TOP);
 		g.setClip(0, 0, GameCanvas.w, GameCanvas.h);
+		if (c != null)
+		{
+			mFont.tahoma_7b_yellow.drawString(g, NinjaUtil.formatShortNumber(c.cHP), (int)(GameCanvas.w / 2 + 60 - 83 - hpBarW / 2), 5, mFont.CENTER, mFont.tahoma_7b_dark);
+			mFont.tahoma_7b_yellow.drawString(g, NinjaUtil.formatShortNumber(c.cMP), (int)(GameCanvas.w / 2 + 60 - 83 - mpBarW / 2), 17, mFont.CENTER, mFont.tahoma_7b_dark);
+		}
 	}
 
 	private void paintImageBar(mGraphics g, bool isLeft, Char c)
@@ -5833,11 +5838,11 @@ public static GameScr gI()
 			if (Char.myCharz().secondPower > 0)
 			{
 				int w = Char.myCharz().powerPoint * spBarW / Char.myCharz().maxPowerPoint;
-				g.drawImage(imgPanel2, 58, 29, 0);
-				g.setClip(83, 31, w, 10);
-				g.drawImage(imgSP, 83, 31, 0);
+				g.drawImage(imgPanel2, 114, 29, 0);
+				g.setClip(139, 31, w, 10);
+				g.drawImage(imgSP, 139, 31, 0);
 				g.setClip(0, 0, GameCanvas.w, GameCanvas.h);
-				mFont.tahoma_7_white.drawString(g, Char.myCharz().strInfo + ":" + Char.myCharz().powerPoint + "/" + Char.myCharz().maxPowerPoint, 115, 29, 2);
+				mFont.tahoma_7_white.drawString(g, Char.myCharz().strInfo + ":" + Char.myCharz().powerPoint + "/" + Char.myCharz().maxPowerPoint, 171, 29, 2);
 			}
 			if (c.charID != Char.myCharz().charID)
 			{
@@ -5846,50 +5851,52 @@ public static GameScr gI()
 			g.drawImage(imgPanel, 0, 0, 0);
 			if (isLeft)
 			{
-				g.setClip(83, 5, num, 10);
+				g.setClip(139, 5, num, 10);
 			}
 			else
 			{
-				g.setClip((int)(83 + hpBarW - num), 5, num, 10);
+				g.setClip((int)(139 + hpBarW - num), 5, num, 10);
 			}
-			g.drawImage(imgHPLost, 83, 5, 0);
+			g.drawImage(imgHPLost, 139, 5, 0);
 			g.setClip(0, 0, GameCanvas.w, GameCanvas.h);
 			if (isLeft)
 			{
-				g.setClip(83, 5, num3, 10);
+				g.setClip(139, 5, num3, 10);
 			}
 			else
 			{
-				g.setClip((int)(83 + hpBarW - num3), 5, num3, 10);
+				g.setClip((int)(139 + hpBarW - num3), 5, num3, 10);
 			}
-			g.drawImage(imgHP, 83, 5, 0);
+			g.drawImage(imgHP, 139, 5, 0);
 			g.setClip(0, 0, GameCanvas.w, GameCanvas.h);
 			if (isLeft)
 			{
-				g.setClip(83, 20, num2, 6);
+				g.setClip(139, 20, num2, 6);
 			}
 			else
 			{
-				g.setClip(83 + mpBarW - num2, 20, num2, 6);
+				g.setClip(139 + mpBarW - num2, 20, num2, 6);
 			}
-			g.drawImage(imgMPLost, 83, 20, 0);
+			g.drawImage(imgMPLost, 139, 20, 0);
 			g.setClip(0, 0, GameCanvas.w, GameCanvas.h);
 			if (isLeft)
 			{
-				g.setClip(83, 20, num2, 6);
+				g.setClip(139, 20, num2, 6);
 			}
 			else
 			{
-				g.setClip(83 + mpBarW - num4, 20, num4, 6);
+				g.setClip(139 + mpBarW - num4, 20, num4, 6);
 			}
-			g.drawImage(imgMP, 83, 20, 0);
+			g.drawImage(imgMP, 139, 20, 0);
 			g.setClip(0, 0, GameCanvas.w, GameCanvas.h);
 			if (Char.myCharz().cMP == 0 && GameCanvas.gameTick % 10 > 5)
 			{
-				g.setClip(83, 20, 2, 6);
-				g.drawImage(imgMPLost, 83, 20, 0);
+				g.setClip(139, 20, 2, 6);
+				g.drawImage(imgMPLost, 139, 20, 0);
 				g.setClip(0, 0, GameCanvas.w, GameCanvas.h);
 			}
+			mFont.tahoma_7b_yellow.drawString(g, NinjaUtil.formatShortNumber(c.cHP), 172, 5, mFont.CENTER, mFont.tahoma_7b_dark);
+			mFont.tahoma_7b_yellow.drawString(g, NinjaUtil.formatShortNumber(c.cMP), 169, 17, mFont.CENTER, mFont.tahoma_7b_dark);
 		}
 	}
 
@@ -5947,7 +5954,7 @@ public static GameScr gI()
 			paintImageBar(g, true, Char.myCharz().charFocus);
 			g.translate(-(GameCanvas.w / 2 - 65), 0);
 			paintImageBarRight(g, Char.myCharz());
-			Char.myCharz().paintHeadWithXY(g, 137, 25, 0);
+			Char.myCharz().paintHeadWithXY(g, 193, 25, 0);
 			Char.myCharz().charFocus.paintHeadWithXY(g, GameCanvas.w - 15 - 122, 25, 2);
 		}
 		else if (ispaintPhubangBar() && isSmallScr())
@@ -6309,7 +6316,7 @@ public static GameScr gI()
 
 	private void loadInforBar()
 	{
-		imgScrW = 84;
+		imgScrW = 140;
 		hpBarW = 66L;
 		mpBarW = 59;
 		hpBarX = 52;
