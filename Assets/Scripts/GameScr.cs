@@ -1207,6 +1207,7 @@ public class GameScr : mScreen, IChatable
 				{
 					isLoadedFromRMS = true;
 					Service.gI().changeOnKeyScr(array);
+					selectDefaultSkill();
 					return;
 				}
 			}
@@ -1277,6 +1278,7 @@ public class GameScr : mScreen, IChatable
 			catch (Exception)
 			{
 			}
+			selectDefaultSkill();
 		}
 	}
 
@@ -1285,10 +1287,7 @@ public class GameScr : mScreen, IChatable
 		Cout.println("GET CURRENTSKILL!");
 		if (cSkillID == null || cSkillID.Length == 0)
 		{
-			if (Char.myCharz().vSkillFight.size() > 0)
-			{
-				Char.myCharz().myskill = (Skill)Char.myCharz().vSkillFight.elementAt(0);
-			}
+			selectDefaultSkill();
 		}
 		else
 		{
@@ -1298,6 +1297,7 @@ public class GameScr : mScreen, IChatable
 				if (skill.template.id == cSkillID[0])
 				{
 					Char.myCharz().myskill = skill;
+					lastSkill = skill;
 					break;
 				}
 			}
@@ -1326,6 +1326,33 @@ public class GameScr : mScreen, IChatable
 			onScreenSkill[i] = skill;
 		}
 		saveKeySkillToRMS();
+		selectDefaultSkill();
+	}
+
+	public void selectDefaultSkill()
+	{
+		Skill skill = null;
+		if (keySkill != null && keySkill.Length > 0 && keySkill[0] != null)
+		{
+			skill = keySkill[0];
+		}
+		else if (onScreenSkill != null && onScreenSkill.Length > 0 && onScreenSkill[0] != null)
+		{
+			skill = onScreenSkill[0];
+		}
+		else if (Char.myCharz() != null && Char.myCharz().vSkillFight != null && Char.myCharz().vSkillFight.size() > 0)
+		{
+			skill = (Skill)Char.myCharz().vSkillFight.elementAt(0);
+		}
+
+		if (skill != null && Char.myCharz() != null)
+		{
+			Char.myCharz().myskill = skill;
+			lastSkill = skill;
+			selectedIndexSkill = -1;
+			Service.gI().selectSkill(skill.template.id);
+			saveRMSCurrentSkill(skill.template.id);
+		}
 	}
 
 	public void doSetOnScreenSkill(SkillTemplate skillTemplate)
@@ -6960,6 +6987,10 @@ public static GameScr gI()
 				onScreenSkill[num2] = skill4;
 				keySkill[num2] = skill4;
 				saveonScreenSkillToRMS();
+				if (num2 == 0)
+				{
+					selectDefaultSkill();
+				}
 			}
 			break;
 		}
@@ -6984,6 +7015,10 @@ public static GameScr gI()
 				keySkill[num] = skill3;
 				onScreenSkill[num] = skill3;
 				saveKeySkillToRMS();
+				if (num == 0)
+				{
+					selectDefaultSkill();
+				}
 			}
 			break;
 		}
