@@ -102,7 +102,7 @@ public class Char : IMapObject
 
 	public int ccurrentAttack;
 
-	public int cDamFull;
+	public long cDamFull;
 
 	public int cDefull;
 
@@ -110,15 +110,15 @@ public class Char : IMapObject
 
 	public int clevel;
 
-	public int cMP;
+	public long cMP;
 
-	public int cHP;
+	public long cHP;
 
-	public int cHPNew;
+	public long cHPNew;
 
 	public int cMaxEXP;
 
-	public int cHPShow;
+	public long cHPShow;
 
 	public int xReload;
 
@@ -132,9 +132,9 @@ public class Char : IMapObject
 
 	public int eff5BuffMp;
 
-	public int cHPFull;
+	public long cHPFull;
 
-	public int cMPFull;
+	public long cMPFull;
 
 	public int cdameDown;
 
@@ -146,9 +146,9 @@ public class Char : IMapObject
 
 	public long cNangdong;
 
-	public int damHP;
+	public long damHP;
 
-	public int damMP;
+	public long damMP;
 
 	public bool isMob;
 
@@ -1009,11 +1009,11 @@ public class Char : IMapObject
 
 	public bool currentFireByShortcut;
 
-	public int cDamGoc;
+	public long cDamGoc;
 
-	public int cHPGoc;
+	public long cHPGoc;
 
-	public int cMPGoc;
+	public long cMPGoc;
 
 	public int cDefGoc;
 
@@ -1079,7 +1079,7 @@ public class Char : IMapObject
 
 	public int perCentMp = 100;
 
-	public int dHP;
+	public long dHP;
 
 	public int headTemp = -1;
 
@@ -1845,7 +1845,7 @@ public class Char : IMapObject
 		}
 		else if (dHP > cHP)
 		{
-			int num = dHP - cHP >> 1;
+			long num = dHP - cHP >> 1;
 			if (num < 1)
 			{
 				num = 1;
@@ -2872,11 +2872,11 @@ public class Char : IMapObject
 							cMP += cMPFull * myskill.damage / 100;
 							if (cHP < cHPFull)
 							{
-								GameScr.startFlyText("+" + cHPFull * myskill.damage / 100 + " " + mResources.HP, cx, cy - ch - 20, 0, -1, mFont.HP);
+								GameScr.startFlyText("+" + NinjaUtil.formatShortNumber(cHPFull * (long)myskill.damage / 100L) + " " + mResources.HP, cx, cy - ch - 20, 0, -1, mFont.HP);
 							}
 							if (cMP < cMPFull)
 							{
-								GameScr.startFlyText("+" + cMPFull * myskill.damage / 100 + " " + mResources.KI, cx, cy - ch - 20, 0, -2, mFont.MP);
+								GameScr.startFlyText("+" + NinjaUtil.formatShortNumber(cMPFull * (long)myskill.damage / 100L) + " " + mResources.KI, cx, cy - ch - 20, 0, -2, mFont.MP);
 							}
 							Service.gI().skill_not_focus(2);
 						}
@@ -5828,7 +5828,7 @@ public class Char : IMapObject
 
 	public void paintHp(mGraphics g, int x, int y)
 	{
-		int num = cHP * 100 / cHPFull / 10 - 1;
+		int num = (int)(cHP * 100L / (cHPFull <= 0L ? 1L : cHPFull) / 10L - 1L);
 		if (num < 0)
 		{
 			num = 0;
@@ -5845,8 +5845,9 @@ public class Char : IMapObject
 		{
 			return;
 		}
-		len = (int)((long)cHP * 100L / cHPFull * w_hp_bar) / 100;
-		num = (int)((long)cHP * 100L / cHPFull);
+		long safeFull = (cHPFull <= 0L) ? 1L : cHPFull;
+		len = (int)(cHP * 100L / safeFull * (long)w_hp_bar / 100L);
+		num = (int)(cHP * 100L / safeFull);
 		if (num < 30)
 		{
 			imgHPtem = GameScr.imgHP_tm_do;
@@ -7203,7 +7204,7 @@ public class Char : IMapObject
 		}
 	}
 
-	public void doInjure(int HPShow, int MPShow, bool isCrit, bool isMob)
+	public void doInjure(long HPShow, long MPShow, bool isCrit, bool isMob)
 	{
 		this.isCrit = isCrit;
 		this.isMob = isMob;
@@ -7237,7 +7238,7 @@ public class Char : IMapObject
 			}
 			else
 			{
-				GameScr.startFlyText("-" + HPShow, cx, cy - ch, 0, -2, isCrit ? mFont.FATAL : mFont.RED);
+				GameScr.startFlyText("-" + NinjaUtil.formatShortNumber(HPShow), cx, cy - ch, 0, -2, isCrit ? mFont.FATAL : mFont.RED);
 			}
 		}
 		if (HPShow > 0)

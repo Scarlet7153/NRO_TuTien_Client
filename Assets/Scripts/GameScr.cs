@@ -683,13 +683,13 @@ public class GameScr : mScreen, IChatable
 
 	public static int padSkill;
 
-	public int dMP;
+	public long dMP;
 
 	public int twMp;
 
 	public bool isInjureMp;
 
-	public int dHP;
+	public long dHP;
 
 	public int twHp;
 
@@ -3913,8 +3913,7 @@ public static GameScr gI()
 				{
 					continue;
 				}
-				int num = 0;
-				num = ((onScreenSkill[l].template.manaUseType == 2) ? 1 : ((onScreenSkill[l].template.manaUseType == 1) ? (onScreenSkill[l].manaUse * Char.myCharz().cMPFull / 100) : onScreenSkill[l].manaUse));
+				long num = ((onScreenSkill[l].template.manaUseType == 2) ? 1L : ((onScreenSkill[l].template.manaUseType == 1) ? (onScreenSkill[l].manaUse * Char.myCharz().cMPFull / 100L) : (long)onScreenSkill[l].manaUse));
 				if (Char.myCharz().cMP >= num)
 				{
 					if (skill == null)
@@ -3940,8 +3939,7 @@ public static GameScr gI()
 			{
 				continue;
 			}
-			int num2 = 0;
-			num2 = ((keySkill[m].template.manaUseType == 2) ? 1 : ((keySkill[m].template.manaUseType == 1) ? (keySkill[m].manaUse * Char.myCharz().cMPFull / 100) : keySkill[m].manaUse));
+			long num2 = ((keySkill[m].template.manaUseType == 2) ? 1L : ((keySkill[m].template.manaUseType == 1) ? (keySkill[m].manaUse * Char.myCharz().cMPFull / 100L) : (long)keySkill[m].manaUse));
 			if (Char.myCharz().cMP >= num2)
 			{
 				if (skill == null)
@@ -4774,7 +4772,7 @@ public static GameScr gI()
 			}
 			else if (dHP > Char.myCharz().cHP)
 			{
-				int num = dHP - Char.myCharz().cHP >> 1;
+				long num = dHP - Char.myCharz().cHP >> 1;
 				if (num < 1)
 				{
 					num = 1;
@@ -4796,7 +4794,7 @@ public static GameScr gI()
 			}
 			else if (dMP > Char.myCharz().cMP)
 			{
-				int num2 = dMP - Char.myCharz().cMP >> 1;
+				long num2 = dMP - Char.myCharz().cMP >> 1;
 				if (num2 < 1)
 				{
 					num2 = 1;
@@ -5790,10 +5788,10 @@ public static GameScr gI()
 
 	public void paintImageBarRight(mGraphics g, Char c)
 	{
-		int num = (int)(c.cHP * hpBarW / c.cHPFull);
-		int num2 = c.cMP * mpBarW;
-		int num3 = (int)(dHP * hpBarW / c.cHPFull);
-		int num4 = dMP * mpBarW;
+		int num = (int)(c.cHP * (long)hpBarW / (c.cHPFull <= 0L ? 1L : c.cHPFull));
+		int num2 = (int)(c.cMP * (long)mpBarW / (c.cMPFull <= 0L ? 1L : c.cMPFull));
+		int num3 = (int)(dHP * (long)hpBarW / (c.cHPFull <= 0L ? 1L : c.cHPFull));
+		int num4 = (int)(dMP * (long)mpBarW / (c.cMPFull <= 0L ? 1L : c.cMPFull));
 		g.setClip(GameCanvas.w / 2 + 58 - mGraphics.getImageWidth(imgPanel), 0, 95, 100);
 		g.drawRegion(imgPanel, 0, 0, mGraphics.getImageWidth(imgPanel), mGraphics.getImageHeight(imgPanel), 2, GameCanvas.w / 2 + 60, 0, mGraphics.RIGHT | mGraphics.TOP);
 		g.setClip((int)(GameCanvas.w / 2 + 60 - 83 - hpBarW + hpBarW - num3), 5, num3, 10);
@@ -5820,14 +5818,14 @@ public static GameScr gI()
 			int num4 = 0;
 			if (c.charID == Char.myCharz().charID)
 			{
-				num = (int)(dHP * hpBarW / c.cHPFull);
-				num2 = dMP * mpBarW / c.cMPFull;
-				num3 = (int)(c.cHP * hpBarW / c.cHPFull);
-				num4 = c.cMP * mpBarW / c.cMPFull;
+				num = (int)(dHP * (long)hpBarW / (c.cHPFull <= 0L ? 1L : c.cHPFull));
+				num2 = (int)(dMP * (long)mpBarW / (c.cMPFull <= 0L ? 1L : c.cMPFull));
+				num3 = (int)(c.cHP * (long)hpBarW / (c.cHPFull <= 0L ? 1L : c.cHPFull));
+				num4 = (int)(c.cMP * (long)mpBarW / (c.cMPFull <= 0L ? 1L : c.cMPFull));
 			}
 			else
 			{
-				num = (int)(c.dHP * hpBarW / c.cHPFull);
+				num = (int)(c.dHP * (long)hpBarW / (c.cHPFull <= 0L ? 1L : c.cHPFull));
 				num2 = c.perCentMp * mpBarW / 100;
 				num3 = (int)(c.cHP * hpBarW / c.cHPFull);
 				num4 = c.perCentMp * mpBarW / 100;
@@ -5971,7 +5969,10 @@ public static GameScr gI()
 				}
 				if (Char.myCharz().mobFocus.templateId != 0)
 				{
-					mFont.tahoma_7b_green2.drawString(g, NinjaUtil.getMoneys(Char.myCharz().mobFocus.hp) + string.Empty, imgScrW / 2, 22 + mGraphics.addYWhenOpenKeyBoard, mFont.CENTER);
+					string mobHpStr = (Char.myCharz().mobFocus.maxHp >= 100000000L || Char.myCharz().mobFocus.hp >= 100000000L)
+						? (NinjaUtil.formatShortNumber(Char.myCharz().mobFocus.hp) + "/" + NinjaUtil.formatShortNumber(Char.myCharz().mobFocus.maxHp))
+						: NinjaUtil.getMoneys(Char.myCharz().mobFocus.hp);
+					mFont.tahoma_7b_green2.drawString(g, mobHpStr, imgScrW / 2, 22 + mGraphics.addYWhenOpenKeyBoard, mFont.CENTER);
 				}
 			}
 			else if (Char.myCharz().npcFocus != null)
@@ -5985,7 +5986,10 @@ public static GameScr gI()
 			else if (Char.myCharz().charFocus != null)
 			{
 				mFont.tahoma_7b_green2.drawString(g, Char.myCharz().charFocus.cName, imgScrW / 2, 9 + mGraphics.addYWhenOpenKeyBoard, mFont.CENTER);
-				mFont.tahoma_7b_green2.drawString(g, NinjaUtil.getMoneys(Char.myCharz().charFocus.cHP) + string.Empty, imgScrW / 2, 22 + mGraphics.addYWhenOpenKeyBoard, mFont.CENTER);
+				string charHpStr = (Char.myCharz().charFocus.cHPFull >= 100000000L || Char.myCharz().charFocus.cHP >= 100000000L)
+					? (NinjaUtil.formatShortNumber(Char.myCharz().charFocus.cHP) + "/" + NinjaUtil.formatShortNumber(Char.myCharz().charFocus.cHPFull))
+					: NinjaUtil.getMoneys(Char.myCharz().charFocus.cHP);
+				mFont.tahoma_7b_green2.drawString(g, charHpStr, imgScrW / 2, 22 + mGraphics.addYWhenOpenKeyBoard, mFont.CENTER);
 			}
 			else
 			{
@@ -7401,7 +7405,7 @@ public static GameScr gI()
 		int num3 = 0;
 		int width = imgHP_NEW.getWidth();
 		int num4 = imgHP_NEW.getHeight() / 2;
-		num2 = c.cHP * width / c.cHPFull;
+		num2 = (int)(c.cHP * (long)width / (c.cHPFull <= 0L ? 1L : c.cHPFull));
 		if (num2 <= 0)
 		{
 			num2 = 1;
@@ -7411,7 +7415,7 @@ public static GameScr gI()
 			num2 = width;
 		}
 		g.drawRegion(imgHP_NEW, 0, num4, num2, num4, 0, x2, num, 0);
-		num3 = c.cMP * width / c.cMPFull;
+		num3 = (int)(c.cMP * (long)width / (c.cMPFull <= 0L ? 1L : c.cMPFull));
 		if (num3 <= 0)
 		{
 			num3 = 1;

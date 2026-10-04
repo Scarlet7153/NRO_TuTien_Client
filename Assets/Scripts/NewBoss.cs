@@ -137,7 +137,7 @@ public class NewBoss : Mob, IMapObject
 
 	public const sbyte typeEff = 16;
 
-	public NewBoss(int id, short px, short py, int templateID, int hp, int maxHp, int s)
+	public NewBoss(int id, short px, short py, int templateID, long hp, long maxHp, int s)
 	{
 		mobId = id;
 		x = (xFirst = px + 20);

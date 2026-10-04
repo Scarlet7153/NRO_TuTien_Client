@@ -106,7 +106,7 @@ public class BachTuoc : Mob, IMapObject
 
 	public new bool sleepEff;
 
-	public BachTuoc(int id, short px, short py, int templateID, int hp, int maxHp, int s)
+	public BachTuoc(int id, short px, short py, int templateID, long hp, long maxHp, int s)
 	{
 		mobId = id;
 		xFirst = (x = px + 20);

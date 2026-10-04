@@ -205,55 +205,7 @@ public class mSystem
 
 	public static string numberTostring(long number)
 	{
-		string text = string.Empty + number;
-		bool flag = false;
-		try
-		{
-			string empty = string.Empty;
-			if (number < 0)
-			{
-				flag = true;
-				number = -number;
-				text = string.Empty + number;
-			}
-			int num = 0;
-			if (number >= 1000000000)
-			{
-				empty = "b";
-				number /= 1000000000;
-				num = (string.Empty + number).Length;
-			}
-			else if (number >= 1000000)
-			{
-				empty = "m";
-				number /= 1000000;
-				num = (string.Empty + number).Length;
-			}
-			else
-			{
-				if (number < 1000)
-				{
-					if (flag)
-					{
-						return "-" + text;
-					}
-					return text;
-				}
-				empty = "k";
-				number /= 1000;
-				num = (string.Empty + number).Length;
-			}
-			int num2 = int.Parse(text.Substring(num, 2));
-			text = ((num2 == 0) ? (text.Substring(0, num) + empty) : ((num2 % 10 != 0) ? (text.Substring(0, num) + "," + text.Substring(num, 2) + empty) : (text.Substring(0, num) + "," + text.Substring(num, 1) + empty)));
-		}
-		catch (Exception)
-		{
-		}
-		if (flag)
-		{
-			return "-" + text;
-		}
-		return text;
+		return NinjaUtil.formatShortNumber(number);
 	}
 
 	public static void callHotlinePC()

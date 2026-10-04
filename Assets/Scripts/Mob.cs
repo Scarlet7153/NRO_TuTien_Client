@@ -62,9 +62,9 @@ public class Mob : IMapObject
 
 	public int holdEffID;
 
-	public int hp;
+	public long hp;
 
-	public int maxHp;
+	public long maxHp;
 
 	public int x;
 
@@ -94,7 +94,7 @@ public class Mob : IMapObject
 
 	public int h;
 
-	public int hpInjure;
+	public long hpInjure;
 
 	public int charIndex;
 
@@ -252,7 +252,7 @@ public class Mob : IMapObject
 	{
 	}
 
-	public Mob(int mobId, bool isDisable, bool isDontMove, bool isFire, bool isIce, bool isWind, int templateId, int sys, int hp, sbyte level, int maxp, short pointx, short pointy, sbyte status, sbyte levelBoss)
+	public Mob(int mobId, bool isDisable, bool isDontMove, bool isFire, bool isIce, bool isWind, int templateId, int sys, long hp, sbyte level, long maxp, short pointx, short pointy, sbyte status, sbyte levelBoss)
 	{
 		this.isDisable = isDisable;
 		this.isDontMove = isDontMove;
@@ -1402,8 +1402,12 @@ public class Mob : IMapObject
 
 	public void updateHp_bar()
 	{
-		len = (int)((long)hp * 100L / maxHp * w_hp_bar) / 100;
-		per = (int)((long)hp * 100L / maxHp);
+		if (maxHp <= 0L)
+		{
+			maxHp = 1L;
+		}
+		len = (int)(hp * 100L / maxHp * (long)w_hp_bar / 100L);
+		per = (int)(hp * 100L / maxHp);
 		if (per == 100)
 		{
 			per_tem = per;

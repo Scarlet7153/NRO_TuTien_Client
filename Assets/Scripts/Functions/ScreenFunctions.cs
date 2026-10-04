@@ -1,4 +1,4 @@
-﻿using Functions.AutoFunctions;
+using Functions.AutoFunctions;
 using Functions.HandlerFunctions;
 using System;
 using UnityEngine;
@@ -48,14 +48,13 @@ namespace Functions
             //mFont.tahoma_7_blue1Small.drawString(g, "TN: " + NinjaUtil.getMoneys((long)global::Char.myCharz().cTiemNang), 10, num, mFont.LEFT);
             g.drawString("TN: " + NinjaUtil.getMoneys((long)global::Char.myCharz().cTiemNang), 10, num, guistyle);
 			num += 10;
-            //mFont.tahoma_7_blue1Small.drawString(g, "HP: " + NinjaUtil.getMoneys((long)global::Char.myCharz().cHP), 10, num, mFont.LEFT);
-            g.drawString("HP: " + NinjaUtil.getMoneys((long)global::Char.myCharz().cHP), 10, num, guistyle);
+            g.drawString("HP: " + (global::Char.myCharz().cHP >= 100000000L ? NinjaUtil.formatShortNumber(global::Char.myCharz().cHP) : NinjaUtil.getMoneys((long)global::Char.myCharz().cHP)), 10, num, guistyle);
 			num += 10;
             //mFont.tahoma_7_blue1Small.drawString(g, "KI: " + NinjaUtil.getMoneys((long)global::Char.myCharz().cMP), 10, num, mFont.LEFT);
-            g.drawString("KI: " + NinjaUtil.getMoneys((long)global::Char.myCharz().cMP), 10, num, guistyle);
+            g.drawString("KI: " + (global::Char.myCharz().cMP >= 100000000L ? NinjaUtil.formatShortNumber(global::Char.myCharz().cMP) : NinjaUtil.getMoneys((long)global::Char.myCharz().cMP)), 10, num, guistyle);
 			num += 10;
             //mFont.tahoma_7_blue1Small.drawString(g, "SD: " + NinjaUtil.getMoneys((long)global::Char.myCharz().cDamFull), 10, num, mFont.LEFT);
-            g.drawString("SD: " + NinjaUtil.getMoneys((long)global::Char.myCharz().cDamFull), 10, num, guistyle);
+            g.drawString("SD: " + (global::Char.myCharz().cDamFull >= 100000000L ? NinjaUtil.formatShortNumber(global::Char.myCharz().cDamFull) : NinjaUtil.getMoneys((long)global::Char.myCharz().cDamFull)), 10, num, guistyle);
 			if (Char.myCharz().havePet)
 			{
 				if (mSystem.currentTimeMillis() - MenuFunctions.lastTimeGetPetSPInfo >= 1000)
@@ -74,11 +73,11 @@ namespace Functions
 				num2 += 10;
 				g.drawString("TN: " + NinjaUtil.getMoneys((long)global::Char.myPetz().cTiemNang), 90, num2, guistyle2);
 				num2 += 10;
-				g.drawString("HP: " + NinjaUtil.getMoneys((long)global::Char.myPetz().cHP), 90, num2, guistyle2);
+				g.drawString("HP: " + (global::Char.myPetz().cHP >= 100000000L ? NinjaUtil.formatShortNumber(global::Char.myPetz().cHP) : NinjaUtil.getMoneys((long)global::Char.myPetz().cHP)), 90, num2, guistyle2);
 				num2 += 10;
-				g.drawString("KI: " + NinjaUtil.getMoneys((long)global::Char.myPetz().cMP), 90, num2, guistyle2);
+				g.drawString("KI: " + (global::Char.myPetz().cMP >= 100000000L ? NinjaUtil.formatShortNumber(global::Char.myPetz().cMP) : NinjaUtil.getMoneys((long)global::Char.myPetz().cMP)), 90, num2, guistyle2);
 				num2 += 10;
-				g.drawString("SD: " + NinjaUtil.getMoneys((long)global::Char.myPetz().cDamFull), 90, num2, guistyle2);
+				g.drawString("SD: " + (global::Char.myPetz().cDamFull >= 100000000L ? NinjaUtil.formatShortNumber(global::Char.myPetz().cDamFull) : NinjaUtil.getMoneys((long)global::Char.myPetz().cDamFull)), 90, num2, guistyle2);
 			}
 		}
 		private static void paintModInfo(mGraphics g)
@@ -143,9 +142,9 @@ namespace Functions
 			{
 		mobTemplate.getTemplate().name,
 		" [",
-		NinjaUtil.getMoneys((long)mobTemplate.hp),
+		(mobTemplate.hp >= 1000000000L ? NinjaUtil.formatShortNumber(mobTemplate.hp) : NinjaUtil.getMoneys(mobTemplate.hp)),
 		"/",
-		NinjaUtil.getMoneys((long)mobTemplate.maxHp),
+		(mobTemplate.maxHp >= 1000000000L ? NinjaUtil.formatShortNumber(mobTemplate.maxHp) : NinjaUtil.getMoneys(mobTemplate.maxHp)),
 		"]"
 			}), GameCanvas.w / 2, 62, 2);
 			int num = 72;
@@ -200,10 +199,9 @@ namespace Functions
 			"Khu ",
 			TileMap.zoneID
 			}), 7, 80, mFont.LEFT, mFont.tahoma_7_grey);
-			//mFont.bigNumber_red.drawString(g,"Cheat: " + Time.timeScale.ToString(), 85, 30, mFont.LEFT);
 			mFont.tahoma_7_white.drawStringBd(g, DateTime.Now.ToString(), 7, 90, mFont.LEFT, mFont.tahoma_7_grey);
-			mFont.tahoma_7b_yellowSmall2.drawString(g, NinjaUtil.getMoneys((long)global::Char.myCharz().cHP), 90, 5, mFont.LEFT);
-			mFont.tahoma_7b_yellowSmall2.drawString(g, NinjaUtil.getMoneys((long)global::Char.myCharz().cMP), 90, 17, mFont.LEFT);
+			mFont.tahoma_7b_yellowSmall2.drawString(g, NinjaUtil.formatShortNumber(global::Char.myCharz().cHP), 90, 5, mFont.LEFT);
+			mFont.tahoma_7b_yellowSmall2.drawString(g, NinjaUtil.formatShortNumber(global::Char.myCharz().cMP), 90, 17, mFont.LEFT);
 		}
 		
 		private static void paintUpgrade(mGraphics g)
@@ -219,7 +217,7 @@ namespace Functions
 		mFont.tahoma_7b_red.drawString(g, "Ngọc Xanh : " + NinjaUtil.getMoneys((long)global::Char.myCharz().luong) + " Ngọc Hồng : " + NinjaUtil.getMoneys((long)global::Char.myCharz().luongKhoa), GameCanvas.w / 2, 102, mFont.CENTER);
 		mFont.tahoma_7b_red.drawString(g, string.Concat(new object[]
 		{
-			"Vàng : ",
+			"Linh Thạch : ",
 			NinjaUtil.getMoneys(global::Char.myCharz().xu),
 			" Thỏi Vàng : ",
 			AutoUpgradeFunctions.thoiVang()

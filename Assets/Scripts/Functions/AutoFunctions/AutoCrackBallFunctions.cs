@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading;
 
 namespace Functions.AutoFunctions
@@ -192,7 +192,7 @@ namespace Functions.AutoFunctions
 			if (flag2)
 			{
 				MyVector myVector = new MyVector();
-				myVector.addElement(new Command("Nhận vàng", AutoCrackBallFunctions.gI(), 3, 9));
+				myVector.addElement(new Command("Nhận linh thạch", AutoCrackBallFunctions.gI(), 3, 9));
 				myVector.addElement(new Command("Nhận bùa", AutoCrackBallFunctions.gI(), 3, 13));
 				myVector.addElement(new Command("Nhận đồ", AutoCrackBallFunctions.gI(), 3, -1));
 				myVector.addElement(new Command("Nhận cải trang", AutoCrackBallFunctions.gI(), 3, 5));

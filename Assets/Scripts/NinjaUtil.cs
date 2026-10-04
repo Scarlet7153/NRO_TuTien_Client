@@ -159,6 +159,34 @@ public class NinjaUtil
 		return text;
 	}
 
+	public static string formatShortNumber(long m)
+	{
+		if (m == 0L)
+		{
+			return "0";
+		}
+		if (m < 0L)
+		{
+			return "-" + formatShortNumber(-m);
+		}
+		if (m >= 1000000000000L)
+		{
+			double num = (double)m / 1000000000000.0;
+			return (num >= 100.0 ? ((long)num).ToString() : num.ToString("0.#", System.Globalization.CultureInfo.InvariantCulture)) + " Vạn Ức";
+		}
+		if (m >= 100000000L)
+		{
+			double num2 = (double)m / 100000000.0;
+			return (num2 >= 1000.0 ? ((long)num2).ToString() : (num2 >= 100.0 ? num2.ToString("0.#", System.Globalization.CultureInfo.InvariantCulture) : num2.ToString("0.##", System.Globalization.CultureInfo.InvariantCulture))) + " Ức";
+		}
+		if (m >= 10000L)
+		{
+			double num3 = (double)m / 10000.0;
+			return (num3 >= 1000.0 ? ((long)num3).ToString() : (num3 >= 100.0 ? num3.ToString("0.#", System.Globalization.CultureInfo.InvariantCulture) : num3.ToString("0.##", System.Globalization.CultureInfo.InvariantCulture))) + " Vạn";
+		}
+		return m.ToString();
+	}
+
 	public static string getTimeAgo(int timeRemainS)
 	{
 		int num = 0;

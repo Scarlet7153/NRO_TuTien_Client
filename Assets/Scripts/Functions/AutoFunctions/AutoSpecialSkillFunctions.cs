@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading;
 
 namespace CilentModify
@@ -28,7 +28,7 @@ namespace CilentModify
 			bool flag = global::Char.myCharz().cPower < 10000000000L;
 			if (flag)
 			{
-				GameScr.info1.addInfo("Cần 10 tỉ sức mạnh để mở.", 0);
+				GameScr.info1.addInfo("Cần 100 Ức sức mạnh để mở.", 0);
 			}
 			else
 			{
@@ -289,7 +289,7 @@ namespace CilentModify
 		// Token: 0x06000AD1 RID: 2769 RVA: 0x000AE4E0 File Offset: 0x000AC6E0
 		public void In4Me(string s)
 		{
-			bool flag = s.ToLower().Contains("bạn không đủ vàng");
+			bool flag = s.ToLower().Contains("bạn không đủ vàng") || s.ToLower().Contains("bạn không đủ linh thạch");
 			if (flag)
 			{
 				AutoSpecialSkillFunctions.gI().isnoitai = false;

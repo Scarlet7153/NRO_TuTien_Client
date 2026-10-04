@@ -6369,7 +6369,7 @@ public class Panel : IActionListener, IChatable
 		}
 		if (Char.myPetz().cDamFull > 0)
 		{
-			mFont.tahoma_7_yellow.drawString(g, mResources.hit_point + ": " + Char.myPetz().cDamFull, X + 60, 27, mFont.LEFT, mFont.tahoma_7_grey);
+			mFont.tahoma_7_yellow.drawString(g, mResources.hit_point + ": " + NinjaUtil.formatShortNumber(Char.myPetz().cDamFull), X + 60, 27, mFont.LEFT, mFont.tahoma_7_grey);
 		}
 		if (Char.myPetz().cMaxStamina > 0)
 		{
@@ -6578,17 +6578,17 @@ public class Panel : IActionListener, IChatable
 
 	private void paintItemBodyBagInfo(mGraphics g)
 	{
-		mFont.tahoma_7_yellow.drawString(g, mResources.HP + ": " + Char.myCharz().cHP + " / " + Char.myCharz().cHPFull, X + 60, 2, mFont.LEFT, mFont.tahoma_7_grey);
-		mFont.tahoma_7_yellow.drawString(g, mResources.KI + ": " + Char.myCharz().cMP + " / " + Char.myCharz().cMPFull, X + 60, 14, mFont.LEFT, mFont.tahoma_7_grey);
-		mFont.tahoma_7_yellow.drawString(g, mResources.hit_point + ": " + Char.myCharz().cDamFull, X + 60, 26, mFont.LEFT, mFont.tahoma_7_grey);
+		mFont.tahoma_7_yellow.drawString(g, mResources.HP + ": " + NinjaUtil.formatShortNumber(Char.myCharz().cHP) + " / " + NinjaUtil.formatShortNumber(Char.myCharz().cHPFull), X + 60, 2, mFont.LEFT, mFont.tahoma_7_grey);
+		mFont.tahoma_7_yellow.drawString(g, mResources.KI + ": " + NinjaUtil.formatShortNumber(Char.myCharz().cMP) + " / " + NinjaUtil.formatShortNumber(Char.myCharz().cMPFull), X + 60, 14, mFont.LEFT, mFont.tahoma_7_grey);
+		mFont.tahoma_7_yellow.drawString(g, mResources.hit_point + ": " + NinjaUtil.formatShortNumber(Char.myCharz().cDamFull), X + 60, 26, mFont.LEFT, mFont.tahoma_7_grey);
 		mFont.tahoma_7_yellow.drawString(g, mResources.armor + ": " + Char.myCharz().cDefull + ", " + mResources.critical + ": " + Char.myCharz().cCriticalFull + "%", X + 60, 38, mFont.LEFT, mFont.tahoma_7_grey);
 	}
 
 	private void paintItemBodyBagInfo(mGraphics g, int x, int y)
 	{
-		mFont.tahoma_7_yellow.drawString(g, mResources.HP + ": " + Char.myCharz().cHP + " / " + Char.myCharz().cHPFull, x, y + 2, mFont.LEFT, mFont.tahoma_7_grey);
-		mFont.tahoma_7_yellow.drawString(g, mResources.KI + ": " + Char.myCharz().cMP + " / " + Char.myCharz().cMPFull, x, y + 14, mFont.LEFT, mFont.tahoma_7_grey);
-		mFont.tahoma_7_yellow.drawString(g, mResources.hit_point + ": " + Char.myCharz().cDamFull, x, y + 26, mFont.LEFT, mFont.tahoma_7_grey);
+		mFont.tahoma_7_yellow.drawString(g, mResources.HP + ": " + NinjaUtil.formatShortNumber(Char.myCharz().cHP) + " / " + NinjaUtil.formatShortNumber(Char.myCharz().cHPFull), x, y + 2, mFont.LEFT, mFont.tahoma_7_grey);
+		mFont.tahoma_7_yellow.drawString(g, mResources.KI + ": " + NinjaUtil.formatShortNumber(Char.myCharz().cMP) + " / " + NinjaUtil.formatShortNumber(Char.myCharz().cMPFull), x, y + 14, mFont.LEFT, mFont.tahoma_7_grey);
+		mFont.tahoma_7_yellow.drawString(g, mResources.hit_point + ": " + NinjaUtil.formatShortNumber(Char.myCharz().cDamFull), x, y + 26, mFont.LEFT, mFont.tahoma_7_grey);
 		mFont.tahoma_7_yellow.drawString(g, mResources.armor + ": " + Char.myCharz().cDefull + ", " + mResources.critical + ": " + Char.myCharz().cCriticalFull + "%", x, y + 38, mFont.LEFT, mFont.tahoma_7_grey);
 	}
 
@@ -6817,8 +6817,8 @@ public class Panel : IActionListener, IChatable
 
 	private void paintPetStatusInfo(mGraphics g)
 	{
-		mFont.tahoma_7b_white.drawString(g, "HP: " + Char.myPetz().cHP + "/" + Char.myPetz().cHPFull, X + 60, 4, mFont.LEFT, mFont.tahoma_7b_dark);
-		mFont.tahoma_7b_white.drawString(g, "MP: " + Char.myPetz().cMP + "/" + Char.myPetz().cMPFull, X + 60, 16, mFont.LEFT, mFont.tahoma_7b_dark);
+		mFont.tahoma_7b_white.drawString(g, "HP: " + NinjaUtil.formatShortNumber(Char.myPetz().cHP) + "/" + NinjaUtil.formatShortNumber(Char.myPetz().cHPFull), X + 60, 4, mFont.LEFT, mFont.tahoma_7b_dark);
+		mFont.tahoma_7b_white.drawString(g, "MP: " + NinjaUtil.formatShortNumber(Char.myPetz().cMP) + "/" + NinjaUtil.formatShortNumber(Char.myPetz().cMPFull), X + 60, 16, mFont.LEFT, mFont.tahoma_7b_dark);
 		mFont.tahoma_7_yellow.drawString(g, mResources.critical + ": " + Char.myPetz().cCriticalFull + "   " + mResources.armor + ": " + Char.myPetz().cDefull, X + 60, 27, mFont.LEFT, mFont.tahoma_7_grey);
 		mFont.tahoma_7_yellow.drawString(g, mResources.status + ": " + strStatus[Char.myPetz().petStatus], X + 60, 38, mFont.LEFT, mFont.tahoma_7_grey);
 	}
@@ -7820,7 +7820,7 @@ public class Panel : IActionListener, IChatable
 					if (currItem.buyCoin > 0)
 					{
 						myVector.addElement(new Command(mResources.buy_with + "\n" + Res.formatNumber2(currItem.buyCoin) + "\n" + mResources.XU, this, 3000, currItem));
-                        myVector.addElement(new Command("Mua Nhiều\n" + Res.formatNumber2((long)this.currItem.buyCoin) + " Vàng/1", AutoBuyFunctions.getInstance(), 3, new AutoBuyFunctions.Item((int)this.currItem.template.id, -1, false, false)));
+                        myVector.addElement(new Command("Mua Nhiều\n" + Res.formatNumber2((long)this.currItem.buyCoin) + " Linh Thạch/1", AutoBuyFunctions.getInstance(), 3, new AutoBuyFunctions.Item((int)this.currItem.template.id, -1, false, false)));
 
                     }
                     if (currItem.buyGold > 0)
@@ -8794,9 +8794,9 @@ public class Panel : IActionListener, IChatable
 		if (selected == 0 || selected == 1 || selected == 2 || selected == 3 || selected == 4 || selected == 5)
 		{
 			long cTiemNang = Char.myCharz().cTiemNang;
-			int cHPGoc = Char.myCharz().cHPGoc;
-			int cMPGoc = Char.myCharz().cMPGoc;
-			int cDamGoc = Char.myCharz().cDamGoc;
+			long cHPGoc = Char.myCharz().cHPGoc;
+			long cMPGoc = Char.myCharz().cMPGoc;
+			long cDamGoc = Char.myCharz().cDamGoc;
 			int cDefGoc = Char.myCharz().cDefGoc;
 			int cCriticalGoc = Char.myCharz().cCriticalGoc;
 			int num = 0;
@@ -8974,7 +8974,7 @@ public class Panel : IActionListener, IChatable
 	private void addSkillDetail2(int type)
 	{
 		string empty = string.Empty;
-		int num = 0;
+		long num = 0L;
 		if (selected == 0)
 		{
 			num = Char.myCharz().cHPGoc + 1000;

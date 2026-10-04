@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 namespace Functions
@@ -140,7 +140,7 @@ namespace Functions
 					{
 						@char.cName,
 						" [",
-						NinjaUtil.getMoneys((long)@char.cHP),
+						(@char.cHP >= 100000000L ? NinjaUtil.formatShortNumber((long)@char.cHP) : NinjaUtil.getMoneys((long)@char.cHP)),
 						"]"
 					});
 					bool flag4;
@@ -151,7 +151,7 @@ namespace Functions
 						{
 							@char.cName,
 							" [",
-							NinjaUtil.getMoneys((long)@char.cHP),
+							(@char.cHP >= 100000000L ? NinjaUtil.formatShortNumber((long)@char.cHP) : NinjaUtil.getMoneys((long)@char.cHP)),
 							" - ",
 							@char.HanhTinh(),
 							"]"

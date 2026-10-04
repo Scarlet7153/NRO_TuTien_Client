@@ -424,7 +424,7 @@ public class Controller : IMessageHandler
 							}
 							else
 							{
-								GameScr.startFlyText("-" + num148, mob.x, mob.y - mob.h, 0, -2, mFont.ORANGE);
+								GameScr.startFlyText("-" + NinjaUtil.formatShortNumber(num148), mob.x, mob.y - mob.h, 0, -2, mFont.ORANGE);
 							}
 						}
 					}
@@ -474,7 +474,7 @@ public class Controller : IMessageHandler
 					}
 					else
 					{
-						GameScr.startFlyText("-" + num150, mob8.x, mob8.y - mob8.h, 0, -2, mFont.ORANGE);
+						GameScr.startFlyText("-" + NinjaUtil.formatShortNumber(num150), mob8.x, mob8.y - mob8.h, 0, -2, mFont.ORANGE);
 					}
 				}
 				if (b60 == 6)
@@ -1653,18 +1653,18 @@ public class Controller : IMessageHandler
 				break;
 			}
 			case -42:
-				Char.myCharz().cHPGoc = msg.readInt3Byte();
-				Char.myCharz().cMPGoc = msg.readInt3Byte();
-				Char.myCharz().cDamGoc = msg.reader().readInt();
-				Char.myCharz().cHPFull = msg.readInt3Byte();
-				Char.myCharz().cMPFull = msg.readInt3Byte();
-				Char.myCharz().cHP = msg.readInt3Byte();
-				Char.myCharz().cMP = msg.readInt3Byte();
+				Char.myCharz().cHPGoc = msg.reader().readLong();
+				Char.myCharz().cMPGoc = msg.reader().readLong();
+				Char.myCharz().cDamGoc = msg.reader().readLong();
+				Char.myCharz().cHPFull = msg.reader().readLong();
+				Char.myCharz().cMPFull = msg.reader().readLong();
+				Char.myCharz().cHP = msg.reader().readLong();
+				Char.myCharz().cMP = msg.reader().readLong();
 				Char.myCharz().cspeed = msg.reader().readByte();
 				Char.myCharz().hpFrom1000TiemNang = msg.reader().readByte();
 				Char.myCharz().mpFrom1000TiemNang = msg.reader().readByte();
 				Char.myCharz().damFrom1000TiemNang = msg.reader().readByte();
-				Char.myCharz().cDamFull = msg.reader().readInt();
+				Char.myCharz().cDamFull = msg.reader().readLong();
 				Char.myCharz().cDefull = msg.reader().readInt();
 				Char.myCharz().cCriticalFull = msg.reader().readByte();
 				Char.myCharz().cTiemNang = msg.reader().readLong();
@@ -1762,11 +1762,11 @@ public class Controller : IMessageHandler
 						break;
 					}
 				}
-				Char.myPetz().cHP = msg.readInt3Byte();
-				Char.myPetz().cHPFull = msg.readInt3Byte();
-				Char.myPetz().cMP = msg.readInt3Byte();
-				Char.myPetz().cMPFull = msg.readInt3Byte();
-				Char.myPetz().cDamFull = msg.readInt3Byte();
+				Char.myPetz().cHP = msg.reader().readLong();
+				Char.myPetz().cHPFull = msg.reader().readLong();
+				Char.myPetz().cMP = msg.reader().readLong();
+				Char.myPetz().cMPFull = msg.reader().readLong();
+				Char.myPetz().cDamFull = msg.reader().readLong();
 				Char.myPetz().cName = msg.reader().readUTF();
 				Char.myPetz().currStrLevel = msg.reader().readUTF();
 				Char.myPetz().cPower = msg.reader().readLong();
@@ -2708,7 +2708,7 @@ public class Controller : IMessageHandler
 						}
 						else
 						{
-							GameScr.startFlyText("-" + num29, @char.cx, @char.cy - @char.ch, 0, -3, flag3 ? mFont.FATAL : mFont.RED);
+							GameScr.startFlyText("-" + NinjaUtil.formatShortNumber(num29), @char.cx, @char.cy - @char.ch, 0, -3, flag3 ? mFont.FATAL : mFont.RED);
 						}
 					}
 					break;
@@ -2748,7 +2748,7 @@ public class Controller : IMessageHandler
 					}
 					else
 					{
-						GameScr.startFlyText("-" + num31, @char.cx, @char.cy - @char.ch, 0, -3, flag4 ? mFont.FATAL : mFont.ORANGE);
+						GameScr.startFlyText("-" + NinjaUtil.formatShortNumber(num31), @char.cx, @char.cy - @char.ch, 0, -3, flag4 ? mFont.FATAL : mFont.ORANGE);
 					}
 				}
 				break;
@@ -3634,7 +3634,7 @@ public class Controller : IMessageHandler
 					{
 						bool flag = false;
 						@char = Char.myCharz();
-						int num5 = msg.readInt3Byte();
+						long num5 = msg.reader().readLong();
 						Res.outz("dame hit = " + num5);
 						@char.isDie = msg.reader().readBoolean();
 						if (@char.isDie)
@@ -3659,7 +3659,7 @@ public class Controller : IMessageHandler
 							return;
 						}
 						bool flag2 = false;
-						int num7 = msg.readInt3Byte();
+						long num7 = msg.reader().readLong();
 						Res.outz("dame hit= " + num7);
 						@char.isDie = msg.reader().readBoolean();
 						Res.outz("isDie=" + @char.isDie + "---------------------------------------");
@@ -3968,7 +3968,7 @@ public class Controller : IMessageHandler
 				mob9.y = mob9.yFirst;
 				mob9.status = 5;
 				mob9.injureThenDie = false;
-				mob9.hp = msg.reader().readInt();
+				mob9.hp = msg.reader().readLong();
 				mob9.maxHp = mob9.hp;
 				mob9.updateHp_bar();
 				ServerEffect.addServerEffect(60, mob9.x, mob9.y, 1);
@@ -4008,9 +4008,9 @@ public class Controller : IMessageHandler
 				GameCanvas.debug("SA83v1", 2);
 				if (mob9 != null)
 				{
-					mob9.hp = msg.readInt3Byte();
+					mob9.hp = msg.reader().readLong();
 					mob9.updateHp_bar();
-					int num183 = msg.readInt3Byte();
+					long num183 = msg.reader().readLong();
 					if (num183 == 1)
 					{
 						return;
@@ -4035,7 +4035,7 @@ public class Controller : IMessageHandler
 					GameCanvas.debug("SA83v2", 2);
 					if (flag11)
 					{
-						GameScr.startFlyText("-" + num183, mob9.x, mob9.getY() - mob9.getH(), 0, -2, mFont.FATAL);
+						GameScr.startFlyText("-" + NinjaUtil.formatShortNumber(num183), mob9.x, mob9.getY() - mob9.getH(), 0, -2, mFont.FATAL);
 					}
 					else if (num183 == 0)
 					{
@@ -4045,7 +4045,7 @@ public class Controller : IMessageHandler
 					}
 					else if (num183 > 1)
 					{
-						GameScr.startFlyText("-" + num183, mob9.x, mob9.getY() - mob9.getH(), 0, -2, mFont.ORANGE);
+						GameScr.startFlyText("-" + NinjaUtil.formatShortNumber(num183), mob9.x, mob9.getY() - mob9.getH(), 0, -2, mFont.ORANGE);
 					}
 				}
 				GameCanvas.debug("SA83v3", 2);
@@ -4091,14 +4091,14 @@ public class Controller : IMessageHandler
 				mob9.startDie();
 				try
 				{
-					int num192 = msg.readInt3Byte();
+					long num192 = msg.reader().readLong();
 					if (msg.reader().readBool())
 					{
-						GameScr.startFlyText("-" + num192, mob9.x, mob9.y - mob9.h, 0, -2, mFont.FATAL);
+						GameScr.startFlyText("-" + NinjaUtil.formatShortNumber(num192), mob9.x, mob9.y - mob9.h, 0, -2, mFont.FATAL);
 					}
 					else
 					{
-						GameScr.startFlyText("-" + num192, mob9.x, mob9.y - mob9.h, 0, -2, mFont.ORANGE);
+						GameScr.startFlyText("-" + NinjaUtil.formatShortNumber(num192), mob9.x, mob9.y - mob9.h, 0, -2, mFont.ORANGE);
 					}
 					sbyte b76 = msg.reader().readByte();
 					for (int num193 = 0; num193 < b76; num193++)
@@ -4203,7 +4203,7 @@ public class Controller : IMessageHandler
 					}
 					GameCanvas.debug("SA87x3", 2);
 					int num185 = msg.readInt3Byte();
-					mob9.dame = @char.cHP - num185;
+					mob9.dame = (int)(@char.cHP - num185);
 					@char.cHPNew = num185;
 					GameCanvas.debug("SA87x4", 2);
 					try
@@ -4703,7 +4703,7 @@ public class Controller : IMessageHandler
 			Mob.newMob.removeAllElements();
 			for (sbyte b = 0; b < num; b = (sbyte)(b + 1))
 			{
-				Mob mob = new Mob(b, msg.reader().readBoolean(), msg.reader().readBoolean(), msg.reader().readBoolean(), msg.reader().readBoolean(), msg.reader().readBoolean(), msg.reader().readByte(), msg.reader().readByte(), msg.reader().readInt(), msg.reader().readByte(), msg.reader().readInt(), msg.reader().readShort(), msg.reader().readShort(), msg.reader().readByte(), msg.reader().readByte());
+				Mob mob = new Mob(b, msg.reader().readBoolean(), msg.reader().readBoolean(), msg.reader().readBoolean(), msg.reader().readBoolean(), msg.reader().readBoolean(), msg.reader().readByte(), msg.reader().readByte(), msg.reader().readLong(), msg.reader().readByte(), msg.reader().readLong(), msg.reader().readShort(), msg.reader().readShort(), msg.reader().readByte(), msg.reader().readByte());
 				mob.xSd = mob.x;
 				mob.ySd = mob.y;
 				mob.isBoss = msg.reader().readBoolean();
@@ -5639,8 +5639,8 @@ public class Controller : IMessageHandler
 				GameCanvas.debug("SA23", 2);
 				Char.myCharz().xu = msg.reader().readLong();
 				Char.myCharz().luong = msg.reader().readInt();
-				Char.myCharz().cHP = msg.readInt3Byte();
-				Char.myCharz().cMP = msg.readInt3Byte();
+				Char.myCharz().cHP = msg.reader().readLong();
+				Char.myCharz().cMP = msg.reader().readLong();
 				Char.myCharz().luongKhoa = msg.reader().readInt();
 				Char.myCharz().xuStr = mSystem.numberTostring(Char.myCharz().xu);
 				Char.myCharz().luongStr = mSystem.numberTostring(Char.myCharz().luong);
@@ -5649,11 +5649,11 @@ public class Controller : IMessageHandler
 			case 5:
 			{
 				GameCanvas.debug("SA24", 2);
-				int cHP = Char.myCharz().cHP;
-				Char.myCharz().cHP = msg.readInt3Byte();
+				long cHP = Char.myCharz().cHP;
+				Char.myCharz().cHP = msg.reader().readLong();
 				if (Char.myCharz().cHP > cHP && Char.myCharz().cTypePk != 4)
 				{
-					GameScr.startFlyText("+" + (Char.myCharz().cHP - cHP) + " " + mResources.HP, Char.myCharz().cx, Char.myCharz().cy - Char.myCharz().ch - 20, 0, -1, mFont.HP);
+					GameScr.startFlyText("+" + NinjaUtil.formatShortNumber(Char.myCharz().cHP - cHP) + " " + mResources.HP, Char.myCharz().cx, Char.myCharz().cy - Char.myCharz().ch - 20, 0, -1, mFont.HP);
 					SoundMn.gI().HP_MPup();
 					if (Char.myCharz().petFollow != null && Char.myCharz().petFollow.smallID == 5003)
 					{
@@ -5662,7 +5662,7 @@ public class Controller : IMessageHandler
 				}
 				if (Char.myCharz().cHP < cHP)
 				{
-					GameScr.startFlyText("-" + (cHP - Char.myCharz().cHP) + " " + mResources.HP, Char.myCharz().cx, Char.myCharz().cy - Char.myCharz().ch - 20, 0, -1, mFont.HP);
+					GameScr.startFlyText("-" + NinjaUtil.formatShortNumber(cHP - Char.myCharz().cHP) + " " + mResources.HP, Char.myCharz().cx, Char.myCharz().cy - Char.myCharz().ch - 20, 0, -1, mFont.HP);
 				}
 				GameScr.gI().dHP = Char.myCharz().cHP;
 				if (GameScr.isPaintInfoMe)
@@ -5677,11 +5677,11 @@ public class Controller : IMessageHandler
 				{
 					break;
 				}
-				int cMP = Char.myCharz().cMP;
-				Char.myCharz().cMP = msg.readInt3Byte();
+				long cMP = Char.myCharz().cMP;
+				Char.myCharz().cMP = msg.reader().readLong();
 				if (Char.myCharz().cMP > cMP)
 				{
-					GameScr.startFlyText("+" + (Char.myCharz().cMP - cMP) + " " + mResources.KI, Char.myCharz().cx, Char.myCharz().cy - Char.myCharz().ch - 23, 0, -2, mFont.MP);
+					GameScr.startFlyText("+" + NinjaUtil.formatShortNumber(Char.myCharz().cMP - cMP) + " " + mResources.KI, Char.myCharz().cx, Char.myCharz().cy - Char.myCharz().ch - 23, 0, -2, mFont.MP);
 					SoundMn.gI().HP_MPup();
 					if (Char.myCharz().petFollow != null && Char.myCharz().petFollow.smallID == 5001)
 					{
@@ -5690,7 +5690,7 @@ public class Controller : IMessageHandler
 				}
 				if (Char.myCharz().cMP < cMP)
 				{
-					GameScr.startFlyText("-" + (cMP - Char.myCharz().cMP) + " " + mResources.KI, Char.myCharz().cx, Char.myCharz().cy - Char.myCharz().ch - 23, 0, -2, mFont.MP);
+					GameScr.startFlyText("-" + NinjaUtil.formatShortNumber(cMP - Char.myCharz().cMP) + " " + mResources.KI, Char.myCharz().cx, Char.myCharz().cy - Char.myCharz().ch - 23, 0, -2, mFont.MP);
 				}
 				Res.outz("curr MP= " + Char.myCharz().cMP);
 				GameScr.gI().dMP = Char.myCharz().cMP;
@@ -5831,7 +5831,7 @@ public class Controller : IMessageHandler
 				{
 					break;
 				}
-				@char.cHP = msg.readInt3Byte();
+				@char.cHP = msg.reader().readLong();
 				sbyte b4 = msg.reader().readByte();
 				Res.outz("player load hp type= " + b4);
 				if (b4 == 1)
@@ -5845,7 +5845,7 @@ public class Controller : IMessageHandler
 				}
 				try
 				{
-					@char.cHPFull = msg.readInt3Byte();
+					@char.cHPFull = msg.reader().readLong();
 					break;
 				}
 				catch (Exception)
@@ -5859,8 +5859,8 @@ public class Controller : IMessageHandler
 				Char @char = GameScr.findCharInMap(msg.reader().readInt());
 				if (@char != null)
 				{
-					@char.cHP = msg.readInt3Byte();
-					@char.cHPFull = msg.readInt3Byte();
+					@char.cHP = msg.reader().readLong();
+					@char.cHPFull = msg.reader().readLong();
 					@char.cx = msg.reader().readShort();
 					@char.cy = msg.reader().readShort();
 					@char.statusMe = 1;

@@ -70,9 +70,9 @@ public class T1 : mResources
 		mResources.page = "Trang";
 		mResources.upTop = "Up Top";
 		mResources.num = "Số lượng";
-		mResources.kiguiXu = "Bán bằng\nvàng";
+		mResources.kiguiXu = "Bán bằng\nlinh thạch";
 		mResources.kiguiLuong = "Bán bằng\nngọc";
-		mResources.kiguiXuchat = "Bán bằng vàng";
+		mResources.kiguiXuchat = "Bán bằng linh thạch";
 		mResources.kiguiLuongchat = "Bán bằng ngọc";
 		mResources.huykigui = "Hủy\nkí gửi";
 		mResources.nhantien = "Nhận tiền";
@@ -221,8 +221,8 @@ public class T1 : mResources
 		mResources.pay_card2 = "Nạp thẻ";
 		mResources.serial_blank = "Vui lòng nhập số serial";
 		mResources.card_code_blank = "Vui lòng nhập mã code";
-		mResources.billion = "Tỉ";
-		mResources.million = "Tr";
+		mResources.billion = "Ức";
+		mResources.million = "Vạn";
 		mResources.MENU = "Menu";
 		mResources.CLOSE = "Đóng";
 		mResources.ON = "Bật";
@@ -254,7 +254,7 @@ public class T1 : mResources
 		mResources.KILL = "Tiêu diệt";
 		mResources.KILLBOSS = "Bắt tà thú";
 		mResources.NOLOCK = "Không khóa";
-		mResources.XU = "vàng";
+		mResources.XU = "linh thạch";
 		mResources.LUONG = "ngọc";
 		mResources.RUBY = "hồng ngọc";
 		mResources.PK_NOW = "Điểm hiếu chiến của bạn hiện tại là ";

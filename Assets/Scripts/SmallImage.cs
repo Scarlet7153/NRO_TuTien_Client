@@ -96,6 +96,10 @@ public class SmallImage
 
 	public static void createImage(int id)
 	{
+		if (imgNew == null || id < 0 || id >= imgNew.Length)
+		{
+			return;
+		}
 		Res.outz("is request =" + id + " zoom=" + mGraphics.zoomLevel);
 		if (mGraphics.zoomLevel == 1)
 		{
@@ -149,6 +153,10 @@ public class SmallImage
 
 	public static void drawSmallImage(mGraphics g, int id, int x, int y, int transform, int anchor)
 	{
+		if (imgNew == null || id < 0 || id >= imgNew.Length)
+		{
+			return;
+		}
 		if (imgbig == null)
 		{
 			Small small = imgNew[id];
@@ -196,6 +204,10 @@ public class SmallImage
 
 	public static void drawSmallImage(mGraphics g, int id, int f, int x, int y, int w, int h, int transform, int anchor)
 	{
+		if (imgNew == null || id < 0 || id >= imgNew.Length)
+		{
+			return;
+		}
 		if (imgbig == null)
 		{
 			Small small = imgNew[id];

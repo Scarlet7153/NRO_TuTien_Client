@@ -140,7 +140,7 @@ namespace Assets.src.g
 
 		public new bool sleepEff;
 
-		public BigBoss(int id, short px, short py, int templateID, int hp, int maxhp, int s)
+		public BigBoss(int id, short px, short py, int templateID, long hp, long maxhp, int s)
 		{
 			xFirst = (x = px + 20);
 			yFirst = (y = py);
