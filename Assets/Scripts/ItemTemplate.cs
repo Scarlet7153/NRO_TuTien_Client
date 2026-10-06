@@ -1,12 +1,45 @@
 public class ItemTemplate
 {
+	public static bool isShowIdItem;
+
+	public static void initShowIdItem()
+	{
+		int saved = Rms.loadRMSInt("showIdItem");
+		isShowIdItem = (saved == 1);
+	}
+
+	public static void toggleShowIdItem()
+	{
+		isShowIdItem = !isShowIdItem;
+		Rms.saveRMSInt("showIdItem", isShowIdItem ? 1 : 0);
+		SoundMn.gI().getStrOption();
+	}
+
 	public short id;
 
 	public sbyte type;
 
 	public sbyte gender;
 
-	public string name;
+	private string _name;
+
+	public string name
+	{
+		get
+		{
+			if (isShowIdItem)
+			{
+				return "[" + id + "] " + _name;
+			}
+			return _name;
+		}
+		set
+		{
+			_name = value;
+		}
+	}
+
+	public string rawName => _name;
 
 	public string[] subName;
 
@@ -31,8 +64,8 @@ public class ItemTemplate
 		id = templateID;
 		this.type = type;
 		this.gender = gender;
-		this.name = name;
-		this.name = Res.changeString(this.name);
+		_name = name;
+		_name = Res.changeString(_name);
 		this.description = description;
 		this.description = Res.changeString(this.description);
 		this.level = level;

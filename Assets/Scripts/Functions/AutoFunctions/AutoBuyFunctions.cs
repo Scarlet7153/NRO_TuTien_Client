@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Threading;
 
@@ -18,9 +18,30 @@ namespace Functions.AutoFunctions
 			return AutoBuyFunctions._Instance;
 		}
 
+		public static bool isNeedReopenPanel;
+		public static bool isAutoBuying;
+		public static bool isStopAutoBuy;
+
 		// Token: 0x06000A22 RID: 2594 RVA: 0x000A6184 File Offset: 0x000A4384
 		public static void Update()
 		{
+			if (AutoBuyFunctions.isAutoBuying && (GameCanvas.keyPressed[13] || GameCanvas.keyPressed[26]))
+			{
+				GameCanvas.keyPressed[13] = false;
+				AutoBuyFunctions.isStopAutoBuy = true;
+			}
+			if (AutoBuyFunctions.isNeedReopenPanel)
+			{
+				AutoBuyFunctions.isNeedReopenPanel = false;
+				if (GameCanvas.panel != null)
+				{
+					GameCanvas.panel.show();
+				}
+				if (GameCanvas.panel2 != null)
+				{
+					GameCanvas.panel2.show();
+				}
+			}
 			bool flag = AutoBuyFunctions.listItemAuto.Count > 0;
 			if (flag)
 			{
@@ -84,6 +105,7 @@ namespace Functions.AutoFunctions
 						catch
 						{
 							GameScr.info1.addInfo("Số Lượng Không Hợp Lệ, Vui Lòng Nhập Lại!", 0);
+							AutoBuyFunctions.isNeedReopenPanel = true;
 						}
 						AutoBuyFunctions.ResetChatTextField();
 					}
@@ -104,6 +126,7 @@ namespace Functions.AutoFunctions
 							catch
 							{
 								GameScr.info1.addInfo("Số Lượng Không Hợp Lệ, Vui Lòng Nhập Lại!", 0);
+								AutoBuyFunctions.isNeedReopenPanel = true;
 							}
 							AutoBuyFunctions.ResetChatTextField();
 						}
@@ -113,12 +136,14 @@ namespace Functions.AutoFunctions
 			else
 			{
 				ChatTextField.gI().isShow = false;
+				AutoBuyFunctions.isNeedReopenPanel = true;
 			}
 		}
 
 		// Token: 0x06000A24 RID: 2596 RVA: 0x00003FF5 File Offset: 0x000021F5
 		public void onCancelChat()
 		{
+			AutoBuyFunctions.isNeedReopenPanel = true;
 		}
 
 		// Token: 0x06000A25 RID: 2597 RVA: 0x000A645C File Offset: 0x000A465C
@@ -241,21 +266,28 @@ namespace Functions.AutoFunctions
 					}
 					GameScr.info1.addInfo("Xong!", 0);
 				}
+				AutoBuyFunctions.isNeedReopenPanel = true;
 				return;
 			}
 			GameScr.info1.addInfo("Xong!", 0);
+			AutoBuyFunctions.isNeedReopenPanel = true;
 		}
 
 		// Token: 0x06000A2C RID: 2604 RVA: 0x000A67C0 File Offset: 0x000A49C0
 		private void AutoBuy(AutoBuyFunctions.Item item)
 		{
-			while (item.Quantity > 0 && !GameScr.gI().isBagFull())
+			AutoBuyFunctions.isAutoBuying = true;
+			AutoBuyFunctions.isStopAutoBuy = false;
+			while (item.Quantity > 0 && !GameScr.gI().isBagFull() && !AutoBuyFunctions.isStopAutoBuy)
 			{
 				Service.gI().buyItem((sbyte)((!item.IsGold) ? 1 : 0), item.Id, 0);
 				item.Quantity--;
 				Thread.Sleep(500);
 			}
-			GameScr.info1.addInfo("Xong!", 0);
+			AutoBuyFunctions.isAutoBuying = false;
+			GameScr.info1.addInfo(AutoBuyFunctions.isStopAutoBuy ? "Đã Hủy Mua Nhiều!" : "Xong!", 0);
+			AutoBuyFunctions.isStopAutoBuy = false;
+			AutoBuyFunctions.isNeedReopenPanel = true;
 		}
 
 		// Token: 0x06000A2D RID: 2605 RVA: 0x000A6838 File Offset: 0x000A4A38

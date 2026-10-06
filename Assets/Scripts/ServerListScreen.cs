@@ -282,6 +282,12 @@ public class ServerListScreen : mScreen, IActionListener
 			cmd[i].x = (GameCanvas.w - cmd[i].w) / 2;
 			num += 30;
 		}
+		left = null;
+		right = null;
+		if (loadScreen)
+		{
+			cmdDownload = null;
+		}
 	}
 
 	public static void doUpdateServer()
@@ -420,7 +426,10 @@ public class ServerListScreen : mScreen, IActionListener
 				}
 			}
 		}
-		base.paint(g);
+		if (!loadScreen)
+		{
+			base.paint(g);
+		}
 	}
 
 	public void selectServer()
@@ -504,6 +513,10 @@ public class ServerListScreen : mScreen, IActionListener
 		base.update();
 		if (Char.isLoadingMap || !loadScreen || !isAutoConect || GameCanvas.currentScreen != this || testConnect == 2)
 		{
+			if (testConnect == 2 && GameCanvas.currentDialog != null && GameCanvas.currentDialog == GameCanvas.msgdlg && GameCanvas.msgdlg.isWait)
+			{
+				GameCanvas.endDlg();
+			}
 			return;
 		}
 		if (countDieConnect < 10)
@@ -560,21 +573,29 @@ public class ServerListScreen : mScreen, IActionListener
 
 	public override void updateKey()
 	{
+		if (!loadScreen)
+		{
+			updateDeleteData();
+			if (cmdDownload != null && cmdDownload.isPointerPressInside())
+			{
+				cmdDownload.performAction();
+			}
+			if (GameCanvas.keyPressed[(!Main.isPC) ? 5 : 25])
+			{
+				GameCanvas.keyPressed[(!Main.isPC) ? 5 : 25] = false;
+				if (!isGetData && cmdDownload != null)
+				{
+					cmdDownload.performAction();
+				}
+			}
+			return;
+		}
 		if (GameCanvas.isTouch)
 		{
 			updateDeleteData();
 			if (cmdCallHotline != null && cmdCallHotline.isPointerPressInside())
 			{
 				cmdCallHotline.performAction();
-			}
-			if (!loadScreen)
-			{
-				if (cmdDownload != null && cmdDownload.isPointerPressInside())
-				{
-					cmdDownload.performAction();
-				}
-				base.updateKey();
-				return;
 			}
 			for (int i = 0; i < cmd.Length; i++)
 			{
@@ -684,6 +705,7 @@ public class ServerListScreen : mScreen, IActionListener
 		DataInputStream dataInputStream = new DataInputStream(array);
 		if (dataInputStream == null)
 		{
+			getServerList(linkDefault);
 			return;
 		}
 		try
@@ -691,6 +713,10 @@ public class ServerListScreen : mScreen, IActionListener
 			lengthServer = new int[3];
 			mResources.loadLanguague(dataInputStream.readByte());
 			sbyte b = dataInputStream.readByte();
+			if (b <= 0 || b > 20)
+			{
+				throw new Exception("Invalid server count in NRlink2: " + b);
+			}
 			nameServer = new string[b];
 			address = new string[b];
 			port = new short[b];
@@ -709,6 +735,8 @@ public class ServerListScreen : mScreen, IActionListener
 		}
 		catch (Exception)
 		{
+			Rms.DeleteStorage("NRlink2");
+			getServerList(linkDefault);
 		}
 	}
 
@@ -773,6 +801,9 @@ public class ServerListScreen : mScreen, IActionListener
 		bigOk = true;
 		cmd[2 + nCmdPlay].caption = mResources.server + ": " + nameServer[ipSelect];
 		center = new Command(string.Empty, this, cmd[selected].idAction, null);
+		left = null;
+		right = null;
+		cmdDownload = null;
 		cmd[1 + nCmdPlay].caption = mResources.change_account;
 		if (cmd.Length == 4 + nCmdPlay)
 		{
@@ -800,6 +831,9 @@ public class ServerListScreen : mScreen, IActionListener
 		bigOk = true;
 		cmd[2 + nCmdPlay].caption = mResources.server + ": " + nameServer[ipSelect];
 		center = new Command(string.Empty, this, cmd[selected].idAction, null);
+		left = null;
+		right = null;
+		cmdDownload = null;
 		cmd[1 + nCmdPlay].caption = mResources.change_account;
 		if (cmd.Length == 4 + nCmdPlay)
 		{
@@ -835,7 +869,7 @@ public class ServerListScreen : mScreen, IActionListener
 		{
 			GameCanvas.connect();
 		}
-		if (idAction == 1 || idAction == 4)
+		if (idAction == 1)
 		{
 			Session_ME.gI().close();
 			isAutoConect = false;
@@ -843,8 +877,21 @@ public class ServerListScreen : mScreen, IActionListener
 			loadScreen = true;
 			testConnect = 0;
 			isGetData = false;
-			Rms.clearAll();
 			switchToMe();
+		}
+		if (idAction == 4)
+		{
+			stopDownload = true;
+			isGetData = false;
+			percent = 0;
+			demPercent = 0;
+			cmdDownload = new Command(mResources.taidulieu, this, 2, null);
+			cmdDownload.isFocus = true;
+			cmdDownload.x = GameCanvas.w / 2 - mScreen.cmdW / 2;
+			cmdDownload.y = GameCanvas.hh + 45;
+			center = cmdDownload;
+			left = null;
+			GameCanvas.clearKeyPressed();
 		}
 		if (idAction == 2)
 		{
@@ -858,15 +905,13 @@ public class ServerListScreen : mScreen, IActionListener
 				cmdDownload.x = GameCanvas.w / 2 - mScreen.cmdW / 2;
 				cmdDownload.y = GameCanvas.h - mScreen.cmdH - 1;
 			}
-			center = new Command(string.Empty, this, 4, null);
+			center = null;
+			left = null;
+			cmdDownload.isFocus = false;
+			GameCanvas.clearKeyPressed();
 			if (!isGetData)
 			{
 				Service.gI().getResource(1, null);
-				if (!GameCanvas.isTouch)
-				{
-					cmdDownload.isFocus = true;
-					center = new Command(string.Empty, this, 4, null);
-				}
 				isGetData = true;
 			}
 		}
@@ -1079,6 +1124,9 @@ public class ServerListScreen : mScreen, IActionListener
 			{
 				cmdDownload.y = GameCanvas.h - 26;
 			}
+			center = cmdDownload;
+			left = null;
+			right = null;
 		}
 		if (!GameCanvas.isTouch)
 		{
@@ -1101,6 +1149,9 @@ public class ServerListScreen : mScreen, IActionListener
 		strWait = mResources.PLEASEWAIT;
 		Char.isLoadingMap = false;
 		init();
+		center = cmdDownload;
+		left = null;
+		right = null;
 		base.switchToMe();
 	}
 

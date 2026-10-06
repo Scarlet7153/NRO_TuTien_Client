@@ -47,7 +47,20 @@ namespace Functions
                             MenuFunctions.UseCapsule();
                             break;
                         case 'f':
+                        case 'm':
                             Service.gI().openUIZone();
+                            break;
+                        case 'q':
+                            if (AutoBuyFunctions.isAutoBuying)
+                            {
+                                AutoBuyFunctions.isStopAutoBuy = true;
+                                GameScr.info1.addInfo("|5|Dừng Mua Nhiều", 0);
+                            }
+                            if (AutoUpgradeFunctions.isDapDo)
+                            {
+                                AutoUpgradeFunctions.isDapDo = false;
+                                GameScr.info1.addInfo("|5|Dừng Đập Đồ", 0);
+                            }
                             break;
                         case 'e':
                             CharFunctions.getInstance().Handler();
@@ -110,6 +123,13 @@ namespace Functions
                     AutoCrackBallFunctions.startmenu = !AutoCrackBallFunctions.startmenu;
                     new Thread(new ThreadStart(AutoCrackBallFunctions.startMenu)).Start();
                     GameScr.info1.addInfo("Auto Quay Thượng Đế: " + (AutoCrackBallFunctions.startmenu ? "ON" : "OFF"), 0);
+                    break;
+                case "huy":
+                case "stop":
+                    if (AutoBuyFunctions.isAutoBuying)
+                    {
+                        AutoBuyFunctions.isStopAutoBuy = true;
+                    }
                     break;
                 default:
                     if(text.StartsWith("k "))

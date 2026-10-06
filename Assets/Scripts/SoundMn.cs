@@ -228,15 +228,17 @@ public class SoundMn
 		string text = "[x]   ";
 		string text2 = "[  ]   ";
 		string textFPS = GameCanvas.isShowFPS ? (text + "Hiển thị FPS") : (text2 + "Hiển thị FPS");
+		string textIdItem = ItemTemplate.isShowIdItem ? (text + "Hiện ID vật phẩm") : (text2 + "Hiện ID vật phẩm");
 		if (Main.isPC)
 		{
-			Panel.strCauhinh = new string[5]
+			Panel.strCauhinh = new string[6]
 			{
 				(!Char.isPaintAura) ? (text + mResources.aura_off.Trim()) : (text2 + mResources.aura_off.Trim()),
 				(!Char.isPaintAura2) ? (text + mResources.aura_off_2.Trim()) : (text2 + mResources.aura_off_2.Trim()),
 				(!GameCanvas.isPlaySound) ? (text2 + mResources.turnOffSound.Trim()) : (text + mResources.turnOffSound.Trim()),
 				(mGraphics.zoomLevel <= 1) ? (text2 + mResources.x2Screen) : (text + mResources.x1Screen),
-				textFPS
+				textFPS,
+				textIdItem
 			};
 			return;
 		}
@@ -245,14 +247,15 @@ public class SoundMn
 		{
 			text3 = (GameScr.isPaintChatVip ? (text + mResources.serverchat_off) : (text2 + mResources.serverchat_off));
 		}
-		Panel.strCauhinh = new string[6]
+		Panel.strCauhinh = new string[7]
 		{
 			(!Char.isPaintAura) ? (text + mResources.aura_off.Trim()) : (text2 + mResources.aura_off.Trim()),
 			(!Char.isPaintAura2) ? (text + mResources.aura_off_2.Trim()) : (text2 + mResources.aura_off_2.Trim()),
 			(!GameCanvas.isPlaySound) ? (text2 + mResources.turnOffSound.Trim()) : (text + mResources.turnOffSound.Trim()),
 			(!GameCanvas.lowGraphic) ? (text2 + mResources.cauhinhthap.Trim()) : (text + mResources.cauhinhthap.Trim()),
 			text3,
-			textFPS
+			textFPS,
+			textIdItem
 		};
 	}
 

@@ -85,6 +85,8 @@ public class Main : MonoBehaviour
 	private void Start()
     {
         Time.timeScale = 2.3f;
+        Application.runInBackground = true;
+        Screen.sleepTimeout = SleepTimeout.NeverSleep;
         if (started)
 		{
 			return;
@@ -128,14 +130,6 @@ public class Main : MonoBehaviour
 
 	private void OnHideUnity(bool isGameShown)
 	{
-		if (!isGameShown)
-		{
-			Time.timeScale = 0f;
-		}
-		else
-		{
-			Time.timeScale = 1f;
-		}
 	}
 
 	private void OnGUI()
@@ -273,6 +267,8 @@ public class Main : MonoBehaviour
 
 	private void FixedUpdate()
 	{
+		Session_ME.update();
+		Session_ME2.update();
 		Rms.update();
 		count++;
 		if (count >= 10)
@@ -310,6 +306,8 @@ public class Main : MonoBehaviour
 
 	private void Update()
 	{
+		Session_ME.update();
+		Session_ME2.update();
 	}
 
 	private void checkInput()
@@ -389,14 +387,7 @@ public class Main : MonoBehaviour
 	private void OnApplicationPause(bool paused)
 	{
 		isResume = false;
-		if (paused)
-		{
-			if (GameCanvas.isWaiting())
-			{
-				isQuitApp = true;
-			}
-		}
-		else
+		if (!paused)
 		{
 			isResume = true;
 		}
@@ -404,10 +395,6 @@ public class Main : MonoBehaviour
 		{
 			TField.kb.active = false;
 			TField.kb = null;
-		}
-		if (isQuitApp)
-		{
-			Application.Quit();
 		}
 	}
 

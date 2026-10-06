@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Threading;
 
@@ -372,13 +372,13 @@ namespace Functions.HandlerFunctions
 		// Token: 0x06000AA9 RID: 2729 RVA: 0x000AFBA0 File Offset: 0x000ADDA0
 		public static void AddItemstoList(Item item)
 		{
-			foreach (ItemHandler.Items items in ItemHandler.ListItemAuto)
+			for (int i = 0; i < ItemHandler.ListItemAuto.Count; i++)
 			{
-				bool flag = items.iconID == (int)item.template.iconID;
-				if (flag)
+				if (ItemHandler.ListItemAuto[i].iconID == (int)item.template.iconID)
 				{
-					ItemHandler.ListItemAuto.Remove(items);
+					ItemHandler.ListItemAuto.RemoveAt(i);
 					GameScr.info1.addInfo("Đã xóa " + item.template.name + " khỏi d/s item", 0);
+					return;
 				}
 			}
 			ItemHandler.ListItemAuto.Add(new ItemHandler.Items((int)item.template.iconID, item.template.name));
@@ -415,50 +415,45 @@ namespace Functions.HandlerFunctions
 		// Token: 0x06000AAB RID: 2731 RVA: 0x000AFD88 File Offset: 0x000ADF88
 		public static int ItemQuantity(int id, string type)
 		{
+			int count = 0;
 			for (int i = 0; i < global::Char.myCharz().arrItemBag.Length; i++)
 			{
 				Item item = global::Char.myCharz().arrItemBag[i];
-				bool flag = type == "id";
-				if (flag)
+				if (item == null)
 				{
-					bool flag2 = item != null && (int)item.template.id == id && id != 590 && id != 933;
-					if (flag2)
-					{
-						return item.quantity;
-					}
-					bool flag3 = item != null && (int)item.template.id == id && id == 933;
-					if (flag3)
-					{
-						string[] array = item.itemOption[0].getOptionString().Split(new char[]
-						{
-							' '
-						});
-						return int.Parse(array[2]);
-					}
-					bool flag4 = item != null && (int)item.template.id == id && id == 590;
-					if (flag4)
-					{
-						string[] array2 = item.itemOption[0].getOptionString().Split(new char[]
-						{
-							' '
-						});
-						return int.Parse(array2[2]);
-					}
+					continue;
 				}
-				else
+				if (type == "id")
 				{
-					bool flag5 = type == "iconID";
-					if (flag5)
+					if ((int)item.template.id == id)
 					{
-						bool flag6 = item != null && (int)item.template.iconID == id && id != 590 && id != 933;
-						if (flag6)
+						if ((id == 933 || id == 590) && item.itemOption != null && item.itemOption.Length > 0)
 						{
-							return item.quantity;
+							try
+							{
+								string[] array = item.itemOption[0].getOptionString().Split(' ');
+								count += int.Parse(array[2]);
+							}
+							catch
+							{
+								count += item.quantity;
+							}
+						}
+						else
+						{
+							count += item.quantity;
 						}
 					}
 				}
+				else if (type == "iconID")
+				{
+					if ((int)item.template.iconID == id)
+					{
+						count += item.quantity;
+					}
+				}
 			}
-			return 0;
+			return count;
 		}
 
 		// Token: 0x06000AAC RID: 2732 RVA: 0x000AFF0C File Offset: 0x000AE10C

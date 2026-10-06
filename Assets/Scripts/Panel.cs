@@ -7831,7 +7831,7 @@ public class Panel : IActionListener, IChatable
 					if (currItem.buyCoin > 0)
 					{
 						myVector.addElement(new Command(mResources.buy_with + "\n" + Res.formatNumber2(currItem.buyCoin) + "\n" + mResources.XU, this, 3000, currItem));
-                        myVector.addElement(new Command("Mua Nhiều\n" + Res.formatNumber2((long)this.currItem.buyCoin) + " Linh Thạch/1", AutoBuyFunctions.getInstance(), 3, new AutoBuyFunctions.Item((int)this.currItem.template.id, -1, false, false)));
+                        myVector.addElement(new Command("Mua Nhiều\n" + Res.formatNumber2((long)this.currItem.buyCoin) + " Linh Thạch/1", AutoBuyFunctions.getInstance(), 3, new AutoBuyFunctions.Item((int)this.currItem.template.id, -1, true, false)));
 
                     }
                     if (currItem.buyGold > 0)
@@ -10539,6 +10539,11 @@ public class Panel : IActionListener, IChatable
 		if (!Main.isPC && selected == 5)
 		{
 			GameCanvas.toggleShowFPS();
+			return;
+		}
+		if ((Main.isPC && selected == 5) || (!Main.isPC && selected == 6))
+		{
+			ItemTemplate.toggleShowIdItem();
 			return;
 		}
 		switch (selected)

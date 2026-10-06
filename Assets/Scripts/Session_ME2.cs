@@ -341,6 +341,7 @@ public class Session_ME2 : ISession
 	public void doConnect(string host, int port)
 	{
 		sc = new TcpClient();
+		sc.NoDelay = true;
 		sc.Connect(host, port);
 		dataStream = sc.GetStream();
 		dis = new BinaryReader(dataStream, new UTF8Encoding());
@@ -488,6 +489,7 @@ public class Session_ME2 : ISession
 	private static void cleanNetwork()
 	{
 		key = null;
+		getKeyComplete = false;
 		curR = 0;
 		curW = 0;
 		try
@@ -496,26 +498,42 @@ public class Session_ME2 : ISession
 			connecting = false;
 			if (sc != null)
 			{
-				sc.Close();
+				try { sc.Close(); } catch {}
 				sc = null;
 			}
 			if (dataStream != null)
 			{
-				dataStream.Close();
+				try { dataStream.Close(); } catch {}
 				dataStream = null;
 			}
 			if (dos != null)
 			{
-				dos.Close();
+				try { dos.Close(); } catch {}
 				dos = null;
 			}
 			if (dis != null)
 			{
-				dis.Close();
+				try { dis.Close(); } catch {}
 				dis = null;
 			}
-			sendThread = null;
-			collectorThread = null;
+			if (sendThread != null)
+			{
+				try { sendThread.Abort(); } catch {}
+				sendThread = null;
+			}
+			if (collectorThread != null)
+			{
+				try { collectorThread.Abort(); } catch {}
+				collectorThread = null;
+			}
+			if (sender != null && sender.sendingMessage != null)
+			{
+				sender.sendingMessage.Clear();
+			}
+			if (recieveMsg != null)
+			{
+				recieveMsg.removeAllElements();
+			}
 		}
 		catch (Exception)
 		{

@@ -630,53 +630,64 @@ public class GameCanvas : IActionListener
 				}
 				else if (panel.isShow)
 				{
-					panel.update();
-					if (isPointer(panel.X, panel.Y, panel.W, panel.H))
+					if (currentScreen is Assets.src.g.ClientInput)
 					{
-						isFocusPanel2 = false;
-					}
-					if (panel2 != null && panel2.isShow)
-					{
-						panel2.update();
-						if (isPointer(panel2.X, panel2.Y, panel2.W, panel2.H))
+						panel.update();
+						if (panel2 != null && panel2.isShow)
 						{
-							isFocusPanel2 = true;
+							panel2.update();
 						}
 					}
-					if (panel2 != null)
+					else
 					{
-						if (isFocusPanel2)
+						panel.update();
+						if (isPointer(panel.X, panel.Y, panel.W, panel.H))
 						{
-							panel2.updateKey();
+							isFocusPanel2 = false;
+						}
+						if (panel2 != null && panel2.isShow)
+						{
+							panel2.update();
+							if (isPointer(panel2.X, panel2.Y, panel2.W, panel2.H))
+							{
+								isFocusPanel2 = true;
+							}
+						}
+						if (panel2 != null)
+						{
+							if (isFocusPanel2)
+							{
+								panel2.updateKey();
+							}
+							else
+							{
+								panel.updateKey();
+							}
 						}
 						else
 						{
 							panel.updateKey();
 						}
-					}
-					else
-					{
-						panel.updateKey();
-					}
-					if (panel.chatTField != null && panel.chatTField.isShow)
-					{
-						panel.chatTFUpdateKey();
-					}
-					else if (panel2 != null && panel2.chatTField != null && panel2.chatTField.isShow)
-					{
-						panel2.chatTFUpdateKey();
-					}
-					else if ((isPointer(panel.X, panel.Y, panel.W, panel.H) && panel2 != null) || panel2 == null)
-					{
-						panel.updateKey();
-					}
-					else if (panel2 != null && panel2.isShow && isPointer(panel2.X, panel2.Y, panel2.W, panel2.H))
-					{
-						panel2.updateKey();
-					}
-					if (isPointer(panel.X + panel.W, panel.Y, w - panel.W * 2, panel.H) && isPointerJustRelease && panel.isDoneCombine)
-					{
-						panel.hide();
+						if (panel.chatTField != null && panel.chatTField.isShow)
+						{
+							panel.chatTFUpdateKey();
+						}
+						else if (panel2 != null && panel2.chatTField != null && panel2.chatTField.isShow)
+						{
+							panel2.chatTFUpdateKey();
+						}
+						else if ((isPointer(panel.X, panel.Y, panel.W, panel.H) && panel2 != null) || panel2 == null)
+						{
+							panel.updateKey();
+						}
+						else if (panel2 != null && panel2.isShow && isPointer(panel2.X, panel2.Y, panel2.W, panel2.H))
+						{
+							panel2.updateKey();
+						}
+						if (isPointer(panel.X + panel.W, panel.Y, w - panel.W * 2, panel.H) && isPointerJustRelease && panel.isDoneCombine)
+						{
+							panel.hide();
+						}
 					}
 				}
 				debug("E", 0);
@@ -685,7 +696,7 @@ public class GameCanvas : IActionListener
 					currentScreen.update();
 				}
 				debug("F", 0);
-				if (!panel.isShow && ChatPopup.serverChatPopUp == null)
+				if ((!panel.isShow || currentScreen is Assets.src.g.ClientInput) && ChatPopup.serverChatPopUp == null)
 				{
 					currentScreen.updateKey();
 				}
@@ -714,6 +725,18 @@ public class GameCanvas : IActionListener
 					Rms.saveIP(GameMidlet.IP + ":" + GameMidlet.PORT);
 					Service.gI().setClientType();
 					Service.gI().androidPack();
+					if (LoginScr.isContinueToLogin)
+					{
+						LoginScr.isContinueToLogin = false;
+						if (loginScr != null)
+						{
+							loginScr.doLogin();
+						}
+					}
+					else if (currentScreen == serverScreen)
+					{
+						endDlg();
+					}
 				}
 				else
 				{
@@ -916,6 +939,11 @@ public class GameCanvas : IActionListener
 
 	public static void connect()
 	{
+		if (string.IsNullOrEmpty(GameMidlet.IP) || GameMidlet.IP == "127.0.0.0" || GameMidlet.PORT <= 0)
+		{
+			GameMidlet.IP = "192.168.2.4";
+			GameMidlet.PORT = 14445;
+		}
 		if (!Session_ME.gI().isConnected())
 		{
 			Session_ME.gI().connect(GameMidlet.IP, GameMidlet.PORT);
@@ -970,6 +998,7 @@ public class GameCanvas : IActionListener
 		listPoint = new MyVector();
 		int savedFPS = Rms.loadRMSInt("showFPS");
 		isShowFPS = (savedFPS == 1);
+		ItemTemplate.initShowIdItem();
 		debug("SP2i7", 0);
 	}
 
@@ -1086,9 +1115,17 @@ public class GameCanvas : IActionListener
 		{
 			Cout.println("Loi tai doResetToLoginScr " + ex.ToString());
 		}
-		ServerListScreen.isAutoConect = true;
+		if (screen == loginScr)
+		{
+			ServerListScreen.isAutoConect = false;
+			ServerListScreen.testConnect = 2;
+		}
+		else
+		{
+			ServerListScreen.isAutoConect = true;
+			ServerListScreen.testConnect = -1;
+		}
 		ServerListScreen.countDieConnect = 0;
-		ServerListScreen.testConnect = -1;
 		ServerListScreen.loadScreen = true;
 	}
 
@@ -2466,7 +2503,14 @@ public class GameCanvas : IActionListener
 			debug("PA", 1);
 			if (currentScreen != null)
 			{
-				currentScreen.paint(g);
+				if (currentScreen is Assets.src.g.ClientInput && panel.isShow)
+				{
+					GameScr.gI().paint(g);
+				}
+				else
+				{
+					currentScreen.paint(g);
+				}
 			}
 			debug("PB", 1);
 			g.translate(-g.getTranslateX(), -g.getTranslateY());
@@ -2489,15 +2533,21 @@ public class GameCanvas : IActionListener
 			}
 			Res.paintOnScreenDebug(g);
 			InfoDlg.paint(g);
+			if (menu.showMenu && currentDialog == null)
+			{
+				debug("PD", 1);
+				menu.paintMenu(g);
+			}
+			if (currentScreen is Assets.src.g.ClientInput && panel.isShow)
+			{
+				g.translate(-g.getTranslateX(), -g.getTranslateY());
+				g.setClip(0, 0, w, h);
+				currentScreen.paint(g);
+			}
 			if (currentDialog != null)
 			{
 				debug("PC", 1);
 				currentDialog.paint(g);
-			}
-			else if (menu.showMenu)
-			{
-				debug("PD", 1);
-				menu.paintMenu(g);
 			}
 			GameScr.info1.paint(g);
 			GameScr.info2.paint(g);

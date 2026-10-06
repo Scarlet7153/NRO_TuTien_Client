@@ -1,4 +1,4 @@
-﻿using Functions.AutoFunctions;
+using Functions.AutoFunctions;
 using MapObject;
 using System;
 using System.Collections.Generic;
@@ -30,72 +30,158 @@ namespace Functions.HandlerFunctions
 		/// <summary>
 		public static int[] LIST_ITEM_ICONID = new int[]
 		{
-			2755,
-			2756,
-			2754,
-			2757,
-			2760,
-			6324,
-			6325,
-			6326,
-			6327,
-			6328,
-			2758,
-			7149,
-			8060,
-			8061,
-			8062,
-			10714,
-			10715,
-			10716,
-			10712,
-			10717
+			// 1. Tăng chỉ số cơ bản
+			2755,  // Bổ huyết (id 382)
+			2756,  // Bổ khí (id 383)
+			2754,  // Cuồng nộ (id 381)
+			2757,  // Giáp Xên bọ hung (id 384)
+			2760,  // Ẩn danh (id 385)
+			2758,  // Máy dò Capsule kì bí (id 379)
+
+			// 2. Tăng chỉ số siêu cấp
+			14424, // Bổ Huyết Siêu Cấp (id 1100)
+			14425, // Bổ Khí Siêu Cấp (id 1101)
+			14426, // Cuồng Nộ Siêu Cấp (id 1099)
+			10712, // Giáp Xên Siêu Cấp (id 1102)
+			10717, // Ẩn Danh Đặc Biệt (id 1103)
+
+			// 3. Đan dược tu tiên (TNSM)
+			22066, // Tụ khí đan (id 2033)
+			22067, // Ngưng khí đan (id 2034)
+			22068, // Trúc cơ đan (id 2035)
+			22069, // Ngộ đạo đan (id 2036)
+			22942, // Định thần đan (id 1265)
+
+			// 4. Thức ăn tăng chỉ số
+			6324,  // Bánh Pudding (id 663)
+			6325,  // Xúc xích (id 664)
+			6326,  // Kem dâu (id 665)
+			6327,  // Mì ly (id 666)
+			6328,  // Sushi (id 667)
+
+			// 5. Thức ăn sự kiện & Đặc biệt
+			7149,  // Khẩu trang (id 764)
+			8060,  // Cua rang me (id 880)
+			8061,  // Bạch tuộc nướng (id 881)
+			8062,  // Tôm tẩm bột chiên xù (id 882)
+			7079,  // Bánh tét (id 752)
+			7080,  // Bánh chưng (id 753)
+			8243,  // Kẹo một mắt (id 899)
+			22727, // Khóa ác quỷ (id 1354)
+
+			// 6. Huyết Long (Ngọc Rồng Đen)
+			15543, // Huyết Long 1 Sao (id 1822)
+			15544, // Huyết Long 2 Sao (id 1823)
+			15545, // Huyết Long 3 Sao (id 1824)
+			15546, // Huyết Long 4 Sao (id 1825)
+			15547, // Huyết Long 5 Sao (id 1826)
+			15548, // Huyết Long 6 Sao (id 1827)
+			15549, // Huyết Long 7 Sao (id 1828)
+
+			// 7. Ngọc buff Tu Tiên
+			20716, // Ngọc Siêu Thần (id 1829)
+			20717, // Ngọc Vương Giả (id 1830)
+			20719, // Ngọc Thiên Tử (id 1831)
+			20720, // Ngọc Kỳ Thiên (id 1832)
+
+			// 8. Máy dò đặc biệt
+			22071, // Máy dò bóng tối (id 1201 / id 1353)
+			22070, // Máy dò đá bóng tối THƯỜNG (id 1352)
+			14397  // Máy dò Boss (id 1422)
 		};
 
 		// Token: 0x04001395 RID: 5013
 		public static string[] LIST_ITEM_NAME = new string[]
 		{
+			// 1. Tăng chỉ số cơ bản
 			"Bổ huyết",
 			"Bổ khí",
 			"Cuồng nộ",
 			"Giáp Xên bọ hung",
 			"Ẩn danh",
+			"Máy dò Capsule kì bí",
+
+			// 2. Tăng chỉ số siêu cấp
+			"Bổ Huyết Siêu Cấp",
+			"Bổ Khí Siêu Cấp",
+			"Cuồng Nộ Siêu Cấp",
+			"Giáp Xên Siêu Cấp",
+			"Ẩn Danh Đặc Biệt",
+
+			// 3. Đan dược tu tiên (TNSM)
+			"Tụ khí đan",
+			"Ngưng khí đan",
+			"Trúc cơ đan",
+			"Ngộ đạo đan",
+			"Định thần đan",
+
+			// 4. Thức ăn tăng chỉ số
 			"Bánh Pudding",
 			"Xúc xích",
 			"Kem dâu",
 			"Mì ly",
 			"Sushi",
-			"Máy dò Capsule kì bí",
+
+			// 5. Thức ăn sự kiện & Đặc biệt
 			"Khẩu trang",
 			"Cua rang me",
 			"Bạch tuộc nướng",
 			"Tôm tẩm bột chiên xù",
-			"Bổ huyết 2",
-			"Bổ khí 2",
-			"Cuồng nộ 2",
-			"Giáp xên bọ hung 2",
-			"Ẩn danh 2"
+			"Bánh tét",
+			"Bánh chưng",
+			"Kẹo một mắt",
+			"Khóa ác quỷ",
+
+			// 6. Huyết Long (Ngọc Rồng Đen)
+			"Huyết Long 1 Sao",
+			"Huyết Long 2 Sao",
+			"Huyết Long 3 Sao",
+			"Huyết Long 4 Sao",
+			"Huyết Long 5 Sao",
+			"Huyết Long 6 Sao",
+			"Huyết Long 7 Sao",
+
+			// 7. Ngọc buff Tu Tiên
+			"Ngọc Siêu Thần",
+			"Ngọc Vương Giả",
+			"Ngọc Thiên Tử",
+			"Ngọc Kỳ Thiên",
+
+			// 8. Máy dò đặc biệt
+			"Máy dò bóng tối",
+			"Máy dò đá bóng tối THƯỜNG",
+			"Máy dò Boss"
 		};
 
 		// Token: 0x04001396 RID: 5014
 		public static string[] TUTORIAL_SETTINGS = new string[]
 		{
-			"1.Lệnh Chat:",
-			"ak: Tự Đánh",
-			"dapdo: Auto Đập Đồ",
-			"tdlt: Tàn Sát",
-			"k X: Đổi Sang Khu X",
-			"vq: Auto Quay Thượng Đế",
-			"alogin: Auto Login",
-			"ahs: Auto Hồi Sinh",
-			"anhat: Auto Nhặt",
-			"2.Phím Tắt:",
-		"A: Tự Đánh",
-		"X: Menu Mod",
-		"C: Capsule Nhanh",
-		"F: Bông Tai Nhanh",
-		"M: Mở Bảng Đổi Khu",
-		"E: Auto Hồi Sinh"
+			"=== 1. PHÍM TẮT (PC) ===",
+			"A: Bật / Tắt Tự Đánh",
+			"B: Dùng Bông Tai Nhanh",
+			"C: Dùng Capsule Nhanh",
+			"E: Bật / Tắt Auto Hồi Sinh",
+			"M / F: Mở Bảng Đổi Khu",
+			"X: Mở Menu Mod Tiện Ích",
+			"J: Load Qua Map Trái",
+			"K: Load Qua Map Giữa",
+			"L: Load Qua Map Phải",
+			"Q: Dừng Auto / Đập Đồ",
+			"Space: Bơm Đậu Thần (HP/KI)",
+			"R: Mở Khung Chat",
+			"Y: Đồng Ý (Yes) / Tin Nhắn",
+			"1 - 5: Phím Tắt Kỹ Năng",
+			"=== 2. LỆNH CHAT ===",
+			"ak: Bật / Tắt Tự Đánh",
+			"dapdo: Bật / Tắt Auto Đập Đồ",
+			"tdlt: Bật / Tắt Tàn Sát",
+			"k [X]: Đổi Khu X (vd: k 5)",
+			"vq: Bật / Tắt Quay Thượng Đế",
+			"alogin: Bật / Tắt Auto Login",
+			"ahs: Bật / Tắt Auto Hồi Sinh",
+			"anhat: Bật / Tắt Auto Nhặt",
+			"huy / stop: Dừng Mua Nhiều",
+			"/atc|[nội dung]: Auto Chat (5s)"
 		};
 		
 		public static string[] GRAPHIC_SETTING_LIST_NAME = new string[]
@@ -218,51 +304,136 @@ namespace Functions.HandlerFunctions
 		/// </summary>
 		/// <param name="panelType"></var>
 
+		public class ActiveItem
+		{
+			public int iconID;
+			public string name;
+			public int quantity;
+			public bool isAuto;
+		}
+
+		public static List<ActiveItem> activeItems = new List<ActiveItem>();
+
+		public static bool isBuffItem(Item item)
+		{
+			if (item == null || item.template == null)
+			{
+				return false;
+			}
+			int icon = (int)item.template.iconID;
+			for (int i = 0; i < LIST_ITEM_ICONID.Length; i++)
+			{
+				if (LIST_ITEM_ICONID[i] == icon)
+				{
+					return true;
+				}
+			}
+			return item.template.type == 29;
+		}
+
+		public static void updateActiveItems()
+		{
+			activeItems.Clear();
+			if (global::Char.myCharz() == null || global::Char.myCharz().arrItemBag == null)
+			{
+				return;
+			}
+			List<int> addedIcons = new List<int>();
+
+			// 1. Quét các item trong hành trang của nhân vật
+			for (int i = 0; i < global::Char.myCharz().arrItemBag.Length; i++)
+			{
+				Item item = global::Char.myCharz().arrItemBag[i];
+				if (item != null && item.template != null)
+				{
+					int icon = (int)item.template.iconID;
+					if (isBuffItem(item) && !addedIcons.Contains(icon))
+					{
+						addedIcons.Add(icon);
+						bool isAuto = false;
+						for (int k = 0; k < ItemHandler.ListItemAuto.Count; k++)
+						{
+							if (ItemHandler.ListItemAuto[k].iconID == icon)
+							{
+								isAuto = true;
+								break;
+							}
+						}
+						activeItems.Add(new ActiveItem
+						{
+							iconID = icon,
+							name = item.template.name,
+							quantity = ItemHandler.ItemQuantity(icon, "iconID"),
+							isAuto = isAuto
+						});
+					}
+				}
+			}
+
+			// 2. Thêm các item đang có trong danh sách ListItemAuto nhưng tạm hết trong túi (để người chơi có thể xóa)
+			for (int k = 0; k < ItemHandler.ListItemAuto.Count; k++)
+			{
+				int icon = ItemHandler.ListItemAuto[k].iconID;
+				if (!addedIcons.Contains(icon))
+				{
+					addedIcons.Add(icon);
+					activeItems.Add(new ActiveItem
+					{
+						iconID = icon,
+						name = ItemHandler.ListItemAuto[k].name,
+						quantity = ItemHandler.ItemQuantity(icon, "iconID"),
+						isAuto = true
+					});
+				}
+			}
+		}
+
 		// Token: 0x06000A8E RID: 2702 RVA: 0x000AE8E1 File Offset: 0x000ACAE1
 		public static void paintItemList(mGraphics g)
 		{
+			updateActiveItems();
+			GameCanvas.panel.currentListLength = activeItems.Count;
 			g.setClip(GameCanvas.panel.xScroll, GameCanvas.panel.yScroll, GameCanvas.panel.wScroll, GameCanvas.panel.hScroll);
 			g.translate(0, -GameCanvas.panel.cmy);
-			for (int i = 0; i < MenuHandler.LIST_ITEM_NAME.Length; i++)
+
+			if (activeItems.Count == 0)
+			{
+				mFont.tahoma_7_white.drawString(g, "Không có vật phẩm buff nào trong người", GameCanvas.panel.xScroll + 10, GameCanvas.panel.yScroll + 15, 0);
+				GameCanvas.panel.paintScrollArrow(g);
+				return;
+			}
+
+			for (int i = 0; i < activeItems.Count; i++)
 			{
 				int xScroll = GameCanvas.panel.xScroll;
 				int num = GameCanvas.panel.yScroll + i * GameCanvas.panel.ITEM_HEIGHT;
 				int w = GameCanvas.panel.wScroll - 1;
 				int h = GameCanvas.panel.ITEM_HEIGHT - 1;
 				bool flag = num - GameCanvas.panel.cmy <= GameCanvas.panel.yScroll + GameCanvas.panel.hScroll && num - GameCanvas.panel.cmy >= GameCanvas.panel.yScroll - GameCanvas.panel.ITEM_HEIGHT;
-				mFont mFont = (ItemHandler.ItemQuantity(MenuHandler.LIST_ITEM_ICONID[i], "iconID") > 0) ? mFont.tahoma_7_yellow : mFont.tahoma_7b_dark;
 				if (flag)
 				{
+					ActiveItem item = activeItems[i];
 					g.setColor((i != GameCanvas.panel.selected) ? 0 : 0, 0.5f);
 					g.fillRect(xScroll, num, w, h);
-					bool flag2 = mGraphics.zoomLevel == 2 || mGraphics.zoomLevel == 3|| mGraphics.zoomLevel == 4;
-					if (flag2)
+					if (mGraphics.zoomLevel == 1)
 					{
-						mFont.tahoma_7_white.drawStringBd(g, MenuHandler.LIST_ITEM_NAME[i], xScroll + 30, num, 0, mFont.tahoma_7b_dark);
+						mFont.tahoma_7b_green.drawString(g, item.name, xScroll + 30, num, 0);
 					}
 					else
 					{
-						bool flag3 = mGraphics.zoomLevel == 1;
-						if (flag3)
-						{
-							mFont.tahoma_7b_green.drawString(g, MenuHandler.LIST_ITEM_NAME[i], xScroll + 30, num, 0);
-						}
+						mFont.tahoma_7_white.drawStringBd(g, item.name, xScroll + 30, num, 0, mFont.tahoma_7b_dark);
 					}
-					SmallImage.drawSmallImage(g, MenuHandler.LIST_ITEM_ICONID[i], xScroll + 2, num + 2, 0, 0);
-					string st = (ItemHandler.ItemQuantity(MenuHandler.LIST_ITEM_ICONID[i], "iconID") > 0) ? ("Số lượng: x" + ItemHandler.ItemQuantity(MenuHandler.LIST_ITEM_ICONID[i], "iconID").ToString()) : "Không có item.";
-					
-					foreach (ItemHandler.Items items in ItemHandler.ListItemAuto)
+					SmallImage.drawSmallImage(g, item.iconID, xScroll + 2, num + 2, 0, 0);
+					string st = (item.quantity > 0) ? ("Số lượng: x" + item.quantity) : "Số lượng: x0";
+					mFont font = (item.quantity > 0) ? mFont.tahoma_7_yellow : mFont.tahoma_7b_dark;
+					if (item.isAuto)
 					{
-						bool flag4 = items.iconID == MenuHandler.LIST_ITEM_ICONID[i];
-						if (flag4)
-						{
-							mFont = mFont.tahoma_7b_red;
-							g.setColor((i != GameCanvas.panel.selected) ? 0 : 0, 0.5f);
-							g.fillRect(xScroll, num, w, h);
-							st = "ẤN ĐỂ XÓA KHỎI DANH SÁCH ! ! !";
-						}
+						font = mFont.tahoma_7b_red;
+						g.setColor((i != GameCanvas.panel.selected) ? 0 : 0, 0.5f);
+						g.fillRect(xScroll, num, w, h);
+						st = "ẤN ĐỂ XÓA KHỎI DANH SÁCH ! ! !";
 					}
-					mFont.drawString(g, st, xScroll + 30, num + 11, 0);
+					font.drawString(g, st, xScroll + 30, num + 11, 0);
 				}
 			}
 			GameCanvas.panel.paintScrollArrow(g);
@@ -300,23 +471,24 @@ namespace Functions.HandlerFunctions
 		{
 			g.setClip(GameCanvas.panel.xScroll, GameCanvas.panel.yScroll, GameCanvas.panel.wScroll, GameCanvas.panel.hScroll);
 			g.translate(0, -GameCanvas.panel.cmy);
-				for (int i = 0; i < TUTORIAL_SETTINGS.Length; i++)
+			for (int i = 0; i < TUTORIAL_SETTINGS.Length; i++)
+			{
+				int xScroll = GameCanvas.panel.xScroll;
+				int num = GameCanvas.panel.yScroll + i * GameCanvas.panel.ITEM_HEIGHT;
+				int w = GameCanvas.panel.wScroll - 1;
+				int h = GameCanvas.panel.ITEM_HEIGHT - 1;
+				bool flag = num - GameCanvas.panel.cmy <= GameCanvas.panel.yScroll + GameCanvas.panel.hScroll && num - GameCanvas.panel.cmy >= GameCanvas.panel.yScroll - GameCanvas.panel.ITEM_HEIGHT;
+				if (flag)
 				{
-					int xScroll = GameCanvas.panel.xScroll;
-					int num = GameCanvas.panel.yScroll + i * GameCanvas.panel.ITEM_HEIGHT;
-					int w = GameCanvas.panel.wScroll - 1;
-					int h = GameCanvas.panel.ITEM_HEIGHT - 1;
-					bool flag = num - GameCanvas.panel.cmy <= GameCanvas.panel.yScroll + GameCanvas.panel.hScroll && num - GameCanvas.panel.cmy >= GameCanvas.panel.yScroll - GameCanvas.panel.ITEM_HEIGHT;
-					if (flag)
-					{
-						g.setColor((i != GameCanvas.panel.selected) ? 15196114 : 16383818);
-						g.fillRect(xScroll, num, w, h);
-						mFont.tahoma_7b_blue.drawString(g, MenuHandler.TUTORIAL_SETTINGS[i], xScroll + 5, num, 0);
-					}
+					bool isHeader = TUTORIAL_SETTINGS[i].StartsWith("=");
+					g.setColor((i != GameCanvas.panel.selected) ? (isHeader ? 14145495 : 15196114) : 16383818);
+					g.fillRect(xScroll, num, w, h);
+					mFont font = isHeader ? mFont.tahoma_7b_red : mFont.tahoma_7b_blue;
+					font.drawString(g, MenuHandler.TUTORIAL_SETTINGS[i], xScroll + 8, num + 5, 0);
 				}
+			}
 
 			GameCanvas.panel.paintScrollArrow(g);
-
 		}
 		// Token: 0x06000A89 RID: 2697 RVA: 0x000AE32C File Offset: 0x000AC52C
 		
@@ -362,33 +534,40 @@ namespace Functions.HandlerFunctions
 		// Token: 0x06000A86 RID: 2694 RVA: 0x000ADE94 File Offset: 0x000AC094
 		public static void doFireItem(int selected)
 		{
-			bool flag = selected == -1;
-			if (!flag)
+			updateActiveItems();
+			if (selected < 0 || selected >= activeItems.Count)
 			{
-				for (int i = 0; i < global::Char.myCharz().arrItemBag.Length; i++)
+				return;
+			}
+			ActiveItem target = activeItems[selected];
+			if (target.isAuto)
+			{
+				for (int k = 0; k < ItemHandler.ListItemAuto.Count; k++)
 				{
-					Item item = global::Char.myCharz().arrItemBag[i];
-					bool flag2 = item == null;
-					if (flag2)
+					if (ItemHandler.ListItemAuto[k].iconID == target.iconID)
 					{
+						ItemHandler.ListItemAuto.RemoveAt(k);
+						GameScr.info1.addInfo("Đã xóa " + target.name + " khỏi d/s item", 0);
 						break;
-					}
-					bool flag3 = ItemHandler.ItemQuantity(MenuHandler.LIST_ITEM_ICONID[selected], "iconID").Equals(0);
-					if (flag3)
-					{
-						GameScr.info1.addInfo("Bạn Không Có Item!", 0);
-						break;
-					}
-					bool flag4 = ItemHandler.ItemQuantity(MenuHandler.LIST_ITEM_ICONID[selected], "iconID") > 0;
-					if (flag4)
-					{
-						bool flag5 = item.template.name == MenuHandler.LIST_ITEM_NAME[selected];
-						if (flag5)
-						{
-							ItemHandler.AddItemstoList(item);
-						}
 					}
 				}
+			}
+			else
+			{
+				if (target.quantity <= 0)
+				{
+					GameScr.info1.addInfo("Bạn Không Có Item!", 0);
+					return;
+				}
+				ItemHandler.ListItemAuto.Add(new ItemHandler.Items(target.iconID, target.name));
+				GameScr.info1.addInfo("Đã thêm " + target.name + " vào d/s item", 0);
+			}
+			updateActiveItems();
+			GameCanvas.panel.currentListLength = activeItems.Count;
+			GameCanvas.panel.cmyLim = GameCanvas.panel.currentListLength * GameCanvas.panel.ITEM_HEIGHT - GameCanvas.panel.hScroll;
+			if (GameCanvas.panel.cmyLim < 0)
+			{
+				GameCanvas.panel.cmyLim = 0;
 			}
 		}
 		public static void setTypeMenuMod(int panelType)
@@ -425,10 +604,14 @@ namespace Functions.HandlerFunctions
 			switch (GameCanvas.panel.currentTabIndex)
 			{
 				case 0:
-					GameCanvas.panel.currentListLength = MenuHandler.LIST_ITEM_NAME.Length;
+					updateActiveItems();
+					GameCanvas.panel.currentListLength = activeItems.Count;
 					break;
 				case 1:
 					GameCanvas.panel.currentListLength = MenuHandler.GRAPHIC_SETTING_LIST_NAME.Length;
+					break;
+				case 2:
+					GameCanvas.panel.currentListLength = MenuHandler.TUTORIAL_SETTINGS.Length;
 					break;
 			
 			}

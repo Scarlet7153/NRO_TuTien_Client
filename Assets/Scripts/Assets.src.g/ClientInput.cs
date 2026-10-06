@@ -41,14 +41,7 @@ namespace Assets.src.g
 				tf[i].y = y + 35 + (strPaint.Length - 1) * 20 + i * 35;
 				tf[i].width = w - 20;
 				tf[i].height = mScreen.ITEM_HEIGHT + 2;
-				if (GameCanvas.isTouch)
-				{
-					tf[0].isFocus = false;
-				}
-				else
-				{
-					tf[0].isFocus = true;
-				}
+				tf[0].isFocus = true;
 				if (!GameCanvas.isTouch)
 				{
 					right = tf[0].cmdClear;
@@ -88,7 +81,10 @@ namespace Assets.src.g
 
 		public override void paint(mGraphics g)
 		{
-			GameScr.gI().paint(g);
+			if (!GameCanvas.panel.isShow)
+			{
+				GameScr.gI().paint(g);
+			}
 			PopUp.paintPopUp(g, x, y, w, h, -1, true);
 			for (int i = 0; i < strPaint.Length; i++)
 			{
@@ -125,7 +121,7 @@ namespace Assets.src.g
 
 		public override void updateKey()
 		{
-			if (GameCanvas.keyPressed[2])
+			if (GameCanvas.keyPressed[(!Main.isPC) ? 2 : 21])
 			{
 				focus--;
 				if (focus < 0)
@@ -133,7 +129,7 @@ namespace Assets.src.g
 					focus = tf.Length - 1;
 				}
 			}
-			else if (GameCanvas.keyPressed[8])
+			else if (GameCanvas.keyPressed[(!Main.isPC) ? 8 : 22] || GameCanvas.keyPressed[16])
 			{
 				focus++;
 				if (focus > tf.Length - 1)
@@ -141,28 +137,34 @@ namespace Assets.src.g
 					focus = 0;
 				}
 			}
-			if (GameCanvas.keyPressed[2] || GameCanvas.keyPressed[8])
+			if (GameCanvas.keyPressed[(!Main.isPC) ? 2 : 21] || GameCanvas.keyPressed[(!Main.isPC) ? 8 : 22] || GameCanvas.keyPressed[16])
 			{
 				GameCanvas.clearKeyPressed();
+			}
+			if (GameCanvas.isPointerJustRelease)
+			{
 				for (int i = 0; i < tf.Length; i++)
 				{
-					if (focus == i)
-					{
-						tf[i].isFocus = true;
-						if (!GameCanvas.isTouch)
-						{
-							right = tf[i].cmdClear;
-						}
-					}
-					else
-					{
-						tf[i].isFocus = false;
-					}
-					if (GameCanvas.isPointerJustRelease && GameCanvas.isPointerHoldIn(tf[i].x, tf[i].y, tf[i].width, tf[i].height))
+					if (GameCanvas.isPointerHoldIn(tf[i].x, tf[i].y, tf[i].width, tf[i].height))
 					{
 						focus = i;
 						break;
 					}
+				}
+			}
+			for (int j = 0; j < tf.Length; j++)
+			{
+				if (focus == j)
+				{
+					tf[j].isFocus = true;
+					if (!GameCanvas.isTouch)
+					{
+						right = tf[j].cmdClear;
+					}
+				}
+				else
+				{
+					tf[j].isFocus = false;
 				}
 			}
 			base.updateKey();

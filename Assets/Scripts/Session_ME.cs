@@ -305,6 +305,14 @@ public class Session_ME : ISession
 
 	public void connect(string host, int port)
 	{
+		if (string.IsNullOrEmpty(host) || host == "127.0.0.0")
+		{
+			host = "192.168.2.4";
+		}
+		if (port <= 0)
+		{
+			port = 14445;
+		}
 		if (!connected && !connecting && mSystem.currentTimeMillis() >= timeWaitConnect)
 		{
 			timeWaitConnect = mSystem.currentTimeMillis() + 50;
@@ -332,9 +340,10 @@ public class Session_ME : ISession
 			doConnect(host, port);
 			messageHandler.onConnectOK(isMainSession);
 		}
-		catch (Exception)
+		catch (Exception ex)
 		{
-			if (messageHandler != null)
+			bool isCanceled = (ex is SocketException se && se.ErrorCode == 10004);
+			if (messageHandler != null && !isCanceled)
 			{
 				close();
 				messageHandler.onConnectionFail(isMainSession);
@@ -345,6 +354,7 @@ public class Session_ME : ISession
 	public void doConnect(string host, int port)
 	{
 		sc = new TcpClient();
+		sc.NoDelay = true;
 		sc.Connect(host, port);
 		dataStream = sc.GetStream();
 		dis = new BinaryReader(dataStream, new UTF8Encoding());
@@ -495,6 +505,7 @@ public class Session_ME : ISession
 	private static void cleanNetwork()
 	{
 		key = null;
+		getKeyComplete = false;
 		curR = 0;
 		curW = 0;
 		try
@@ -503,47 +514,46 @@ public class Session_ME : ISession
 			connecting = false;
 			if (sc != null)
 			{
-				sc.Close();
+				try { sc.Close(); } catch {}
 				sc = null;
 			}
 			if (dataStream != null)
 			{
-				dataStream.Close();
+				try { dataStream.Close(); } catch {}
 				dataStream = null;
 			}
 			if (dos != null)
 			{
-				dos.Close();
+				try { dos.Close(); } catch {}
 				dos = null;
 			}
 			if (dis != null)
 			{
-				dis.Close();
+				try { dis.Close(); } catch {}
 				dis = null;
 			}
-			if (Thread.CurrentThread.Name == Main.mainThreadName)
+			if (sendThread != null)
 			{
-				if (sendThread != null)
-				{
-					sendThread.Abort();
-				}
+				try { sendThread.Abort(); } catch {}
 				sendThread = null;
-				if (initThread != null)
-				{
-					initThread.Abort();
-				}
+			}
+			if (initThread != null)
+			{
+				try { initThread.Abort(); } catch {}
 				initThread = null;
-				if (collectorThread != null)
-				{
-					collectorThread.Abort();
-				}
+			}
+			if (collectorThread != null)
+			{
+				try { collectorThread.Abort(); } catch {}
 				collectorThread = null;
 			}
-			else
+			if (sender != null && sender.sendingMessage != null)
 			{
-				sendThread = null;
-				initThread = null;
-				collectorThread = null;
+				sender.sendingMessage.Clear();
+			}
+			if (recieveMsg != null)
+			{
+				recieveMsg.removeAllElements();
 			}
 			if (isMainSession)
 			{

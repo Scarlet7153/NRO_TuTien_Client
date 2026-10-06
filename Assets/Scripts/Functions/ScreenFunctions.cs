@@ -33,51 +33,51 @@ namespace Functions
 				paintMobFocusInfo(g, Char.myCharz().mobFocus);
 			}
 		}
-		private static void paintInfo(mGraphics g) {
-			GUIStyle guistyle = new GUIStyle(GUI.skin.label);
-			guistyle.normal.textColor = Color.magenta;
-			guistyle.fontSize = 17;
-			int num = 125;
-            //mFont.tahoma_7_whiteSmall.drawString(g, "Sư Phụ [" + Char.myCharz().cName + "]", 10, num, mFont.LEFT);
-            mFont.tahoma_7_white.drawStringBd(g, "Sư Phụ [" + Char.myCharz().cName + "]", 10, num, mFont.LEFT, mFont.tahoma_7_grey);
-            //g.drawString("Sư Phụ [" + Char.myCharz().cName + "]", 10, num, guistyle);
-            num += 10;
-			//mFont.tahoma_7_blue1Small.drawString(g, "SM: " + NinjaUtil.getMoneys((long)global::Char.myCharz().cPower), 10, num, mFont.LEFT);
-            g.drawString("SM: " + NinjaUtil.getMoneys((long)global::Char.myCharz().cPower), 10, num, guistyle);
-            num += 10;
-            //mFont.tahoma_7_blue1Small.drawString(g, "TN: " + NinjaUtil.getMoneys((long)global::Char.myCharz().cTiemNang), 10, num, mFont.LEFT);
-            g.drawString("TN: " + NinjaUtil.getMoneys((long)global::Char.myCharz().cTiemNang), 10, num, guistyle);
-			num += 10;
-            g.drawString("HP: " + (global::Char.myCharz().cHP >= 100000000L ? NinjaUtil.formatShortNumber(global::Char.myCharz().cHP) : NinjaUtil.getMoneys((long)global::Char.myCharz().cHP)), 10, num, guistyle);
-			num += 10;
-            //mFont.tahoma_7_blue1Small.drawString(g, "KI: " + NinjaUtil.getMoneys((long)global::Char.myCharz().cMP), 10, num, mFont.LEFT);
-            g.drawString("KI: " + (global::Char.myCharz().cMP >= 100000000L ? NinjaUtil.formatShortNumber(global::Char.myCharz().cMP) : NinjaUtil.getMoneys((long)global::Char.myCharz().cMP)), 10, num, guistyle);
-			num += 10;
-            //mFont.tahoma_7_blue1Small.drawString(g, "SD: " + NinjaUtil.getMoneys((long)global::Char.myCharz().cDamFull), 10, num, mFont.LEFT);
-            g.drawString("SD: " + (global::Char.myCharz().cDamFull >= 100000000L ? NinjaUtil.formatShortNumber(global::Char.myCharz().cDamFull) : NinjaUtil.getMoneys((long)global::Char.myCharz().cDamFull)), 10, num, guistyle);
+		private static void paintInfo(mGraphics g)
+		{
 			if (Char.myCharz().havePet)
 			{
 				if (mSystem.currentTimeMillis() - MenuFunctions.lastTimeGetPetSPInfo >= 1000)
 				{
-                    MenuFunctions.lastTimeGetPetSPInfo = mSystem.currentTimeMillis();
-                    Service.gI().petInfo();
+					MenuFunctions.lastTimeGetPetSPInfo = mSystem.currentTimeMillis();
+					Service.gI().petInfo();
 				}
-				GUIStyle guistyle2 = new GUIStyle(GUI.skin.label);
-				guistyle2.normal.textColor = Color.red;
-				guistyle2.fontSize = 17;
-				int num2 = 125;
-				//g.drawString("Đệ Tử [" + Char.myPetz().cName + "]", 80, num2, guistyle2);
-                mFont.tahoma_7_white.drawStringBd(g, "Đệ Tử [" + Char.myPetz().cName + "]", 90, num2, mFont.LEFT, mFont.tahoma_7_grey);
-                num2 += 10;
-				g.drawString("SM: " + NinjaUtil.getMoneys((long)global::Char.myPetz().cPower), 90, num2, guistyle2);
-				num2 += 10;
-				g.drawString("TN: " + NinjaUtil.getMoneys((long)global::Char.myPetz().cTiemNang), 90, num2, guistyle2);
-				num2 += 10;
-				g.drawString("HP: " + (global::Char.myPetz().cHP >= 100000000L ? NinjaUtil.formatShortNumber(global::Char.myPetz().cHP) : NinjaUtil.getMoneys((long)global::Char.myPetz().cHP)), 90, num2, guistyle2);
-				num2 += 10;
-				g.drawString("KI: " + (global::Char.myPetz().cMP >= 100000000L ? NinjaUtil.formatShortNumber(global::Char.myPetz().cMP) : NinjaUtil.getMoneys((long)global::Char.myPetz().cMP)), 90, num2, guistyle2);
-				num2 += 10;
-				g.drawString("SD: " + (global::Char.myPetz().cDamFull >= 100000000L ? NinjaUtil.formatShortNumber(global::Char.myPetz().cDamFull) : NinjaUtil.getMoneys((long)global::Char.myPetz().cDamFull)), 90, num2, guistyle2);
+			}
+
+			bool hasPet = Char.myCharz().havePet && Char.myPetz() != null;
+			int col1X = 10;
+			int col2X = col1X + 112;
+			int lineH = 12;
+
+			// Cột Sư Phụ
+			int y1 = 125;
+			mFont.tahoma_7b_yellow.drawStringBd(g, "Sư Phụ", col1X, y1, mFont.LEFT, mFont.tahoma_7b_dark);
+			y1 += lineH;
+			mFont.tahoma_7_white.drawStringBd(g, "SM: " + NinjaUtil.getMoneys((long)Char.myCharz().cPower), col1X, y1, mFont.LEFT, mFont.tahoma_7b_dark);
+			y1 += lineH;
+			mFont.tahoma_7_white.drawStringBd(g, "TN: " + NinjaUtil.getMoneys((long)Char.myCharz().cTiemNang), col1X, y1, mFont.LEFT, mFont.tahoma_7b_dark);
+			y1 += lineH;
+			mFont.tahoma_7_red.drawStringBd(g, "HP: " + (Char.myCharz().cHP >= 100000000L ? NinjaUtil.formatShortNumber(Char.myCharz().cHP) : NinjaUtil.getMoneys((long)Char.myCharz().cHP)), col1X, y1, mFont.LEFT, mFont.tahoma_7b_dark);
+			y1 += lineH;
+			mFont.tahoma_7_blue1.drawStringBd(g, "KI: " + (Char.myCharz().cMP >= 100000000L ? NinjaUtil.formatShortNumber(Char.myCharz().cMP) : NinjaUtil.getMoneys((long)Char.myCharz().cMP)), col1X, y1, mFont.LEFT, mFont.tahoma_7b_dark);
+			y1 += lineH;
+			mFont.tahoma_7_yellow.drawStringBd(g, "SD: " + (Char.myCharz().cDamFull >= 100000000L ? NinjaUtil.formatShortNumber(Char.myCharz().cDamFull) : NinjaUtil.getMoneys((long)Char.myCharz().cDamFull)), col1X, y1, mFont.LEFT, mFont.tahoma_7b_dark);
+
+			// Cột Đệ Tử (nếu có đệ tử)
+			if (hasPet)
+			{
+				int y2 = 125;
+				mFont.tahoma_7b_yellow.drawStringBd(g, "Đệ Tử", col2X, y2, mFont.LEFT, mFont.tahoma_7b_dark);
+				y2 += lineH;
+				mFont.tahoma_7_white.drawStringBd(g, "SM: " + NinjaUtil.getMoneys((long)Char.myPetz().cPower), col2X, y2, mFont.LEFT, mFont.tahoma_7b_dark);
+				y2 += lineH;
+				mFont.tahoma_7_white.drawStringBd(g, "TN: " + NinjaUtil.getMoneys((long)Char.myPetz().cTiemNang), col2X, y2, mFont.LEFT, mFont.tahoma_7b_dark);
+				y2 += lineH;
+				mFont.tahoma_7_red.drawStringBd(g, "HP: " + (Char.myPetz().cHP >= 100000000L ? NinjaUtil.formatShortNumber(Char.myPetz().cHP) : NinjaUtil.getMoneys((long)Char.myPetz().cHP)), col2X, y2, mFont.LEFT, mFont.tahoma_7b_dark);
+				y2 += lineH;
+				mFont.tahoma_7_blue1.drawStringBd(g, "KI: " + (Char.myPetz().cMP >= 100000000L ? NinjaUtil.formatShortNumber(Char.myPetz().cMP) : NinjaUtil.getMoneys((long)Char.myPetz().cMP)), col2X, y2, mFont.LEFT, mFont.tahoma_7b_dark);
+				y2 += lineH;
+				mFont.tahoma_7_yellow.drawStringBd(g, "SD: " + (Char.myPetz().cDamFull >= 100000000L ? NinjaUtil.formatShortNumber(Char.myPetz().cDamFull) : NinjaUtil.getMoneys((long)Char.myPetz().cDamFull)), col2X, y2, mFont.LEFT, mFont.tahoma_7b_dark);
 			}
 		}
 		private static void paintModInfo(mGraphics g)

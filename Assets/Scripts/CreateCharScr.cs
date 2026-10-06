@@ -71,7 +71,14 @@ public class CreateCharScr : mScreen, IActionListener
 		}
 		indexGender = 1;
 		tAddName = new TField();
-		tAddName.width = GameCanvas.loginScr.tfUser.width;
+		if (GameCanvas.loginScr != null && GameCanvas.loginScr.tfUser != null)
+		{
+			tAddName.width = GameCanvas.loginScr.tfUser.width;
+		}
+		else
+		{
+			tAddName.width = 160;
+		}
 		if (GameCanvas.w < 200)
 		{
 			tAddName.width = 60;
@@ -94,9 +101,14 @@ public class CreateCharScr : mScreen, IActionListener
 		tAddName.setIputType(TField.INPUT_TYPE_ANY);
 		tAddName.showSubTextField = false;
 		tAddName.strInfo = mResources.char_name;
-		if (tAddName.getText().Equals("@"))
+		if (tAddName.getText().Equals("@") && GameCanvas.loginScr != null && GameCanvas.loginScr.tfUser != null)
 		{
-			tAddName.setText(GameCanvas.loginScr.tfUser.getText().Substring(0, GameCanvas.loginScr.tfUser.getText().IndexOf("@")));
+			string uText = GameCanvas.loginScr.tfUser.getText();
+			int atIdx = uText.IndexOf("@");
+			if (atIdx != -1)
+			{
+				tAddName.setText(uText.Substring(0, atIdx));
+			}
 		}
 		tAddName.name = mResources.char_name;
 		indexGender = 1;
@@ -589,7 +601,7 @@ public class CreateCharScr : mScreen, IActionListener
 			Service.gI().createChar(tAddName.getText(), indexGender, hairID[indexGender][indexHair]);
 			break;
 		case 8001:
-			if (GameCanvas.loginScr.isLogin2)
+			if (GameCanvas.loginScr != null && GameCanvas.loginScr.isLogin2)
 			{
 				GameCanvas.startYesNoDlg(mResources.note, new Command(mResources.YES, this, 10019, null), new Command(mResources.NO, this, 10020, null));
 				break;
