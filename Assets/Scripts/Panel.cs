@@ -2415,24 +2415,26 @@ public class Panel : IActionListener, IChatable
 			string text2 = string.Empty;
 			if (item.itemOption != null)
 			{
-				if (item.itemOption.Length > 0 && item.itemOption[0] != null)
+				for (int l = 0; l < item.itemOption.Length; l++)
 				{
-					text2 += item.itemOption[0].getOptionString();
+					if (item.itemOption[l] != null && item.itemOption[l].optionTemplate != null
+						&& item.itemOption[l].optionTemplate.id != 102 && item.itemOption[l].optionTemplate.id != 107 && item.itemOption[l].optionTemplate.id != 73)
+					{
+						string optionString = item.itemOption[l].getOptionString();
+						if (!string.IsNullOrEmpty(optionString))
+						{
+							if (!string.IsNullOrEmpty(text2))
+							{
+								text2 += ",";
+							}
+							text2 += optionString;
+						}
+					}
 				}
 				mFont mFont3 = mFont.tahoma_7_blue;
 				if (item.compare < 0 && item.template.type != 5)
 				{
 					mFont3 = mFont.tahoma_7_red;
-				}
-				if (item.itemOption.Length > 1)
-				{
-					for (int l = 1; l < item.itemOption.Length; l++)
-					{
-						if (item.itemOption[l] != null && item.itemOption[l].optionTemplate.id != 102 && item.itemOption[l].optionTemplate.id != 107)
-						{
-							text2 = text2 + "," + item.itemOption[l].getOptionString();
-						}
-					}
 				}
 				mFont3.drawString(g, text2, num + 5, num2 + 11, mFont.LEFT);
 			}
@@ -4483,24 +4485,26 @@ public class Panel : IActionListener, IChatable
 				string text2 = string.Empty;
 				if (item.itemOption != null)
 				{
-					if (item.itemOption.Length > 0 && item.itemOption[0] != null && item.itemOption[0].optionTemplate.id != 102 && item.itemOption[0].optionTemplate.id != 107)
+					for (int l = 0; l < item.itemOption.Length; l++)
 					{
-						text2 += item.itemOption[0].getOptionString();
+						if (item.itemOption[l] != null && item.itemOption[l].optionTemplate != null
+							&& item.itemOption[l].optionTemplate.id != 102 && item.itemOption[l].optionTemplate.id != 107 && item.itemOption[l].optionTemplate.id != 73)
+						{
+							string optionString = item.itemOption[l].getOptionString();
+							if (!string.IsNullOrEmpty(optionString))
+							{
+								if (!string.IsNullOrEmpty(text2))
+								{
+									text2 += ",";
+								}
+								text2 += optionString;
+							}
+						}
 					}
 					mFont mFont3 = mFont.tahoma_7_blue;
 					if (item.compare < 0 && item.template.type != 5)
 					{
 						mFont3 = mFont.tahoma_7_red;
-					}
-					if (item.itemOption.Length > 1)
-					{
-						for (int l = 1; l < 2; l++)
-						{
-							if (item.itemOption[l] != null && item.itemOption[l].optionTemplate.id != 102 && item.itemOption[l].optionTemplate.id != 107)
-							{
-								text2 = text2 + "," + item.itemOption[l].getOptionString();
-							}
-						}
 					}
 					mFont3.drawString(g, text2, num3 + 5, num4 + 11, mFont.LEFT);
 				}
@@ -4993,24 +4997,26 @@ public class Panel : IActionListener, IChatable
 				string text2 = string.Empty;
 				if (item.itemOption != null)
 				{
-					if (item.itemOption.Length > 0 && item.itemOption[0] != null)
+					for (int m = 0; m < item.itemOption.Length; m++)
 					{
-						text2 += item.itemOption[0].getOptionString();
+						if (item.itemOption[m] != null && item.itemOption[m].optionTemplate != null
+							&& item.itemOption[m].optionTemplate.id != 102 && item.itemOption[m].optionTemplate.id != 107 && item.itemOption[m].optionTemplate.id != 73)
+						{
+							string optionString = item.itemOption[m].getOptionString();
+							if (!string.IsNullOrEmpty(optionString))
+							{
+								if (!string.IsNullOrEmpty(text2))
+								{
+									text2 += ",";
+								}
+								text2 += optionString;
+							}
+						}
 					}
 					mFont mFont3 = mFont.tahoma_7_blue;
 					if (item.compare < 0 && item.template.type != 5)
 					{
 						mFont3 = mFont.tahoma_7_red;
-					}
-					if (item.itemOption.Length > 1)
-					{
-						for (int m = 1; m < item.itemOption.Length; m++)
-						{
-							if (item.itemOption[m] != null && item.itemOption[m].optionTemplate.id != 102 && item.itemOption[m].optionTemplate.id != 107)
-							{
-								text2 = text2 + "," + item.itemOption[m].getOptionString();
-							}
-						}
 					}
 					mFont3.drawString(g, text2, num2 + 5, num3 + 11, mFont.LEFT);
 				}
@@ -5638,24 +5644,26 @@ public class Panel : IActionListener, IChatable
 			string text2 = string.Empty;
 			if (item.itemOption != null)
 			{
-				if (item.itemOption.Length > 0 && item.itemOption[0] != null && item.itemOption[0].optionTemplate.id != 102 && item.itemOption[0].optionTemplate.id != 107)
+				for (int m = 0; m < item.itemOption.Length; m++)
 				{
-					text2 += item.itemOption[0].getOptionString();
+					if (item.itemOption[m] != null && item.itemOption[m].optionTemplate != null
+						&& item.itemOption[m].optionTemplate.id != 102 && item.itemOption[m].optionTemplate.id != 107 && item.itemOption[m].optionTemplate.id != 73)
+					{
+						string optionString = item.itemOption[m].getOptionString();
+						if (!string.IsNullOrEmpty(optionString))
+						{
+							if (!string.IsNullOrEmpty(text2))
+							{
+								text2 += ",";
+							}
+							text2 += optionString;
+						}
+					}
 				}
 				mFont mFont3 = mFont.tahoma_7_blue;
 				if (item.compare < 0 && item.template.type != 5)
 				{
 					mFont3 = mFont.tahoma_7_red;
-				}
-				if (item.itemOption.Length > 1)
-				{
-					for (int m = 1; m < item.itemOption.Length; m++)
-					{
-						if (item.itemOption[m] != null && item.itemOption[m].optionTemplate.id != 102 && item.itemOption[m].optionTemplate.id != 107)
-						{
-							text2 = text2 + "," + item.itemOption[m].getOptionString();
-						}
-					}
 				}
 				mFont3.drawString(g, text2, num + 5, num2 + 11, mFont.LEFT);
 			}
@@ -5913,24 +5921,26 @@ public class Panel : IActionListener, IChatable
 				string text2 = string.Empty;
 				if (itemInvenNew.itemOption != null)
 				{
-					if (itemInvenNew.itemOption.Length > 0 && itemInvenNew.itemOption[0] != null && itemInvenNew.itemOption[0].optionTemplate.id != 102 && itemInvenNew.itemOption[0].optionTemplate.id != 107)
+					for (int num17 = 0; num17 < itemInvenNew.itemOption.Length; num17++)
 					{
-						text2 += itemInvenNew.itemOption[0].getOptionString();
+						if (itemInvenNew.itemOption[num17] != null && itemInvenNew.itemOption[num17].optionTemplate != null
+							&& itemInvenNew.itemOption[num17].optionTemplate.id != 102 && itemInvenNew.itemOption[num17].optionTemplate.id != 107 && itemInvenNew.itemOption[num17].optionTemplate.id != 73)
+						{
+							string optionString = itemInvenNew.itemOption[num17].getOptionString();
+							if (!string.IsNullOrEmpty(optionString))
+							{
+								if (!string.IsNullOrEmpty(text2))
+								{
+									text2 += ",";
+								}
+								text2 += optionString;
+							}
+						}
 					}
 					mFont mFont3 = mFont.tahoma_7_blue;
 					if (itemInvenNew.compare < 0 && itemInvenNew.template.type != 5)
 					{
 						mFont3 = mFont.tahoma_7_red;
-					}
-					if (itemInvenNew.itemOption.Length > 1)
-					{
-						for (int num17 = 1; num17 < 2; num17++)
-						{
-							if (itemInvenNew.itemOption[num17] != null && itemInvenNew.itemOption[num17].optionTemplate.id != 102 && itemInvenNew.itemOption[num17].optionTemplate.id != 107)
-							{
-								text2 = text2 + "," + itemInvenNew.itemOption[num17].getOptionString();
-							}
-						}
 					}
 					try
 					{
@@ -6060,24 +6070,26 @@ public class Panel : IActionListener, IChatable
 				string text4 = string.Empty;
 				if (item3.itemOption != null)
 				{
-					if (item3.itemOption.Length > 0 && item3.itemOption[0] != null && item3.itemOption[0].optionTemplate.id != 102 && item3.itemOption[0].optionTemplate.id != 107)
+					for (int num32 = 0; num32 < item3.itemOption.Length; num32++)
 					{
-						text4 += item3.itemOption[0].getOptionString();
+						if (item3.itemOption[num32] != null && item3.itemOption[num32].optionTemplate != null
+							&& item3.itemOption[num32].optionTemplate.id != 102 && item3.itemOption[num32].optionTemplate.id != 107 && item3.itemOption[num32].optionTemplate.id != 73)
+						{
+							string optionString = item3.itemOption[num32].getOptionString();
+							if (!string.IsNullOrEmpty(optionString))
+							{
+								if (!string.IsNullOrEmpty(text4))
+								{
+									text4 += ",";
+								}
+								text4 += optionString;
+							}
+						}
 					}
 					mFont mFont5 = mFont.tahoma_7_blue;
 					if (item3.compare < 0 && item3.template.type != 5)
 					{
 						mFont5 = mFont.tahoma_7_red;
-					}
-					if (item3.itemOption.Length > 1)
-					{
-						for (int num32 = 1; num32 < 2; num32++)
-						{
-							if (item3.itemOption[num32] != null && item3.itemOption[num32].optionTemplate.id != 102 && item3.itemOption[num32].optionTemplate.id != 107)
-							{
-								text4 = text4 + "," + item3.itemOption[num32].getOptionString();
-							}
-						}
 					}
 					mFont5.drawString(g, text4, num23 + 5, num24 + 11, mFont.LEFT);
 				}
@@ -7727,8 +7739,7 @@ public class Panel : IActionListener, IChatable
 				selected = (GameCanvas.isTouch ? (-1) : 0);
 				InfoDlg.showWait();
 				Service.gI().combine(1, vItemCombine);
-                AutoSpecialSkillFunctions.startMenu();
-                return;
+				return;
 			}
 			if (selected > vItemCombine.size() - 1)
 			{

@@ -1478,6 +1478,7 @@ public class GameScr : mScreen, IChatable
 		{
 			myVector.addElement(new Command(menu[i], 11057, npc));
 		}
+		GameCanvas.menu.showMenu = false;
 		GameCanvas.menu.startAt(myVector, 2);
 	}
 

@@ -81,16 +81,7 @@ public class MagicTree : Npc, IActionListener
 		{
 			mFont.tahoma_7b_white.drawString(g, name, cx, cy - SmallImage.smallImg[id][4] - 17, mFont.CENTER, mFont.tahoma_7_grey);
 		}
-		try
-		{
-			for (int i = 0; i < currPeas; i++)
-			{
-				g.drawImage(pea, cx + peaPostionX[i] - SmallImage.smallImg[id][3] / 2, cy + peaPostionY[i] - SmallImage.smallImg[id][4], 0);
-			}
-		}
-		catch (Exception)
-		{
-		}
+
 		if (indexEffTask < 0 || effTask == null || cTypePk != 0)
 		{
 			return;
@@ -168,19 +159,11 @@ public class MagicTree : Npc, IActionListener
 		}
 		if (isPeasEffect)
 		{
-			p.isPaint = false;
-			ServerEffect.addServerEffect(98, cx + peaPostionX[currPeas - 1] - SmallImage.smallImg[id][3] / 2, cy + peaPostionY[currPeas - 1] - SmallImage.smallImg[id][4], 1);
-			currPeas--;
-			if (GameCanvas.gameTick % 2 == 0)
-			{
-				SoundMn.gI().HP_MPup();
-			}
-			if (currPeas == remainPeas)
-			{
-				p.isPaint = true;
-				isUpdateTree = true;
-				isPeasEffect = false;
-			}
+			p.isPaint = true;
+			isUpdateTree = true;
+			isPeasEffect = false;
+			currPeas = remainPeas;
+			SoundMn.gI().HP_MPup();
 		}
 		base.update();
 	}
