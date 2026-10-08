@@ -31,7 +31,11 @@ public class CreateCharScr : mScreen, IActionListener
 
 	private int disY;
 
-	private int[] bgID = new int[3] { 45, 4, 8 };
+	// ID tile sheet để load tile (dùng cho TileMap.tileID + 1)
+	private int[] tileSheetID = new int[3] { 0, 4, 8 };
+	// Background type để load ảnh bg (phải khớp với file /bg/b{type}*.png)
+	// 1=Trái đất (b10-b13), 4=Naméc (b40-b43), 8=Xayda (b80-b83)
+	private int[] bgType = new int[3] { 1, 4, 8 };
 
 	public int yBegin;
 
@@ -240,8 +244,12 @@ public class CreateCharScr : mScreen, IActionListener
 		GameCanvas.menu.showMenu = false;
 		GameCanvas.endDlg();
 		base.switchToMe();
+		// Đảm bảo parts và SmallImage luôn được khởi tạo trước khi vẽ nhân vật
+		GameScr.gI().initSelectChar();
 		indexGender = Res.random(0, 3);
 		indexHair = Res.random(0, 3);
+		// Reset lastBgID để loadBG() không bị skip khi bgID trùng lần trước
+		TileMap.lastBgID = -1;
 		doChangeMap();
 		Char.isLoadingMap = false;
 		tAddName.setFocusWithKb(true);
@@ -261,11 +269,12 @@ public class CreateCharScr : mScreen, IActionListener
 		TileMap.tileID = MapTemplate.pxw[indexGender];
 		TileMap.tmw = MapTemplate.tmw[indexGender];
 		TileMap.tmh = MapTemplate.tmh[indexGender];
-		TileMap.tileID = bgID[indexGender] + 1;
+		TileMap.tileID = tileSheetID[indexGender] + 1;
 		TileMap.loadMainTile();
 		TileMap.loadTileCreatChar();
-		GameCanvas.loadBG(bgID[indexGender]);
+		GameCanvas.loadBG(bgType[indexGender]);
 		GameScr.loadCamera(false, cx, cy);
+		cx = GameScr.cmx + GameCanvas.w / 2;
 	}
 
 	public override void keyPress(int keyCode)
@@ -462,9 +471,9 @@ public class CreateCharScr : mScreen, IActionListener
 		Part part = GameScr.parts[num2];
 		Part part2 = GameScr.parts[num3];
 		Part part3 = GameScr.parts[num4];
-		SmallImage.drawSmallImage(g, part.pi[Char.CharInfo[cf][0][0]].id, cx + Char.CharInfo[cf][0][1] + part.pi[Char.CharInfo[cf][0][0]].dx, cy - Char.CharInfo[cf][0][2] + part.pi[Char.CharInfo[cf][0][0]].dy + dy, 0, 0);
 		SmallImage.drawSmallImage(g, part2.pi[Char.CharInfo[cf][1][0]].id, cx + Char.CharInfo[cf][1][1] + part2.pi[Char.CharInfo[cf][1][0]].dx, cy - Char.CharInfo[cf][1][2] + part2.pi[Char.CharInfo[cf][1][0]].dy + dy, 0, 0);
 		SmallImage.drawSmallImage(g, part3.pi[Char.CharInfo[cf][2][0]].id, cx + Char.CharInfo[cf][2][1] + part3.pi[Char.CharInfo[cf][2][0]].dx, cy - Char.CharInfo[cf][2][2] + part3.pi[Char.CharInfo[cf][2][0]].dy + dy, 0, 0);
+		SmallImage.drawSmallImage(g, part.pi[Char.CharInfo[cf][0][0]].id, cx + Char.CharInfo[cf][0][1] + part.pi[Char.CharInfo[cf][0][0]].dx, cy - Char.CharInfo[cf][0][2] + part.pi[Char.CharInfo[cf][0][0]].dy + dy, 0, 0);
 		if (!GameCanvas.lowGraphic)
 		{
 			for (int j = 0; j < MapTemplate.vCurrItem[indexGender].size(); j++)
@@ -480,9 +489,9 @@ public class CreateCharScr : mScreen, IActionListener
 		if (GameCanvas.w < 200)
 		{
 			GameCanvas.paintz.paintFrame(GameScr.popupX, GameScr.popupY, GameScr.popupW, GameScr.popupH, g);
-			SmallImage.drawSmallImage(g, part.pi[Char.CharInfo[0][0][0]].id, GameCanvas.w / 2 + Char.CharInfo[0][0][1] + part.pi[Char.CharInfo[0][0][0]].dx, GameScr.popupY + 30 + 3 * num - Char.CharInfo[0][0][2] + part.pi[Char.CharInfo[0][0][0]].dy + dy, 0, 0);
 			SmallImage.drawSmallImage(g, part2.pi[Char.CharInfo[0][1][0]].id, GameCanvas.w / 2 + Char.CharInfo[0][1][1] + part2.pi[Char.CharInfo[0][1][0]].dx, GameScr.popupY + 30 + 3 * num - Char.CharInfo[0][1][2] + part2.pi[Char.CharInfo[0][1][0]].dy + dy, 0, 0);
 			SmallImage.drawSmallImage(g, part3.pi[Char.CharInfo[0][2][0]].id, GameCanvas.w / 2 + Char.CharInfo[0][2][1] + part3.pi[Char.CharInfo[0][2][0]].dx, GameScr.popupY + 30 + 3 * num - Char.CharInfo[0][2][2] + part3.pi[Char.CharInfo[0][2][0]].dy + dy, 0, 0);
+			SmallImage.drawSmallImage(g, part.pi[Char.CharInfo[0][0][0]].id, GameCanvas.w / 2 + Char.CharInfo[0][0][1] + part.pi[Char.CharInfo[0][0][0]].dx, GameScr.popupY + 30 + 3 * num - Char.CharInfo[0][0][2] + part.pi[Char.CharInfo[0][0][0]].dy + dy, 0, 0);
 			for (int k = 0; k < mResources.MENUNEWCHAR.Length; k++)
 			{
 				if (selected == k)

@@ -95,9 +95,9 @@ public class ChooseCharScr : mScreen, IActionListener
 					Part part = GameScr.parts[playerData[j].head];
 					Part part2 = GameScr.parts[playerData[j].leg];
 					Part part3 = GameScr.parts[playerData[j].body];
-					SmallImage.drawSmallImage(g, part.pi[Char.CharInfo[cf][0][0]].id, cx[j] + Char.CharInfo[cf][0][1] + part.pi[Char.CharInfo[cf][0][0]].dx, cy[j] - Char.CharInfo[cf][0][2] + part.pi[Char.CharInfo[cf][0][0]].dy, 0, 0);
 					SmallImage.drawSmallImage(g, part2.pi[Char.CharInfo[cf][1][0]].id, cx[j] + Char.CharInfo[cf][1][1] + part2.pi[Char.CharInfo[cf][1][0]].dx, cy[j] - Char.CharInfo[cf][1][2] + part2.pi[Char.CharInfo[cf][1][0]].dy, 0, 0);
 					SmallImage.drawSmallImage(g, part3.pi[Char.CharInfo[cf][2][0]].id, cx[j] + Char.CharInfo[cf][2][1] + part3.pi[Char.CharInfo[cf][2][0]].dx, cy[j] - Char.CharInfo[cf][2][2] + part3.pi[Char.CharInfo[cf][2][0]].dy, 0, 0);
+					SmallImage.drawSmallImage(g, part.pi[Char.CharInfo[cf][0][0]].id, cx[j] + Char.CharInfo[cf][0][1] + part.pi[Char.CharInfo[cf][0][0]].dx, cy[j] - Char.CharInfo[cf][0][2] + part.pi[Char.CharInfo[cf][0][0]].dy, 0, 0);
 					if (focus == j)
 					{
 						mFont.tahoma_7b_yellow.drawString(g, playerData[j].name, cx[j] + rectPanel[2] - 25, cy[j] + offsetY, 1);
