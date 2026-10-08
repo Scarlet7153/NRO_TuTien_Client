@@ -16,6 +16,7 @@ namespace Functions
 		/// <summary>
 		public static CharFunctions _Instance = new CharFunctions();
 		public static bool dangLogin;
+		public static bool isAutoLogin;
 		public static bool isAutoNhatXa;
 		public static int xNhatXa;
 		public static int yNhatXa;
