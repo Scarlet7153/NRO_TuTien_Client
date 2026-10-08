@@ -37,6 +37,7 @@ public class mFont
 	private Image imgFont;
 
 	private string strFont;
+	private int[] charIndex;
 
 	private int[][] fImages;
 
@@ -163,6 +164,16 @@ public class mFont
 		try
 		{
 			this.strFont = strFont;
+			
+			int maxChar = 0;
+			for (int i = 0; i < strFont.Length; i++) {
+				if (strFont[i] > maxChar) maxChar = strFont[i];
+			}
+			this.charIndex = new int[maxChar + 1];
+			for (int i = 0; i < this.charIndex.Length; i++) this.charIndex[i] = -1;
+			for (int i = 0; i < strFont.Length; i++) {
+				if (this.charIndex[strFont[i]] == -1) this.charIndex[strFont[i]] = i;
+			}
 			this.space = space;
 			this.pathImage = pathImage;
 			DataInputStream dataInputStream = null;
@@ -429,7 +440,7 @@ public class mFont
 			}
 			for (int i = 0; i < length; i++)
 			{
-				int num2 = strFont.IndexOf(st[i] + string.Empty);
+				int num2 = (charIndex != null && st[i] < charIndex.Length) ? charIndex[st[i]] : -1;
 				if (num2 == -1)
 				{
 					num2 = 0;
@@ -513,7 +524,7 @@ public class mFont
 			}
 			for (int i = 0; i < length; i++)
 			{
-				int num2 = strFont.IndexOf(st[i]);
+				int num2 = (charIndex != null && st[i] < charIndex.Length) ? charIndex[st[i]] : -1;
 				if (num2 == -1)
 				{
 					num2 = 0;
@@ -720,7 +731,7 @@ public class mFont
 			int num = 0;
 			for (int i = 0; i < s.Length; i++)
 			{
-				int num2 = strFont.IndexOf(s[i]);
+				int num2 = (charIndex != null && s[i] < charIndex.Length) ? charIndex[s[i]] : -1;
 				if (num2 == -1)
 				{
 					num2 = 0;
