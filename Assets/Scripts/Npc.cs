@@ -302,6 +302,14 @@ public class Npc : Char
 						SmallImage.drawSmallImage(g, part2.pi[Char.CharInfo[cf][1][0]].id, cx - Char.CharInfo[cf][1][1] - part2.pi[Char.CharInfo[cf][1][0]].dx, cy - Char.CharInfo[cf][1][2] + part2.pi[Char.CharInfo[cf][1][0]].dy, 2, 24);
 						SmallImage.drawSmallImage(g, part3.pi[Char.CharInfo[cf][2][0]].id, cx - Char.CharInfo[cf][2][1] - part3.pi[Char.CharInfo[cf][2][0]].dx, cy - Char.CharInfo[cf][2][2] + part3.pi[Char.CharInfo[cf][2][0]].dy, 2, 24);
 					}
+					if (part != null && part.pi != null && part.pi.Length > 0 && part.pi[Char.CharInfo[cf][0][0]] != null)
+					{
+						int customH = Char.CharInfo[cf][0][2] - part.pi[Char.CharInfo[cf][0][0]].dy - 2;
+						if (customH > ch)
+						{
+							ch = customH;
+						}
+					}
 					if (TileMap.mapID != 51)
 					{
 						int num2 = 15;
