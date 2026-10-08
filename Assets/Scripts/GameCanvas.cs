@@ -596,11 +596,7 @@ public class GameCanvas : IActionListener
                 bool flag7 = mSystem.currentTimeMillis() - GameCanvas.lastTimePress > 20000L && GameCanvas.currentScreen == GameCanvas.loginScr;
                 if (flag7)
                 {
-                    bool isAutoLogin = CharFunctions.isAutoLogin;
-                    if (isAutoLogin)
-                    {
-                        new Thread(new ThreadStart(CharFunctions.AutoLogin)).Start();
-                    }
+                    // Removed AutoLogin thread due to Unity crash
                 }
                 gameTick = 0;
 			}
@@ -846,11 +842,7 @@ public class GameCanvas : IActionListener
 		{
 			ServerListScreen.testConnect = 0;
 		}
-        bool isAutoLogin = CharFunctions.isAutoLogin;
-        if (isAutoLogin)
-        {
-            new Thread(new ThreadStart(CharFunctions.AutoLogin)).Start();
-        }
+        // Removed AutoLogin thread due to Unity crash
         
         instance.resetToLoginScrz();
 		mSystem.endKey();
