@@ -1,573 +1,176 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Net.Sockets;
-using System.Text;
-using System.Threading;
-using UnityEngine;
+using NRO.Net;
+using NRO.Util;
 
-public class Session_ME2 : ISession
+public class Session_ME2 : ISession, INetLog
 {
-	public class Sender
-	{
-		public List<Message> sendingMessage;
+    protected static Session_ME2 instance = new Session_ME2();
 
-		public Sender()
-		{
-			sendingMessage = new List<Message>();
-		}
+    public static IMessageHandler messageHandler;
+    public static bool isMainSession = false;
 
-		public void AddMessage(Message message)
-		{
-			sendingMessage.Add(message);
-		}
+    private GameConnection _conn;
+    private Queue<NetEvent> _localEventQueue = new Queue<NetEvent>();
 
-		public void run()
-		{
-			while (connected)
-			{
-				try
-				{
-					if (getKeyComplete)
-					{
-						while (sendingMessage.Count > 0)
-						{
-							Message m = sendingMessage[0];
-							doSendMessage(m);
-							sendingMessage.RemoveAt(0);
-						}
-					}
-					try
-					{
-						Thread.Sleep(5);
-					}
-					catch (Exception ex)
-					{
-						Cout.LogError(ex.ToString());
-					}
-				}
-				catch (Exception)
-				{
-					Res.outz("error send message! ");
-				}
-			}
-		}
-	}
+    [Obsolete("Use _conn.SendBytes instead")]
+    public static int sendByteCount => instance != null && instance._conn != null ? (int)instance._conn.SendBytes : 0;
+    
+    [Obsolete("Use _conn.RecvBytes instead")]
+    public static int recvByteCount => instance != null && instance._conn != null ? (int)instance._conn.RecvBytes : 0;
 
-	private class MessageCollector
-	{
-		public void run()
-		{
-			try
-			{
-				while (connected)
-				{
-					Message message = readMessage();
-					if (message == null)
-					{
-						break;
-					}
-					try
-					{
-						if (message.command == -27)
-						{
-							getKey(message);
-						}
-						else
-						{
-							onRecieveMsg(message);
-						}
-					}
-					catch (Exception)
-					{
-						Cout.println("LOI NHAN  MESS THU 1");
-					}
-					try
-					{
-						Thread.Sleep(5);
-					}
-					catch (Exception)
-					{
-						Cout.println("LOI NHAN  MESS THU 2");
-					}
-				}
-			}
-			catch (Exception)
-			{
-			}
-			if (!connected)
-			{
-				return;
-			}
-			if (messageHandler != null)
-			{
-				if (currentTimeMillis() - timeConnected > 500)
-				{
-					messageHandler.onDisconnected(isMainSession);
-				}
-				else
-				{
-					messageHandler.onConnectionFail(isMainSession);
-				}
-			}
-			if (sc != null)
-			{
-				cleanNetwork();
-			}
-		}
+    public static bool connected => instance != null && instance._conn != null && instance._conn.IsConnected;
+    public static bool connecting => instance != null && instance._conn != null && instance._conn.IsConnecting;
+    public static bool isCancel;
+    public static int count;
+    public static sbyte[] key = null; 
 
-		private void getKey(Message message)
-		{
-			try
-			{
-				sbyte b = message.reader().readSByte();
-				key = new sbyte[b];
-				for (int i = 0; i < b; i++)
-				{
-					key[i] = message.reader().readSByte();
-				}
-				for (int j = 0; j < key.Length - 1; j++)
-				{
-					ref sbyte reference = ref key[j + 1];
-					reference = (sbyte)(reference ^ key[j]);
-				}
-				getKeyComplete = true;
-				GameMidlet.IP2 = message.reader().readUTF();
-				GameMidlet.PORT2 = message.reader().readInt();
-				GameMidlet.isConnect2 = ((message.reader().readByte() != 0) ? true : false);
-				if (isMainSession && GameMidlet.isConnect2)
-				{
-					GameCanvas.connect2();
-				}
-			}
-			catch (Exception)
-			{
-			}
-		}
+    public static string strRecvByteCount
+    {
+        get
+        {
+            if (instance == null || instance._conn == null) return "0.0Kb";
+            long total = instance._conn.RecvBytes + instance._conn.SendBytes;
+            return (total / 1024) + "." + ((total % 1024) / 102) + "Kb";
+        }
+        set { }
+    }
 
-		private Message readMessage2(sbyte cmd)
-		{
-			int num = readKey(dis.ReadSByte()) + 128;
-			int num2 = readKey(dis.ReadSByte()) + 128;
-			int num3 = readKey(dis.ReadSByte()) + 128;
-			int num4 = (num3 * 256 + num2) * 256 + num;
-			Cout.LogError("SIZE = " + num4);
-			sbyte[] array = new sbyte[num4];
-			int num5 = 0;
-			byte[] src = dis.ReadBytes(num4);
-			//Buffer.BlockCopy(src, 0, array, 0, num4);
-            array = ArrayCast.cast(src);
-            recvByteCount += 5 + num4;
-			int num6 = recvByteCount + sendByteCount;
-			strRecvByteCount = num6 / 1024 + "." + num6 % 1024 / 102 + "Kb";
-			if (getKeyComplete)
-			{
-				for (int i = 0; i < array.Length; i++)
-				{
-					array[i] = readKey(array[i]);
-				}
-			}
-			return new Message(cmd, array);
-		}
+    public Session_ME2()
+    {
+        _conn = new GameConnection(this, new HashSet<sbyte> { -32, -66, 11, -67, -74, -87 });
+    }
 
-		private Message readMessage()
-		{
-			try
-			{
-				sbyte b = dis.ReadSByte();
-				if (getKeyComplete)
-				{
-					b = readKey(b);
-				}
-				if (b == -32 || b == -66 || b == 11 || b == -67 || b == -74 || b == -87)
-				{
-					return readMessage2(b);
-				}
-				int num;
-				if (getKeyComplete)
-				{
-					sbyte b2 = dis.ReadSByte();
-					sbyte b3 = dis.ReadSByte();
-					num = ((readKey(b2) & 0xFF) << 8) | (readKey(b3) & 0xFF);
-				}
-				else
-				{
-					sbyte b4 = dis.ReadSByte();
-					sbyte b5 = dis.ReadSByte();
-					num = (b4 & 0xFF00) | (b5 & 0xFF);
-				}
-				sbyte[] array = new sbyte[num];
-				int num2 = 0;
-				int num3 = 0;
-				byte[] src = dis.ReadBytes(num);
-				//Buffer.BlockCopy(src, 0, array, 0, num);
+    public static Session_ME2 gI()
+    {
+        if (instance == null) instance = new Session_ME2();
+        return instance;
+    }
 
-				recvByteCount += 5 + num;
-				int num4 = recvByteCount + sendByteCount;
-				strRecvByteCount = num4 / 1024 + "." + num4 % 1024 / 102 + "Kb";
-				if (getKeyComplete)
-				{
-					for (int i = 0; i < array.Length; i++)
-					{
-						array[i] = readKey(array[i]);
-					}
-				}
-				return new Message(b, array);
-			}
-			catch (Exception)
-			{
-			}
-			return null;
-		}
-	}
+    public bool isConnected() => _conn != null && _conn.IsConnected;
+    
+    public void setHandler(IMessageHandler msgHandler)
+    {
+        messageHandler = msgHandler;
+    }
 
-	protected static Session_ME2 instance = new Session_ME2();
+    public void connect(string host, int port)
+    {
+        _localEventQueue.Clear();
+        _conn.Connect(host, port);
+    }
 
-	private static NetworkStream dataStream;
+    public void sendMessage(Message message)
+    {
+        count++;
+        sbyte[] data = message.getData();
+        _conn.SendMessage(new RawPacket(message.command, data));
+    }
 
-	private static BinaryReader dis;
+    public void clearSendingMessage()
+    {
+        _conn.ClearSendingMessage();
+    }
 
-	private static BinaryWriter dos;
+    public void close()
+    {
+        _conn.Close();
+    }
 
-	public static IMessageHandler messageHandler;
+    public static void update()
+    {
+        if (instance == null || instance._conn == null) return;
 
-	public static bool isMainSession = true;
+        while (instance._conn.TryGetEvent(out NetEvent ev))
+        {
+            instance._localEventQueue.Enqueue(ev);
+        }
 
-	private static TcpClient sc;
+        while (instance._localEventQueue.Count > 0)
+        {
+            NetEvent ev = instance._localEventQueue.Peek();
 
-	public static bool connected;
+            if (ev.Type == NetEventType.Message)
+            {
+                if (Controller.isStopReadMessage) break;
+                
+                instance._localEventQueue.Dequeue();
+                Message msg = new Message(ev.Packet.Command, ev.Packet.Payload);
+                if (messageHandler != null) messageHandler.onMessage(msg);
+            }
+            else
+            {
+                instance._localEventQueue.Dequeue();
+                if (ev.Type == NetEventType.Connected)
+                {
+                    if (messageHandler != null) messageHandler.onConnectOK(isMainSession);
+                }
+                else if (ev.Type == NetEventType.ConnectFailed)
+                {
+                    if (messageHandler != null) messageHandler.onConnectionFail(isMainSession);
+                }
+                else if (ev.Type == NetEventType.Disconnected)
+                {
+                    if (messageHandler != null) messageHandler.onDisconnected(isMainSession);
+                }
+                else if (ev.Type == NetEventType.Handshake)
+                {
+                    if (ev.Packet.Payload != null)
+                    {
+                        try {
+                            Message msg = new Message(ev.Packet.Command, ev.Packet.Payload);
+                            sbyte b = msg.reader().readSByte();
+                            for (int i = 0; i < b; i++) msg.reader().readSByte();
+                            
+                            GameMidlet.IP2 = msg.reader().readUTF();
+                            GameMidlet.PORT2 = msg.reader().readInt();
+                            GameMidlet.isConnect2 = (msg.reader().readByte() != 0);
+                            
+                            if (isMainSession && GameMidlet.isConnect2)
+                            {
+                                GameCanvas.connect2();
+                            }
+                        } catch { }
+                    }
+                }
+            }
+        }
+    }
 
-	public static bool connecting;
+    public static int currentTimeMillis()
+    {
+        return Environment.TickCount;
+    }
 
-	private static Sender sender = new Sender();
+    public static byte convertSbyteToByte(sbyte var)
+    {
+        if (var > 0) return (byte)var;
+        return (byte)(var + 256);
+    }
 
-	public static Thread initThread;
+    public static byte[] convertSbyteToByte(sbyte[] var)
+    {
+        byte[] array = new byte[var.Length];
+        for (int i = 0; i < var.Length; i++)
+        {
+            if (var[i] > 0) array[i] = (byte)var[i];
+            else array[i] = (byte)(var[i] + 256);
+        }
+        return array;
+    }
 
-	public static Thread collectorThread;
+    public bool isCompareIPConnect()
+    {
+        return true;
+    }
 
-	public static Thread sendThread;
+    public void LogError(string msg)
+    {
+        Cout.LogError(msg);
+    }
 
-	public static int sendByteCount;
-
-	public static int recvByteCount;
-
-	private static bool getKeyComplete;
-
-	public static sbyte[] key = null;
-
-	private static sbyte curR;
-
-	private static sbyte curW;
-
-	private static int timeConnected;
-
-	private long lastTimeConn;
-
-	public static string strRecvByteCount = string.Empty;
-
-	public static bool isCancel;
-
-	private string host;
-
-	private int port;
-
-	private long timeWaitConnect;
-
-	public static MyVector recieveMsg = new MyVector();
-
-	public Session_ME2()
-	{
-	}
-
-	public void clearSendingMessage()
-	{
-		sender.sendingMessage.Clear();
-	}
-
-	public static Session_ME2 gI()
-	{
-		if (instance == null)
-		{
-			instance = new Session_ME2();
-		}
-		return instance;
-	}
-
-	public bool isConnected()
-	{
-		return connected && sc != null && dis != null;
-	}
-
-	public void setHandler(IMessageHandler msgHandler)
-	{
-		messageHandler = msgHandler;
-	}
-
-	public void connect(string host, int port)
-	{
-		if (!connected && !connecting && mSystem.currentTimeMillis() >= timeWaitConnect)
-		{
-			timeWaitConnect = mSystem.currentTimeMillis() + 50;
-			this.host = host;
-			this.port = port;
-			getKeyComplete = false;
-			close();
-			initThread = new Thread(NetworkInit);
-			initThread.Start();
-		}
-	}
-
-	private void NetworkInit()
-	{
-		isCancel = false;
-		connecting = true;
-		Thread.CurrentThread.Priority = System.Threading.ThreadPriority.Highest;
-		connected = true;
-		try
-		{
-			doConnect(host, port);
-			messageHandler.onConnectOK(isMainSession);
-		}
-		catch (Exception)
-		{
-			if (messageHandler != null)
-			{
-				close();
-				messageHandler.onConnectionFail(isMainSession);
-			}
-		}
-	}
-
-	public void doConnect(string host, int port)
-	{
-		sc = new TcpClient();
-		sc.NoDelay = true;
-		sc.Connect(host, port);
-		dataStream = sc.GetStream();
-		dis = new BinaryReader(dataStream, new UTF8Encoding());
-		dos = new BinaryWriter(dataStream, new UTF8Encoding());
-		sendThread = new Thread(sender.run);
-		sendThread.Start();
-		MessageCollector @object = new MessageCollector();
-		Cout.LogError("new -----");
-		collectorThread = new Thread(@object.run);
-		collectorThread.Start();
-		timeConnected = currentTimeMillis();
-		connecting = false;
-		doSendMessage(new Message(-27));
-	}
-
-	public void sendMessage(Message message)
-	{
-		Res.outz("SEND MSG: " + message.command);
-		sender.AddMessage(message);
-	}
-
-	private static void doSendMessage(Message m)
-	{
-		sbyte[] data = m.getData();
-		try
-		{
-			if (getKeyComplete)
-			{
-				sbyte value = writeKey(m.command);
-				dos.Write(value);
-			}
-			else
-			{
-				dos.Write(m.command);
-			}
-			if (data != null)
-			{
-				int num = data.Length;
-				if (getKeyComplete)
-				{
-					int num2 = writeKey((sbyte)(num >> 8));
-					dos.Write((sbyte)num2);
-					int num3 = writeKey((sbyte)(num & 0xFF));
-					dos.Write((sbyte)num3);
-				}
-				else
-				{
-					dos.Write((ushort)num);
-				}
-				if (getKeyComplete)
-				{
-					for (int i = 0; i < data.Length; i++)
-					{
-						sbyte value2 = writeKey(data[i]);
-						dos.Write(value2);
-					}
-				}
-				sendByteCount += 5 + data.Length;
-			}
-			else
-			{
-				if (getKeyComplete)
-				{
-					int num4 = 0;
-					int num5 = writeKey((sbyte)(num4 >> 8));
-					dos.Write((sbyte)num5);
-					int num6 = writeKey((sbyte)(num4 & 0xFF));
-					dos.Write((sbyte)num6);
-				}
-				else
-				{
-					dos.Write((ushort)0);
-				}
-				sendByteCount += 5;
-			}
-			dos.Flush();
-		}
-		catch (Exception)
-		{
-		}
-	}
-
-	public static sbyte readKey(sbyte b)
-	{
-		sbyte[] array = key;
-		sbyte num = curR;
-		curR = (sbyte)(num + 1);
-		sbyte result = (sbyte)((array[num] & 0xFF) ^ (b & 0xFF));
-		if (curR >= key.Length)
-		{
-			curR = (sbyte)(curR % (sbyte)key.Length);
-		}
-		return result;
-	}
-
-	public static sbyte writeKey(sbyte b)
-	{
-		sbyte[] array = key;
-		sbyte num = curW;
-		curW = (sbyte)(num + 1);
-		sbyte result = (sbyte)((array[num] & 0xFF) ^ (b & 0xFF));
-		if (curW >= key.Length)
-		{
-			curW = (sbyte)(curW % (sbyte)key.Length);
-		}
-		return result;
-	}
-
-	public static void onRecieveMsg(Message msg)
-	{
-		if (Thread.CurrentThread.Name == Main.mainThreadName)
-		{
-			messageHandler.onMessage(msg);
-		}
-		else
-		{
-			recieveMsg.addElement(msg);
-		}
-	}
-
-	public static void update()
-	{
-		while (recieveMsg.size() > 0)
-		{
-			Message message = (Message)recieveMsg.elementAt(0);
-			if (Controller.isStopReadMessage)
-			{
-				break;
-			}
-			if (message == null)
-			{
-				recieveMsg.removeElementAt(0);
-				break;
-			}
-			messageHandler.onMessage(message);
-			recieveMsg.removeElementAt(0);
-		}
-	}
-
-	public void close()
-	{
-		cleanNetwork();
-	}
-
-	private static void cleanNetwork()
-	{
-		key = null;
-		getKeyComplete = false;
-		curR = 0;
-		curW = 0;
-		try
-		{
-			connected = false;
-			connecting = false;
-			if (sc != null)
-			{
-				try { sc.Close(); } catch {}
-				sc = null;
-			}
-			if (dataStream != null)
-			{
-				try { dataStream.Close(); } catch {}
-				dataStream = null;
-			}
-			if (dos != null)
-			{
-				try { dos.Close(); } catch {}
-				dos = null;
-			}
-			if (dis != null)
-			{
-				try { dis.Close(); } catch {}
-				dis = null;
-			}
-			if (sendThread != null)
-			{
-				try { sendThread.Abort(); } catch {}
-				sendThread = null;
-			}
-			if (collectorThread != null)
-			{
-				try { collectorThread.Abort(); } catch {}
-				collectorThread = null;
-			}
-			if (sender != null && sender.sendingMessage != null)
-			{
-				sender.sendingMessage.Clear();
-			}
-			if (recieveMsg != null)
-			{
-				recieveMsg.removeAllElements();
-			}
-		}
-		catch (Exception)
-		{
-		}
-	}
-
-	public static int currentTimeMillis()
-	{
-		return Environment.TickCount;
-	}
-
-	public static byte convertSbyteToByte(sbyte var)
-	{
-		if (var > 0)
-		{
-			return (byte)var;
-		}
-		return (byte)(var + 256);
-	}
-
-	public static byte[] convertSbyteToByte(sbyte[] var)
-	{
-		byte[] array = new byte[var.Length];
-		for (int i = 0; i < var.Length; i++)
-		{
-			if (var[i] > 0)
-			{
-				array[i] = (byte)var[i];
-			}
-			else
-			{
-				array[i] = (byte)(var[i] + 256);
-			}
-		}
-		return array;
-	}
+    public void LogInfo(string msg)
+    {
+        Cout.println(msg);
+    }
 }

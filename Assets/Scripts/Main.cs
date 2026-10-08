@@ -148,8 +148,7 @@ public class Main : MonoBehaviour
 			}
 			fps++;
 			checkInput();
-			Session_ME.update();
-			Session_ME2.update();
+
 			if (Event.current.type.Equals(EventType.Repaint))
 			{
 				GameMidlet.gameCanvas.paint(g);
@@ -267,8 +266,7 @@ public class Main : MonoBehaviour
 
 	private void FixedUpdate()
 	{
-		Session_ME.update();
-		Session_ME2.update();
+
 		Rms.update();
 		count++;
 		if (count >= 10)
