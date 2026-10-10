@@ -23,6 +23,7 @@ namespace NRO.UI
         // Typography Colors
         public static readonly Color ColorTextPrimary = new Color(0.973f, 0.98f, 0.988f); // #F8FAFC - Bạch Vân
         public static readonly Color ColorTextSecondary = new Color(0.58f, 0.639f, 0.722f); // #94A3B8 - Sương Mù
+        public static readonly Color ColorTextMuted = new Color(0.58f, 0.639f, 0.722f); // Alias cho ColorTextSecondary
         public static readonly Color ColorTextGold = new Color(1f, 0.9f, 0.4f); // Hoàng Kim Chữ
 
         // 2. Metrics & Dimensions
