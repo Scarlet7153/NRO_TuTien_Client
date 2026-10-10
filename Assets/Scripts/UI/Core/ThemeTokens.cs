@@ -17,11 +17,14 @@ namespace NRO.UI
 
         // Backgrounds
         public static readonly Color ColorDarkBg = new Color(0.071f, 0.067f, 0.102f, 0.95f); // #12111A - Màn Đêm U Tịch
+        public static readonly Color ColorDarkBackground = ColorDarkBg; // Alias
         public static readonly Color ColorCardBg = new Color(0.118f, 0.11f, 0.169f, 0.9f); // #1E1C2B - Thẻ Bài / Ngọc Giản
+        public static readonly Color ColorCardBackground = ColorCardBg; // Alias
         public static readonly Color ColorCardBorder = new Color(0.247f, 0.231f, 0.353f, 0.8f); // #3F3B5A - Viền Đồng Cổ
 
         // Typography Colors
         public static readonly Color ColorTextPrimary = new Color(0.973f, 0.98f, 0.988f); // #F8FAFC - Bạch Vân
+        public static readonly Color ColorTextLight = ColorTextPrimary; // Alias
         public static readonly Color ColorTextSecondary = new Color(0.58f, 0.639f, 0.722f); // #94A3B8 - Sương Mù
         public static readonly Color ColorTextMuted = new Color(0.58f, 0.639f, 0.722f); // Alias cho ColorTextSecondary
         public static readonly Color ColorTextGold = new Color(1f, 0.9f, 0.4f); // Hoàng Kim Chữ
