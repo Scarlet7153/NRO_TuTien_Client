@@ -7,9 +7,9 @@ namespace NRO.UI
     public static class UiFlags
     {
         public static bool EnableNewSplash { get; set; } = false;
-        public static bool EnableNewLogin { get; set; } = false;
-        public static bool EnableNewCharSelect { get; set; } = false;
-        public static bool EnableNewHud { get; set; } = false;
+        public static bool EnableNewLogin { get; set; } = true;
+        public static bool EnableNewCharSelect { get; set; } = true;
+        public static bool EnableNewHud { get; set; } = true;
         public static bool EnableNewInventory { get; set; } = false;
         public static bool EnableNewDialogs { get; set; } = false;
 

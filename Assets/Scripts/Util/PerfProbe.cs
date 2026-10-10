@@ -21,7 +21,7 @@ namespace NRO.Util
         private ProfilerRecorder _gcRecorder;
         private ProfilerRecorder _drawCallsRecorder;
 
-        private bool _showOsd = true;
+        private bool _showOsd = false;
         private readonly KeyCode _toggleKey1 = KeyCode.BackQuote; // Phim `~`
         private readonly KeyCode _toggleKey2 = KeyCode.F12;
 
