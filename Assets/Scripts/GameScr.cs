@@ -5966,6 +5966,7 @@ public static GameScr gI()
 
 	private void paintInfoBar(mGraphics g)
 	{
+		if (NRO.UIBridge.HudBridge.ShouldSuppressLegacyHud()) return;
 		resetTranslate(g);
 		if (TileMap.mapID == 130 && findCharVS1() != null && findCharVS2() != null)
 		{
@@ -6066,6 +6067,7 @@ public static GameScr gI()
 
 	private void paintSelectedSkill(mGraphics g)
 	{
+		if (NRO.UIBridge.HudBridge.ShouldSuppressLegacyHud()) return;
 		if (mobCapcha != null)
 		{
 			paintCapcha(g);
@@ -7145,6 +7147,7 @@ public static GameScr gI()
 
 	private void paintGamePad(mGraphics g)
 	{
+		if (NRO.UIBridge.HudBridge.ShouldSuppressLegacyHud()) return;
 		if (isAnalog != 0 && Char.myCharz().statusMe != 14)
 		{
 			g.drawImage((mScreen.keyTouch != 5 && mScreen.keyMouse != 5) ? imgFire0 : imgFire1, xF + 20, yF + 20, mGraphics.HCENTER | mGraphics.VCENTER);

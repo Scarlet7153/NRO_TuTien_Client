@@ -313,6 +313,10 @@ public class Main : MonoBehaviour
 	{
 		Session_ME.update();
 		Session_ME2.update();
+		if (NRO.UI.UiFlags.EnableNewHud && GameCanvas.currentScreen == GameScr.instance)
+		{
+			NRO.UIBridge.HudBridge.UpdateHudData();
+		}
 	}
 
 	private void checkInput()

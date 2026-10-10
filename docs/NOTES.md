@@ -71,6 +71,14 @@ docs/
   - [CharacterBridge.cs](../Assets/Scripts/UIBridge/CharacterBridge.cs): Kết nối với `CreateCharScr` và `Service.gI().createChar` `[A]`.
 - **Unit Tests:** Bổ sung [SliceViewModelsTests.cs](../Assets/Scripts/UI/Tests/SliceViewModelsTests.cs) kiểm thử toàn diện logic đăng nhập và tạo nhân vật `[A]`.
 
+### Sprint 5: Lát Cắt S3 (HUD Lõi Tu Tiên In-Game) (Wave 5)
+- **P4.3 Prep (L1 Layering):** Phân tách lớp vẽ thế giới game và HUD trong [GameScr.cs](../Assets/Scripts/GameScr.cs), tích hợp điểm ngắt an toàn `HudBridge.ShouldSuppressLegacyHud()` tại `paintInfoBar`, `paintSelectedSkill`, `paintGamePad` `[A]`.
+- **Lát cắt S3 (HUD Lõi Tu Tiên):**
+  - [HudViewModel.cs](../Assets/Scripts/UI/Core/ViewModels/HudViewModel.cs): Quản lý Sinh Mệnh (HP/MP/Tu vi), Kính Chiếu Yêu (Target Mob/Player), Ngũ Hành Thần Thông (5 kỹ năng + cooldown) và Đan Dược/Đậu Thần `[A]`.
+  - [HudView.cs](../Assets/Scripts/UI/Core/Views/HudView.cs): Giao diện uGUI Greybox HUD Tu Tiên hoàn chỉnh (Avatar Bát Quái, thanh Huyết Khí/Linh Lực, Kính Chiếu Yêu, cụm 5 nút kỹ năng rẻ quạt công thái học, phím tắt 1-5 / Space / Tab / B) `[A]`.
+  - [HudBridge.cs](../Assets/Scripts/UIBridge/HudBridge.cs): Cầu nối hai chiều giữa `GameScr` và `HudViewModel`, tự động cập nhật dữ liệu và kết nối sự kiện xuất chiêu, dùng đậu thần, đổi mục tiêu, mở hành trang `[A]`.
+- **Unit Tests:** Bổ sung [HudViewModelTests.cs](../Assets/Scripts/UI/Tests/HudViewModelTests.cs) kiểm thử toàn diện logic tính toán phần trăm, cảnh giới tu vi và sự kiện HUD `[A]`.
+
 ---
 
 ## 4. Bảng Hiện Trạng Các Cổng Kiểm Soát (Gate Status)
