@@ -83,56 +83,57 @@ namespace Functions
 		private static void paintModInfo(mGraphics g)
         {
 			int num = 100;
-			mFont mfont = mFont.tahoma_7b_yellowSmall2;
+			mFont mfont = mFont.tahoma_7_white;
+			mFont fontBorder = mFont.tahoma_7b_dark;
 			int anchor = mFont.LEFT;
             if (SkillFunctions.isAutoSendAttack)
             {
-				mfont.drawString(g, "Tự Đánh: Bật", 7 , num, anchor);
+				mfont.drawStringBd(g, "Tự Đánh: Bật", 7, num, anchor, fontBorder);
 				num += 10;
             }
             if (Char.isPetHandler)
             {
-				mfont.drawString(g, "Auto Up Đệ: Bật" ,7 , num, anchor);
+				mfont.drawStringBd(g, "Auto Up Đệ: Bật", 7, num, anchor, fontBorder);
 				num += 10;
             }
             if (AutoPickMobHandler.IsTanSat)
             {
-				mfont.drawString(g, "Tàn Sát: Bật", 7, num, anchor);
+				mfont.drawStringBd(g, "Tàn Sát: Bật", 7, num, anchor, fontBorder);
 				num += 10;
             }
             if (MainFunctions.isSanBoss)
             {
-				mfont.drawString(g, "Thông Báo Boss: Bật", 7, num, anchor);
+				mfont.drawStringBd(g, "Thông Báo Boss: Bật", 7, num, anchor, fontBorder);
 				num += 10;
 			}
             if (CharFunctions.getInstance().AutoRivive())
             {
-				mfont.drawString(g, "Auto Hồi Sinh: Bật", 7, num, anchor);
+				mfont.drawStringBd(g, "Auto Hồi Sinh: Bật", 7, num, anchor, fontBorder);
 				num += 10;
 			}
             if (CharFunctions.isAutoLogin)
             {
-				mfont.drawString(g, "Auto Login: Bật", 7, num, anchor);
+				mfont.drawStringBd(g, "Auto Login: Bật", 7, num, anchor, fontBorder);
 				num += 10;
 			}
             if (AutoPickFunctions.isAutoPick)
             {
-				mfont.drawString(g, "Auto Nhặt: Bật", 7, num, anchor);
+				mfont.drawStringBd(g, "Auto Nhặt: Bật", 7, num, anchor, fontBorder);
 				num += 10;
 			}
             if (GraphicsHandler.xoamap)
             {
-				mfont.drawString(g, "Xóa Map: Bật", 7, num, anchor);
+				mfont.drawStringBd(g, "Xóa Map: Bật", 7, num, anchor, fontBorder);
 				num += 10;
 			}
             if (GraphicsHandler.listchar)
             {
-				mfont.drawString(g, "D.Sách Nhân Vật: Bật", 7, num, anchor);
+				mfont.drawStringBd(g, "D.Sách Nhân Vật: Bật", 7, num, anchor, fontBorder);
 				num += 10;
 			}
             if (GraphicsHandler.enablePaintColor_Wallpaper)
             {
-				mfont.drawString(g, "Mã Màu Nền: " + GraphicsHandler.ColorRGB, 7, num, anchor);
+				mfont.drawStringBd(g, "Mã Màu Nền: " + GraphicsHandler.ColorRGB, 7, num, anchor, fontBorder);
 				num += 10;
 			}
         }
