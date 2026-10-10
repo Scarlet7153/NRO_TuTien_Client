@@ -2639,6 +2639,10 @@ public class GameCanvas : IActionListener
 
 	public static void startOKDlg(string info)
 	{
+		if (NRO.UIBridge.DialogBridge.TryInterceptOkDlg(info))
+		{
+			return;
+		}
 		closeKeyBoard();
 		msgdlg.setInfo(info, null, new Command(mResources.OK, instance, 8882, null), null);
 		currentDialog = msgdlg;
@@ -2688,6 +2692,10 @@ public class GameCanvas : IActionListener
 
 	public static void startYesNoDlg(string info, Command cmdYes, Command cmdNo)
 	{
+		if (NRO.UIBridge.DialogBridge.TryInterceptYesNoDlg(info, cmdYes, cmdNo))
+		{
+			return;
+		}
 		closeKeyBoard();
 		msgdlg.setInfo(info, cmdYes, null, cmdNo);
 		msgdlg.show();

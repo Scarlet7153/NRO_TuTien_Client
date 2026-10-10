@@ -456,4 +456,14 @@ public class Image
 			data[i] = mGraphics.getIntByColor(pixels[i]);
 		}
 	}
+
+	public void DestroyTexture()
+	{
+		if (texture != null)
+		{
+			UnityEngine.Object.Destroy(texture);
+			texture = null;
+		}
+	}
 }
+

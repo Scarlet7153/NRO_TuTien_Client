@@ -1,7 +1,7 @@
 # NRO_TuTien_Client — Tài Liệu Kiến Trúc & Tái Cấu Trúc Tổng Hợp
 
 > Tài liệu đầu mối tổng hợp cho cả 2 luồng công việc: **Track N** (Network & Performance Refactor) và **Track U** (UI/UX Tu Tiên Redesign).  
-> Cập nhật: 10/10/2026 — **Sprint 2 (Wave 2 - Technical Foundations) ĐÃ HOÀN TẤT CODE**.
+> Cập nhật: 10/10/2026 — **Sprint 3 (Wave 3 - Technical Infrastructure & Spike Layering) ĐÃ HOÀN TẤT CODE**.
 
 ---
 
@@ -17,7 +17,8 @@ docs/
 └── ui/                          <-- Track U: Tu Tiên UI/UX Overhaul
     ├── PANEL_INVENTORY.md       <-- Kiểm kê toàn diện 26 Panel Types + NewPanel + Các Screen
     ├── HUD_INVENTORY.md         <-- Kiểm kê HUD chiến đấu GameScr (HP/MP, Joystick, Kỹ năng, Commands)
-    └── SERVER_ADDITIONS.md      <-- Phân định dữ liệu Client Tự Suy Diễn vs Đề xuất Server (Draft)
+    ├── SERVER_ADDITIONS.md      <-- Phân định dữ liệu Client Tự Suy Diễn vs Đề xuất Server (Draft)
+    └── SPIKE_LAYERING.md        <-- Kết luận thực nghiệm thứ tự render IMGUI vs uGUI Canvas (Gate G-C)
 ```
 
 ---
@@ -50,6 +51,13 @@ docs/
   - `Assets/Scripts/UIBridge/PlayerStateAdapter.cs` & `LegacyResourcesLocalizerAdapter.cs` nằm trong `Assembly-CSharp` gốc kết nối an toàn `[A]`.
 - **D1.6:** Hiện thực `ILocalizer`: Chỉ đọc `mResources` + JSON rỗng `{}`. Bỏ toàn bộ từ điển Tu Tiên / tính toán Cảnh Giới ở Sprint 2 `[A]`.
 
+### Sprint 3: Hạ Tầng Kỹ Thuật & Spike Layering (Wave 3)
+- **P2.2:** Triển khai giải phóng VRAM GPU: Bổ sung `DestroyTexture()` vào [Image.cs](../Assets/Scripts/Image.cs) và cơ chế thu hồi an toàn trong [Small.cs](../Assets/Scripts/Assets.src.e/Small.cs) và [SmallImage.cs](../Assets/Scripts/SmallImage.cs) (ngưỡng 200 lowGraphic / 800 normal), triệt tiêu rò rỉ GPU Texture `[A]`.
+- **D1.1:** Hoàn thành báo cáo thực nghiệm [SPIKE_LAYERING.md](ui/SPIKE_LAYERING.md) (Gate G-C): Phân định rõ L0 (Pre-Game Canvas không bị che khuất) và L1 (In-Game HUD cần P4.3 backend) `[A]`.
+- **D1.3:** Hiện thực bộ khung điều hướng UI: [UiRoot.cs](../Assets/Scripts/UI/Core/UiRoot.cs) (CanvasScaler 1280x720, EventSystem), [UiRouter.cs](../Assets/Scripts/UI/Core/UiRouter.cs) (Navigation Stack), [ModalManager.cs](../Assets/Scripts/UI/Core/ModalManager.cs) (Dim Backdrop), [ToastService.cs](../Assets/Scripts/UI/Core/ToastService.cs) (Thông báo nổi) `[A]`.
+- **D1.7:** Hiện thực [DialogBridge.cs](../Assets/Scripts/UIBridge/DialogBridge.cs) và gắn móc an toàn trong `GameCanvas.startOKDlg/startYesNoDlg` (chuyển hướng sang Modal/Toast khi `UiFlags.EnableNewDialogs == true`, giữ 100% logic cũ khi tắt) `[A]`.
+- **Unit Tests:** Bổ sung [UiFrameworkTests.cs](../Assets/Scripts/UI/Tests/UiFrameworkTests.cs) kiểm thử toàn diện `UiFlags`, `UiRouter`, `ModalManager` `[A]`.
+
 ---
 
 ## 4. Bảng Hiện Trạng Các Cổng Kiểm Soát (Gate Status)
@@ -59,59 +67,54 @@ docs/
 | **P1.1, P1.2** | `NRO.Net` + Golden Tests | Code hoàn thành `[A]` | Người dùng chạy Test Runner EditMode xác nhận Xanh lá `[H]`. |
 | **P1.3, P1.4** | `GameConnection` & Facade `Session_ME` | Code hoàn thành `[A]` | **CHƯA TÍNH LÀ XONG** — Cần người dùng playtest **P1-PT** không lỗi mạng (Gate G-B) `[H]`. |
 | **P0.3** | Đo đạc Baseline | Code hoàn thành `[A]` | Người dùng đo 4 kịch bản trên tag `baseline-before-refactor` để lập mốc so sánh (Gate G-A) `[H]`. |
-| **D1.2, D1.6** | UI Asmdef & ILocalizer | Code hoàn thành `[A]` | Unity compile 0 error, Test Runner EditMode `NRO.UI.Tests` pass `[H]`. |
+| **Gate G-C** | Spike Layering (D1.1) | **ĐÃ THÔNG QUA `[A]`** | Đã kết luận tại [SPIKE_LAYERING.md](ui/SPIKE_LAYERING.md): S1-S2 đi trước trên L0, S3 chờ L1 (P4.3). |
+| **D1.3, D1.7** | UI Framework & DialogBridge | Code hoàn thành `[A]` | Unity compile 0 error, Test Runner EditMode `NRO.UI.Tests` pass `[H]`. |
 
 ---
 
 ## 5. Hai Phiếu Kiểm Thử Độc Lập Cho Người Dùng (Theo G13)
 
-### Phiếu 1: Unity Test Card — Track N (P0.3 PerfProbe Baseline)
+### Phiếu 1: Unity Test Card — Track N (P2.2 LRU Texture Cache)
 
 ```text
-## Unity Test Card — P0.3 (PerfProbe Baseline Measurement)
-Nhánh: docs/analysis (hoặc checkout baseline-before-refactor)   Unity: 6000.0.57f1
+## Unity Test Card — P2.2 (LRU Texture Cache & VRAM Cleanup)
+Nhánh: docs/analysis   Unity: 6000.0.57f1
 Loại: [Track N]
 
 1. Mở project Unity, chờ nạp mã nguồn.
    Kỳ vọng: 0 compile errors trên Console.
-2. Đo Baseline trên tag 'baseline-before-refactor':
-   - git checkout baseline-before-refactor
-   - Đưa file PerfProbe.cs vào Assets/Scripts/Util/PerfProbe.cs
+2. Kiểm tra giải phóng Texture:
    - Bấm Play scene game.
-   - Bấm phím `~` (BackQuote) hoặc F12 để hiển thị OSD PerfProbe góc trên phải.
-3. Chạy 4 kịch bản chuẩn trong 60 giây mỗi kịch bản:
-   a) Màn hình đăng nhập / Đứng yên tại Làng Aru.
-   b) Di chuyển liên tục qua 3 map.
-   c) Đánh quái / dùng chiêu thức liên tục.
-   d) Mở / đóng Panel hành trang 20 lần.
-4. Kết quả mong đợi:
-   - Ghi lại các chỉ số: FPS trung bình, 1% Low, FrameTime (ms), GC Alloc/Frame, Draw Calls.
-   - Lưu kết quả làm mốc so sánh cho Gate G-A.
+   - Bấm `~` (BackQuote) hoặc F12 để mở PerfProbe OSD quan sát chỉ số Heap và Memory.
+   - Di chuyển qua 3-5 map khác nhau (để nạp nhiều icon quái và NPC vào SmallImage).
+   - Mở Panel Hành Trang lướt xem các item.
+   - Quan sát Memory: Sau khi chuyển map hoặc sau chu kỳ dọn dẹp, VRAM/Heap không bị tăng đột biến không kiểm soát.
+3. Kết quả mong đợi:
+   - Game chạy mượt mà, không gặp lỗi MissingReferenceException của Texture.
+   - Icon vật phẩm và sprite nhân vật hiển thị đầy đủ, sắc nét, không bị trắng/mất hình.
 ```
 
 ---
 
-### Phiếu 2: Unity Test Card — Track U (D1.2 asmdef & D1.6 ILocalizer)
+### Phiếu 2: Unity Test Card — Track U (D1.1, D1.3 & D1.7 UI Core Framework)
 
 ```text
-## Unity Test Card — D1.2 & D1.6 (UI Architecture & Localizer)
+## Unity Test Card — D1.1, D1.3 & D1.7 (UI Router, Modals & DialogBridge)
 Nhánh: docs/analysis   Unity: 6000.0.57f1
 Loại: [Track U]
 
 1. Mở project Unity trên nhánh docs/analysis, chờ compile hoàn tất.
    Kỳ vọng: 0 compile errors.
-   Unity tự động nhận diện 3 asmdef: NRO.UI.Contracts, NRO.UI, NRO.UI.Tests.
 2. Kiểm tra Test Runner:
-   - Menu: Window > General > Test Runner (hoặc Window > Analysis > Test Runner).
-   - Chọn tab: EditMode.
-   - Bấm nút: 'Run All'.
+   - Mở Window > General > Test Runner > Tab EditMode > Bấm 'Run All'.
    Kỳ vọng:
    - NRO.Net.Tests tiếp tục XANH LÁ (Passed).
-   - NRO.UI.Tests (LocalizerTests) XANH LÁ (Passed 100%).
-3. Thao tác thử Game:
+   - NRO.UI.Tests (LocalizerTests, UiFrameworkTests) XANH LÁ (Passed 100%).
+3. Đọc tài liệu Spike Layering:
+   - Xem file docs/ui/SPIKE_LAYERING.md để nắm rõ kết luận về cơ chế IMGUI vs uGUI Canvas.
+4. Kiểm tra độ an toàn hồi quy (Regression Test):
    - Bấm Play scene game.
-   - Đăng nhập và vào game bình thường.
-4. Kết quả mong đợi:
-   - Game chạy nguyên vẹn như cũ, 0 ngoại lệ trên Console.
-   - UiFlags mặc định tắt toàn bộ nên không ảnh hưởng đến giao diện hiện hành.
+   - Đăng nhập và trải nghiệm các tính năng hiện hành.
+5. Kết quả mong đợi:
+   - Do UiFlags mặc định tắt toàn bộ, game chạy 100% như cũ, không có lỗi ngoại lệ trên Console.
 ```

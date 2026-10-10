@@ -51,7 +51,17 @@ namespace Assets.src.e
 			timeUpdate++;
 			if (timeUpdate - timePaint > 1 && !Char.myCharz().isCharBodyImageID(id))
 			{
+				Destroy();
 				SmallImage.imgNew[id] = null;
+			}
+		}
+
+		public void Destroy()
+		{
+			if (img != null && img != SmallImage.imgEmpty)
+			{
+				img.DestroyTexture();
+				img = null;
 			}
 		}
 	}

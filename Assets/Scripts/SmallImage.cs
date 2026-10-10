@@ -281,8 +281,16 @@ public class SmallImage
 				smallCount++;
 			}
 		}
-		if (num > 200 && GameCanvas.lowGraphic)
+		if ((num > 200 && GameCanvas.lowGraphic) || num > 800)
 		{
+			for (int j = 0; j < imgNew.Length; j++)
+			{
+				if (imgNew[j] != null)
+				{
+					imgNew[j].Destroy();
+					imgNew[j] = null;
+				}
+			}
 			imgNew = new Small[maxSmall];
 		}
 	}
