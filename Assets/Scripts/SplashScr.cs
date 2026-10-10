@@ -144,14 +144,12 @@ public class SplashScr : mScreen
 			g.setColor(0);
 			g.fillRect(0, 0, GameCanvas.w, GameCanvas.h);
 			g.drawImage(LoginScr.imgTitle, GameCanvas.w / 2, GameCanvas.h / 2 - 24, StaticObj.BOTTOM_HCENTER);
-			GameCanvas.paintShukiren(GameCanvas.hw, GameCanvas.h / 2 + 24, g);
 			mFont.tahoma_7b_white.drawString(g, mResources.downloading_data + nData * 100 / maxData + "%", GameCanvas.w / 2, GameCanvas.h / 2, 2);
 		}
 		else if (splashScrStat >= 30)
 		{
 			g.setColor(0);
 			g.fillRect(0, 0, GameCanvas.w, GameCanvas.h);
-			GameCanvas.paintShukiren(GameCanvas.hw, GameCanvas.hh, g);
 			if (ServerListScreen.cmdDeleteRMS != null)
 			{
 				mFont.tahoma_7_white.drawString(g, mResources.xoadulieu, GameCanvas.w - 2, GameCanvas.h - 15, 1, mFont.tahoma_7_grey);

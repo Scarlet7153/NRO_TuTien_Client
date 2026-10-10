@@ -2982,7 +2982,7 @@ public class GameCanvas : IActionListener
 
 	public static void paintShukiren(int x, int y, mGraphics g)
 	{
-		g.drawRegion(imgShuriken, 0, Main.f * 16, 16, 16, 0, x, y, mGraphics.HCENTER | mGraphics.VCENTER);
+		// Đã loại bỏ hình viên ngọc rồng xoay xoay cũ theo yêu cầu art direction mới
 	}
 
 	public void resetToLoginScrz()

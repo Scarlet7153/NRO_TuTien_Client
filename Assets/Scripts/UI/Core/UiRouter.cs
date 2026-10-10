@@ -30,6 +30,17 @@ namespace NRO.UI
             if (UiRoot.Instance != null && UiRoot.Instance.ScreensContainer != null)
             {
                 screenInstance.transform.SetParent(UiRoot.Instance.ScreensContainer, false);
+                var rt = screenInstance.GetComponent<RectTransform>();
+                if (rt != null)
+                {
+                    rt.anchorMin = Vector2.zero;
+                    rt.anchorMax = Vector2.one;
+                    rt.offsetMin = Vector2.zero;
+                    rt.offsetMax = Vector2.zero;
+                    rt.sizeDelta = Vector2.zero;
+                    rt.anchoredPosition = Vector2.zero;
+                    rt.pivot = new Vector2(0.5f, 0.5f);
+                }
             }
 
             // An man hinh hien tai neu co

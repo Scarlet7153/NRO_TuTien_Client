@@ -72,6 +72,8 @@ namespace NRO.UI
             Scaler.referenceResolution = new Vector2(1280, 720);
             Scaler.screenMatchMode = CanvasScaler.ScreenMatchMode.MatchWidthOrHeight;
             Scaler.matchWidthOrHeight = 0.5f;
+            Scaler.dynamicPixelsPerUnit = 3f;
+            Scaler.referencePixelsPerUnit = 100f;
 
             if (gameObject.GetComponent<GraphicRaycaster>() == null)
             {

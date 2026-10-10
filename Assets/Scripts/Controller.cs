@@ -1699,6 +1699,7 @@ public class Controller : IMessageHandler
 				GameCanvas.endDlg();
 				CreateCharScr.isCreateChar = true;
 				CreateCharScr.gI().switchToMe();
+				NRO.UIBridge.GatewayBridge.NotifyLoginSuccess();
 				break;
 			case -107:
 			{
@@ -3342,6 +3343,7 @@ public class Controller : IMessageHandler
 				GameCanvas.endDlg();
 				break;
 			case -24:
+				NRO.UIBridge.GatewayBridge.NotifyLoginSuccess();
 				if (GameCanvas.currentScreen is GameScr)
 				{
 					GameCanvas.timeBreakLoading = mSystem.currentTimeMillis() + 3000;
@@ -4335,6 +4337,7 @@ public class Controller : IMessageHandler
 		}
 		GameCanvas.chooseCharScr.switchToMe();
 		GameCanvas.chooseCharScr.updateChooseCharacter((byte)b);
+		NRO.UIBridge.GatewayBridge.NotifyLoginSuccess();
 	}
 
 	private void createItem(myReader d)
@@ -4629,6 +4632,7 @@ public class Controller : IMessageHandler
 		GameScr.gI().dMP = Char.myCharz().cMP;
 		Char.ischangingMap = false;
 		GameScr.gI().switchToMe();
+		NRO.UIBridge.GatewayBridge.NotifyLoginSuccess();
 		if (Char.myCharz().cy <= 10 && teleport3 != 0 && teleport3 != 2)
 		{
 			Teleport p = new Teleport(Char.myCharz().cx, Char.myCharz().cy, Char.myCharz().head, Char.myCharz().cdir, 1, true, (teleport3 != 1) ? teleport3 : Char.myCharz().cgender);

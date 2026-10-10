@@ -136,7 +136,7 @@ namespace NRO.UI.Views
             txt.fontSize = size;
             txt.color = color;
             txt.alignment = TextAnchor.MiddleCenter;
-            txt.font = UnityEngine.Resources.GetBuiltinResource<Font>("Arial.ttf");
+            txt.font = ThemeTokens.GetDefaultFont();
             return txt;
         }
 

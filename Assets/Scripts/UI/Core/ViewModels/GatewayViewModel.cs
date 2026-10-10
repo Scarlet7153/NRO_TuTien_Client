@@ -25,6 +25,7 @@ namespace NRO.UI.ViewModels
 
         public bool IsLoading { get; set; }
         public string StatusMessage { get; set; } = string.Empty;
+        public string RegisterUrl { get; set; } = "https://ngocrongtutien.online";
 
         public event Action<string, string> RequestLoginEvent;
         public event Action<ServerInfo> ServerChangedEvent;

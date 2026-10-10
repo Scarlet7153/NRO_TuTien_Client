@@ -69,7 +69,7 @@ namespace NRO.UI
             txt.alignment = TextAnchor.MiddleCenter;
             txt.color = Color.white;
             txt.fontSize = 14;
-            txt.font = UnityEngine.Resources.GetBuiltinResource<Font>("Arial.ttf");
+            txt.font = ThemeTokens.GetDefaultFont();
 
             yield return new WaitForSeconds(duration);
 

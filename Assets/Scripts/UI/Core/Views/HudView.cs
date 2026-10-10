@@ -283,7 +283,7 @@ namespace NRO.UI.Views
             t.fontSize = fontSize;
             t.color = color;
             t.alignment = align;
-            t.font = Resources.GetBuiltinResource<Font>("Arial.ttf") ?? Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+            t.font = ThemeTokens.GetDefaultFont();
             return t;
         }
 
