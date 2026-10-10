@@ -37,8 +37,8 @@ namespace NRO.UIBridge
             }
             else
             {
-                Command cmdYes = new Command(mResources.YES, new SimpleActionExecutor(onYes));
-                Command cmdNo = new Command(mResources.NO, new SimpleActionExecutor(onNo));
+                Command cmdYes = new Command(mResources.YES, new SimpleActionExecutor(onYes), 1, null);
+                Command cmdNo = new Command(mResources.NO, new SimpleActionExecutor(onNo), 2, null);
                 GameCanvas.startYesNoDlg(message, cmdYes, cmdNo);
             }
         }

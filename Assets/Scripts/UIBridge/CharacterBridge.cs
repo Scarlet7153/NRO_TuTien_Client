@@ -27,7 +27,7 @@ namespace NRO.UIBridge
             }
 
             bool isInCharScr = (CreateCharScr.instance != null && GameCanvas.currentScreen == CreateCharScr.instance) ||
-                               (ChooseCharScr.instance != null && GameCanvas.currentScreen == ChooseCharScr.instance);
+                               (GameCanvas.chooseCharScr != null && GameCanvas.currentScreen == GameCanvas.chooseCharScr);
 
             if (isInCharScr)
             {
@@ -70,8 +70,9 @@ namespace NRO.UIBridge
 
             vm.RequestSelectCharacterEvent += charId =>
             {
-                // Goi chon nhan vat vao game
-                Service.gI().selectChar(charId);
+                // Goi chon nhan vat vao game qua finishUpdate
+                GameCanvas.startWaitDlg();
+                Service.gI().finishUpdate(charId);
             };
 
             return vm;

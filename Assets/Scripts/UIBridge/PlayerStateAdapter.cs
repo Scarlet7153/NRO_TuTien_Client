@@ -35,7 +35,7 @@ namespace NRO.UIBridge
             get
             {
                 var c = Char.myCharz();
-                return c != null ? c.cgender : (sbyte)0;
+                return c != null ? (sbyte)c.cgender : (sbyte)0;
             }
         }
 

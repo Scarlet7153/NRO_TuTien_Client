@@ -29,7 +29,7 @@ namespace NRO.UIBridge
 
             // Neu dang o man hinh Login hoac ServerList thi kich hoat giao dien moi
             bool isInLogin = GameCanvas.currentScreen == GameCanvas.loginScr ||
-                             (ServerListScreen.instance != null && GameCanvas.currentScreen == ServerListScreen.instance);
+                             (GameCanvas.serverScreen != null && GameCanvas.currentScreen == GameCanvas.serverScreen);
 
             if (isInLogin)
             {

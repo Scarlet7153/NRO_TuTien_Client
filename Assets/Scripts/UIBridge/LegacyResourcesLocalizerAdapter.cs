@@ -35,28 +35,28 @@ namespace NRO.UIBridge
 
                 case "btn_close":
                 case "close":
-                    return mResources.close;
+                    return mResources.CLOSE;
 
                 case "btn_accept":
                 case "accept":
-                    return mResources.accept;
+                    return mResources.ACCEPT;
 
                 case "btn_denied":
                 case "denied":
-                    return mResources.denied;
+                    return mResources.NO;
 
                 case "enter":
                     return mResources.enter;
 
                 case "select":
-                    return mResources.select;
+                    return mResources.SELECT;
 
                 case "pleasewait":
                 case "please_wait":
-                    return mResources.pleaseWait;
+                    return mResources.PLEASEWAIT;
 
                 case "connecting":
-                    return mResources.connecting;
+                    return mResources.CONNECTING;
 
                 default:
                     return null;
