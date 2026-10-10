@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -32,26 +32,7 @@ namespace Functions
 			}
 			return CharFunctions._Instance;
 		}
-		public static void AutoLogin()
-		{
-			CharFunctions.dangLogin = true;
-			Thread.Sleep(1000);
-			GameCanvas.startOKDlg("Vui Lòng Đợi 25 Giây...");
-			Thread.Sleep(23000);
-			while (ServerListScreen.testConnect != 2)
-			{
-				GameCanvas.serverScreen.switchToMe();
-				Thread.Sleep(1000);
-			}
-			if (GameCanvas.loginScr == null)
-			{
-				GameCanvas.loginScr = new LoginScr();
-			}
-			Thread.Sleep(1000);
-			GameCanvas.loginScr.switchToMe();
-			GameCanvas.loginScr.doLogin();
-			CharFunctions.dangLogin = false;
-		}
+
 		public static void AutoNhatXa()
 		{
 			if (CharFunctions.isAutoNhatXa && mSystem.currentTimeMillis() - CharFunctions.currNhatXa >= 2000L)

@@ -1,11 +1,14 @@
 using System.Threading;
 using UnityEngine;
+using NRO.Util;
 
 public class Sound
 {
 	private const int INTERVAL = 5;
 
 	private const int MAXTIME = 100;
+
+	private static readonly AutoResetEvent _waitEvent = new AutoResetEvent(false);
 
 	public static int status;
 
@@ -306,7 +309,7 @@ public class Sound
 
 	public static void load(string filename, int pos)
 	{
-		if (Thread.CurrentThread.Name == Main.mainThreadName)
+		if (MainThread.IsMain)
 		{
 			__load(filename, pos);
 		}
@@ -326,21 +329,13 @@ public class Sound
 		filenametemp = filename;
 		postem = pos;
 		status = 2;
-		int i;
-		for (i = 0; i < 100; i++)
-		{
-			Thread.Sleep(5);
-			if (status == 0)
-			{
-				break;
-			}
-		}
-		if (i == 100)
+		if (!_waitEvent.WaitOne(500))
 		{
 			Cout.LogError("TOO LONG FOR LOAD AUDIO " + filename);
+			status = 0;
 			return;
 		}
-		Cout.Log("Load Audio " + filename + " done in " + i * 5 + "ms");
+		Cout.Log("Load Audio " + filename + " done");
 	}
 
 	private static void __load(string filename, int pos)
@@ -352,7 +347,7 @@ public class Sound
 
 	public static void start(float volume, int pos)
 	{
-		if (Thread.CurrentThread.Name == Main.mainThreadName)
+		if (MainThread.IsMain)
 		{
 			__start(volume, pos);
 		}
@@ -372,22 +367,14 @@ public class Sound
 		volumetem = volume;
 		postem = pos;
 		status = 3;
-		int i;
-		for (i = 0; i < 100; i++)
-		{
-			Thread.Sleep(5);
-			if (status == 0)
-			{
-				break;
-			}
-		}
-		if (i == 100)
+		if (!_waitEvent.WaitOne(500))
 		{
 			Debug.LogError("TOO LONG FOR START AUDIO");
+			status = 0;
 		}
 		else
 		{
-			Debug.Log("Start Audio done in " + i * 5 + "ms");
+			Debug.Log("Start Audio done");
 		}
 	}
 
@@ -401,7 +388,7 @@ public class Sound
 
 	public static void stop(int pos)
 	{
-		if (Thread.CurrentThread.Name == Main.mainThreadName)
+		if (MainThread.IsMain)
 		{
 			__stop(pos);
 		}
@@ -420,22 +407,14 @@ public class Sound
 		}
 		postem = pos;
 		status = 4;
-		int i;
-		for (i = 0; i < 100; i++)
-		{
-			Thread.Sleep(5);
-			if (status == 0)
-			{
-				break;
-			}
-		}
-		if (i == 100)
+		if (!_waitEvent.WaitOne(500))
 		{
 			Debug.LogError("TOO LONG FOR STOP AUDIO");
+			status = 0;
 		}
 		else
 		{
-			Debug.Log("Stop Audio done in " + i * 5 + "ms");
+			Debug.Log("Stop Audio done");
 		}
 	}
 

@@ -1,12 +1,15 @@
 using System;
 using System.Threading;
 using UnityEngine;
+using NRO.Util;
 
 public class SMS
 {
 	private const int INTERVAL = 5;
 
 	private const int MAXTIME = 500;
+
+	private static readonly AutoResetEvent _waitEvent = new AutoResetEvent(false);
 
 	private static int status;
 
@@ -26,7 +29,7 @@ public class SMS
 
 	public static int send(string content, string to)
 	{
-		if (Thread.CurrentThread.Name == Main.mainThreadName)
+		if (MainThread.IsMain)
 		{
 			return __send(content, to);
 		}
@@ -37,15 +40,7 @@ public class SMS
 	{
 		if (status != 0)
 		{
-			for (int i = 0; i < 500; i++)
-			{
-				Thread.Sleep(5);
-				if (status == 0)
-				{
-					break;
-				}
-			}
-			if (status != 0)
+			if (!_waitEvent.WaitOne(2500))
 			{
 				Cout.LogError("CANNOT SEND SMS " + content + " WHEN SENDING " + _content);
 				return -1;
@@ -55,23 +50,14 @@ public class SMS
 		_to = to;
 		_result = -1;
 		status = 2;
-		int j;
-		for (j = 0; j < 500; j++)
-		{
-			Thread.Sleep(5);
-			if (status == 0)
-			{
-				break;
-			}
-		}
-		if (j == 500)
+		if (!_waitEvent.WaitOne(2500))
 		{
 			Debug.LogError("TOO LONG FOR SEND SMS " + content);
 			status = 0;
 		}
 		else
 		{
-			Debug.Log("Send SMS " + content + " done in " + j * 5 + "ms");
+			Debug.Log("Send SMS " + content + " done");
 		}
 		return _result;
 	}
@@ -113,6 +99,7 @@ public class SMS
 				Debug.Log("CANNOT SEND SMS");
 			}
 			status = 0;
+			_waitEvent.Set();
 		}
 	}
 

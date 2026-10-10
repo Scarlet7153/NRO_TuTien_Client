@@ -413,27 +413,33 @@ namespace Functions.HandlerFunctions
 				if (flag)
 				{
 					ActiveItem item = activeItems[i];
-					g.setColor((i != GameCanvas.panel.selected) ? 0 : 0, 0.5f);
-					g.fillRect(xScroll, num, w, h);
-					if (mGraphics.zoomLevel == 1)
+					if (i == GameCanvas.panel.selected)
 					{
-						mFont.tahoma_7b_green.drawString(g, item.name, xScroll + 30, num, 0);
+						g.setColor(16383818, 0.5f);
+						g.fillRect(xScroll, num, w, h);
 					}
 					else
 					{
-						mFont.tahoma_7_white.drawStringBd(g, item.name, xScroll + 30, num, 0, mFont.tahoma_7b_dark);
+						g.setColor(0, 0.35f);
+						g.fillRect(xScroll, num, w, h);
 					}
-					SmallImage.drawSmallImage(g, item.iconID, xScroll + 2, num + 2, 0, 0);
+					if (mGraphics.zoomLevel == 1)
+					{
+						mFont.tahoma_7b_green.drawString(g, item.name, xScroll + 30, num + 2, 0);
+					}
+					else
+					{
+						mFont.tahoma_7_white.drawStringBd(g, item.name, xScroll + 30, num + 2, 0, mFont.tahoma_7b_dark);
+					}
+					SmallImage.drawSmallImage(g, item.iconID, xScroll + 2, num + 3, 0, 0);
 					string st = (item.quantity > 0) ? ("Số lượng: x" + item.quantity) : "Số lượng: x0";
 					mFont font = (item.quantity > 0) ? mFont.tahoma_7_yellow : mFont.tahoma_7b_dark;
 					if (item.isAuto)
 					{
 						font = mFont.tahoma_7b_red;
-						g.setColor((i != GameCanvas.panel.selected) ? 0 : 0, 0.5f);
-						g.fillRect(xScroll, num, w, h);
 						st = "ẤN ĐỂ XÓA KHỎI DANH SÁCH ! ! !";
 					}
-					font.drawString(g, st, xScroll + 30, num + 11, 0);
+					font.drawString(g, st, xScroll + 30, num + 12, 0);
 				}
 			}
 			GameCanvas.panel.paintScrollArrow(g);
