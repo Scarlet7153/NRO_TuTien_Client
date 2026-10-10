@@ -1,7 +1,7 @@
-# NRO_TuTien_Client — Tài Liệu Kiến Trúc & Tái Cấu Trúc
+# NRO_TuTien_Client — Tài Liệu Kiến Trúc & Tái Cấu Trúc Tổng Hợp
 
 > Tài liệu đầu mối tổng hợp cho cả 2 luồng công việc: **Track N** (Network & Performance Refactor) và **Track U** (UI/UX Tu Tiên Redesign).  
-> Cập nhật lần đầu: 10/10/2026 (Sprint 1 - Analysis Phase).
+> Cập nhật: 10/10/2026 — **Sprint 1 (Analysis & Architecture Phase) ĐÃ HOÀN TẤT 100%**.
 
 ---
 
@@ -9,50 +9,60 @@
 
 ```text
 docs/
-├── NOTES.md                     <-- File này (Đầu mối tổng hợp, trạng thái, sai lệch phát hiện)
+├── NOTES.md                     <-- File này (Đầu mối tổng hợp, hiện trạng, sai lệch mã nguồn)
 ├── refactor/                    <-- Track N: Network & Performance
-│   ├── PROTOCOL.md              <-- Đặc tả giao thức mạng Client ↔ Server (đối chiếu mã nguồn)
-│   ├── THREADS.md               <-- Kiểm kê toàn bộ Thread / async / MainThread
-│   └── TEXTURE_LIFECYCLE.md     <-- Vòng đời bộ nhớ Texture / Image / Asset
+│   ├── PROTOCOL.md              <-- Đặc tả giao thức mạng Client ↔ Server (đối chiếu mã nguồn 2 chiều)
+│   ├── THREADS.md               <-- Kiểm kê toàn bộ Thread / Thread.Sleep / MainThread rủi ro
+│   └── TEXTURE_LIFECYCLE.md     <-- Vòng đời bộ nhớ Texture / VRAM leak / Đề xuất LRU cache
 └── ui/                          <-- Track U: Tu Tiên UI/UX Overhaul
-    ├── PANEL_INVENTORY.md       <-- Kiểm kê toàn bộ Panel & Screen (26 types + Screens)
-    ├── HUD_INVENTORY.md         <-- Kiểm kê HUD chiến đấu & nút điều khiển (GameScr)
-    └── SERVER_ADDITIONS.md      <-- Đề xuất gói tin server bổ sung (Draft)
+    ├── PANEL_INVENTORY.md       <-- Kiểm kê toàn diện 26 Panel Types + NewPanel + Các Screen
+    ├── HUD_INVENTORY.md         <-- Kiểm kê HUD chiến đấu GameScr (HP/MP, Joystick, Kỹ năng, Commands)
+    └── SERVER_ADDITIONS.md      <-- Phân định dữ liệu Client Tự Suy Diễn vs Đề xuất Server (Draft)
 ```
 
 ---
 
 ## 2. Quy Ước Ký Hiệu Kiểm Định (Verification Badges)
 
-Vì AI Agent không sở hữu Unity Editor và không tự chạy runtime, mọi hạng mục kiểm định được gắn thẻ minh bạch:
-
 - **`[A]` — Agent Verified**: Đã được AI Agent đối chiếu trực tiếp qua mã nguồn C# và Java, khớp tên hàm, số dòng, logic nhị phân.
 - **`[H]` — Human / Unity Run Needed**: Cần lập trình viên mở Unity Editor bấm Play, kiểm tra log console hoặc FPS/bộ nhớ thực tế.
 - **`[D]` — Design Review Needed**: Cần thẩm định thẩm mỹ, mỹ thuật giao diện Tu Tiên hoặc trải nghiệm người dùng (UX).
-- **`[Cần xác nhận]`**: Vấn đề chưa đủ dữ kiện mã nguồn hoặc có nghi vấn nghiệp vụ cần quyết định.
 
 ---
 
-## 3. Nhật Ký Tiến Độ Phân Tích (Sprint 1)
+## 3. Nhật Ký Tiến Độ Phân Tích (Sprint 1: T1 → T7)
 
-| Task | Mục Tiêu | Trạng Thái | File Sản Phẩm |
-|:---|:---|:---:|:---|
-| **T1** | Cấu trúc thư mục docs & branching | Hoàn thành | `docs/NOTES.md` |
-| **T2** | Bổ sung PROTOCOL.md đối chiếu Server Java | Đang thực hiện | `docs/refactor/PROTOCOL.md` |
-| **T3** | Phân tích toàn diện 26 Panel Types + Screens | Chờ xử lý | `docs/ui/PANEL_INVENTORY.md` |
-| **T4** | Phân tích HUD GameScr (HP/MP, Chat, Joystick, Radar) | Chờ xử lý | `docs/ui/HUD_INVENTORY.md` |
-| **T5** | Kiểm kê Thread & Vòng đời bộ nhớ Texture | Chờ xử lý | `docs/refactor/THREADS.md`, `TEXTURE_LIFECYCLE.md` |
-| **T6** | Dự thảo gói tin mở rộng Server (Tu Tiên data) | Chờ xử lý | `docs/ui/SERVER_ADDITIONS.md` |
-| **T7** | Cập nhật tổng kết sai lệch và danh sách kiểm tra | Chờ xử lý | `docs/NOTES.md` |
+| Task | Mã Định Danh | Nội Dung Công Việc | File Sản Phẩm | Trạng Thái |
+|:---:|:---:|:---|:---|:---:|
+| **T1** | `P0.1` | Khởi tạo cấu trúc thư mục `docs/ui/`, `docs/NOTES.md`, nhánh phân tích | `docs/NOTES.md` | **Hoàn thành `[A]`** |
+| **T2** | `P0.2` | Đối chiếu giao thức mạng 2 chiều Client ↔ Server Java (`MessageSendCollect.java`) | `docs/refactor/PROTOCOL.md` | **Hoàn thành `[A]`** |
+| **T3** | `D0.1` | Kiểm kê toàn bộ 26 Panel Types, `NewPanel.cs` và phân nhóm 6 Hub Tu Tiên | `docs/ui/PANEL_INVENTORY.md` | **Hoàn thành `[A]`** |
+| **T4** | `D0.1` | Kiểm kê giao diện HUD GameScr, các thanh chỉ số, điều khiển, Commands | `docs/ui/HUD_INVENTORY.md` | **Hoàn thành `[A]`** |
+| **T5** | `P3.1` / `P2.2` | Kiểm kê đa luồng (`THREADS.md`) & Vòng đời bộ nhớ hình ảnh (`TEXTURE_LIFECYCLE.md`) | `docs/refactor/THREADS.md`<br>`docs/refactor/TEXTURE_LIFECYCLE.md` | **Hoàn thành `[A]`** |
+| **T6** | `D0.3` | Dự thảo gói tin mở rộng Server & phân định Client Inferred | `docs/ui/SERVER_ADDITIONS.md` | **Hoàn thành `[A]`** |
+| **T7** | Tổng kết | Cập nhật báo cáo tổng kết, danh mục sai lệch và kế hoạch Sprint 2 | `docs/NOTES.md` | **Hoàn thành `[A]`** |
 
 ---
 
-## 4. Bảng Sai Lệch Phát Hiện Giữa FINAL_PLAN.md Và Code Thực Tế
+## 4. Tổng Hợp Các Phát Hiện Quan Trọng Giữa FINAL_PLAN.md Và Thực Tế
 
-| # | Khẳng Định Trong FINAL_PLAN.md | Hiện Trạng Thực Tế Trong Code | Đánh Giá & Hướng Xử Lý |
-|:---|:---|:---|:---|
-| 1 | `Session_ME.cs` có ~603 dòng monolith | Đã được refactor thành Facade (`Session_ME.cs`: 180 dòng, `Session_ME2.cs`: 177 dòng) dùng `GameConnection` | **Đã hoàn thành P1.4**. Không cần viết lại từ đầu, chỉ cần bảo trì và bổ sung test. |
-| 2 | Chưa có `NRO.Net.asmdef` | Đã có assembly `NRO.Net` và `NRO.Net.Tests` | **Đã hoàn thành P1.1**. Các test đã compile và pass độc lập. |
-| 3 | `Session_ME.update()` bị gọi ở 4 nơi | Chỉ còn 1 cuộc gọi duy nhất tại `Main.cs:338` trong hàm `Update()` | **Đã hoàn thành P1.4 / P3.2**. Đã sạch polling rải rác. |
-| 4 | Client và Server đều dùng BIG_SET hai chiều | **Chỉ Server gửi BIG_SET cho Client** (`MessageSendCollect.java:42`). Khi Client gửi lên, Server chỉ đọc 2-byte short (`MessageSendCollect.java:89`). | Client gửi lên Server tối đa 65,535 bytes. Client nhận tối đa 16MB (3-byte length). Giới hạn `MaxFrameBytes = 8MB` là an toàn. |
-| 5 | Các luồng AutoLogin, Rms, SMS, Sound tạo Thread liên tục | Đã loại bỏ luồng AutoLogin trái phép, Rms/SMS/Sound dùng `MainThread.IsMain` | **Đã hoàn thành P3.2, P3.3**. |
+| # | Khẳng Định Ban Đầu | Hiện Trạng Thực Tế Trong Mã Nguồn | Ý Nghĩa Kiến Trúc & Hướng Xử Lý |
+|:---:|:---|:---|:---|
+| **1** | `Session_ME.cs` có ~603 dòng monolith | Đã được refactor thành Facade (`Session_ME.cs`: 180 dòng, `Session_ME2.cs`: 177 dòng) dùng `GameConnection` | **P1.4 đã hoàn thành**. Kiến trúc mạng đã sạch sẽ, an toàn luồng `[A]`. |
+| **2** | Client và Server đều xử lý BIG_SET hai chiều | **Chỉ Server gửi BIG_SET cho Client** (`MessageSendCollect.java:42`). Khi Client gửi lên, Server chỉ đọc 2-byte short (`MessageSendCollect.java:89`). | **Tuyệt đối không gửi gói tin 3-byte size từ Client lên Server**. Giới hạn gói Client $\rightarrow$ Server là 64KB `[A]`. |
+| **3** | `NewPanel.cs` là hệ thống panel mới | `NewPanel.cs` chỉ là class stub rỗng 23 dòng (`Assets/Scripts/NewPanel.cs`) | Sẵn sàng làm vỏ bọc kế thừa / adapter cho UI Tu Tiên mới `[A]`. |
+| **4** | Quản lý bộ nhớ Texture | Trong `Image.cs` và `SmallImage.cs` **hoàn toàn không có bất kỳ lệnh `Destroy(texture)`** nào | Giải thích hiện tượng phình RAM khi chơi lâu. Cần triển khai LRU Cache ở Sprint 2 `[A]`. |
+| **5** | Đa luồng trong client | Đã dọn dẹp AutoLogin, Rms, SMS, Sound; nhưng thư mục mod `Assets/Scripts/Functions/` còn rất nhiều `new Thread` và `Thread.Sleep` | Cần quy hoạch dọn dẹp các luồng mod này sang Coroutine / Update Tick ở Sprint 2 `[A]`. |
+| **6** | Dữ liệu giao diện Tu Tiên | Cần sửa Server để cung cấp dữ liệu tu vi, cảnh giới, phẩm cấp | **Khẳng định: MVP Track U KHÔNG CẦN SỬA SERVER**. 100% cảnh giới, linh căn, phẩm cấp có thể tự suy diễn từ `cPower`, `cgender`, `item` `[A]`. |
+
+---
+
+## 5. Lộ Trình Sẵn Sàng Cho Sprint 2
+
+Sau khi Sprint 1 kết thúc với bộ tài liệu phân tích hoàn chỉnh:
+- **Track N (Hiệu năng):**
+  - `P2.2`: Triển khai LRU Texture Cache cho `SmallImage` có gọi `Destroy(texture)`.
+  - `P3.1`: Dọn dẹp các `new Thread` và `Thread.Sleep` trong thư mục `Functions/`.
+- **Track U (Giao diện Tu Tiên):**
+  - Bắt đầu thiết kế Design System & Theme Tokens (Màu ngọc bích, vàng kim, mây khói, phông chữ thư pháp).
+  - Triển khai Hub 1 (Bản Nguyên - Nhân Vật & Hành Trang) song song với HUD Thái Cực Âm Dương.
