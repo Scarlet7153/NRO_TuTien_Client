@@ -248,8 +248,8 @@ public class Panel : IActionListener, IChatable
 		new string[1][] { new string[1] { string.Empty } },
 		boxPet,
 		new string[1][] { new string[1] { string.Empty } },
-		new string[1][] { new string[1] { string.Empty } },
-		new string[1][] { new string[1] { string.Empty } },
+		MenuHandler.MenuOption,
+		MenuHandler.MenuOption,
 		new string[1][] { new string[1] { string.Empty } },
 		new string[1][] { new string[1] { string.Empty } }
 	};
@@ -397,6 +397,12 @@ public class Panel : IActionListener, IChatable
 	public int hScroll;
 
 	public ChatPopup cp;
+
+	public bool isShowChiSoView = false;
+
+	private bool isFocusBtnChiSo = false;
+
+	private int cmyChiSo = 0;
 
 	public int idIcon;
 
@@ -904,14 +910,10 @@ public class Panel : IActionListener, IChatable
 			cmtoX = GameCanvas.w - W;
 			break;
 		}
-		TAB_W = W / 5 - 1;
 		currentTabIndex = 0;
 		currentTabName = tabName[type];
-		if (currentTabName.Length < 5)
-		{
-			TAB_W += 5;
-		}
-		startTabPos = xScroll + wScroll / 2 - currentTabName.Length * TAB_W / 2;
+		TAB_W = (wScroll - 1) / currentTabName.Length;
+		startTabPos = xScroll + (wScroll - currentTabName.Length * TAB_W) / 2;
 		lastSelect = new int[currentTabName.Length];
 		cmyLast = new int[currentTabName.Length];
 		for (int i = 0; i < currentTabName.Length; i++)
@@ -963,7 +965,8 @@ public class Panel : IActionListener, IChatable
 			}
 			type = 4;
 			currentTabName = tabName[type];
-			startTabPos = xScroll + wScroll / 2 - currentTabName.Length * TAB_W / 2;
+			TAB_W = (wScroll - 1) / currentTabName.Length;
+			startTabPos = xScroll + (wScroll - currentTabName.Length * TAB_W) / 2;
 			cmx = (cmtoX = 0);
 			setTabMap();
 		}
@@ -1427,7 +1430,7 @@ public class Panel : IActionListener, IChatable
 				mResources.fusion
 			};
 		}
-		setType(2);
+		setType(0);
 		if (currentTabIndex == 0)
 		{
 			setTabPetInventory();
@@ -1884,6 +1887,7 @@ public class Panel : IActionListener, IChatable
 		cmdClose.isPlaySoundButton = false;
 		ChatPopup.currChatPopup = null;
 		InfoDlg.hide();
+		isShowChiSoView = false;
 		timeShow = 20;
 		isShow = true;
 		isClose = false;
@@ -1967,6 +1971,36 @@ public class Panel : IActionListener, IChatable
 				hide();
 				return;
 			}
+			if (type == 0 && currentTabIndex == 1)
+			{
+				int btnChiSoX = X + W - 35;
+				int btnChiSoY = Y + 24;
+				int btnChiSoW = 32;
+				int btnChiSoH = 15;
+				if (GameCanvas.isPointerHoldIn(btnChiSoX, btnChiSoY, btnChiSoW, btnChiSoH))
+				{
+					isFocusBtnChiSo = true;
+					if (GameCanvas.isPointerJustRelease)
+					{
+						SoundMn.gI().buttonClick();
+						isShowChiSoView = !isShowChiSoView;
+						if (isShowChiSoView)
+						{
+							setTabChiSo();
+						}
+						else
+						{
+							setTypeMain();
+						}
+						GameCanvas.clearAllPointerEvent();
+						return;
+					}
+				}
+				else
+				{
+					isFocusBtnChiSo = false;
+				}
+			}
 			if (!isClanOption)
 			{
 				updateKeyInTabBar();
@@ -1992,6 +2026,12 @@ public class Panel : IActionListener, IChatable
 				}
 				break;
 			case 0:
+				if (isShowChiSoView)
+				{
+					updateKeyScrollView();
+					cmyChiSo = cmy;
+					break;
+				}
 				if (currentTabIndex == 0)
 				{
 					updateKeyQuest();
@@ -2680,7 +2720,7 @@ public class Panel : IActionListener, IChatable
 	{
 		try
 		{
-			if (type != 0 || currentTabIndex != 3 || mainTabName.Length != 5 || selected == -1)
+			if (type != 0 || currentTabIndex != 4 || mainTabName.Length != 6 || selected == -1)
 			{
 				return;
 			}
@@ -3215,6 +3255,7 @@ public class Panel : IActionListener, IChatable
 			}
 		break;
 		case 0:
+			isShowChiSoView = false;
 			if (currentTabIndex == 0)
 			{
 				setTabTask();
@@ -3986,6 +4027,11 @@ public class Panel : IActionListener, IChatable
             MenuHandler.paintMenuMod(g);
             break;
         case 0:
+			if (isShowChiSoView)
+			{
+				paintChiSo(g);
+				break;
+			}
 			if (currentTabIndex == 0)
 			{
 				paintTask(g);
@@ -6139,11 +6185,10 @@ public class Panel : IActionListener, IChatable
                 {
                     mFont.drawString(g, MenuHandler.MenuOption[i][0], this.startTabPos + i * this.TAB_W + this.TAB_W / 2, 59, mFont.CENTER);
                 }
-                if (this.type == 0 && MenuHandler.MenuOption.Length == 5 && GameScr.isNewClanMessage && GameCanvas.gameTick % 4 == 0)
-                {
-                    g.drawImage(ItemMap.imageFlare, this.startTabPos + 3 * this.TAB_W + this.TAB_W / 2, 77, mGraphics.BOTTOM | mGraphics.HCENTER);
-                }
             }
+            g.setColor(13524492);
+            g.fillRect(1, 78, W - 2, 1);
+            return;
         }
         if (type == 20)
 		{
@@ -6271,7 +6316,7 @@ public class Panel : IActionListener, IChatable
 			g.fillRect(X + 1, 78, W - 2, 1);
 			return;
 		}
-		if (currentTabIndex == 3 && mainTabName.Length != 4)
+		if (currentTabIndex == 3 && mainTabName.Length == 5)
 		{
 			g.translate(-cmx, 0);
 		}
@@ -6723,6 +6768,29 @@ public class Panel : IActionListener, IChatable
 			{
 				SmallImage.drawSmallImage(g, Char.myCharz().avatarz(), X + 25, 50, 0, 33);
 				paintToolInfo(g);
+			}
+			if (type == 0 && currentTabIndex == 1)
+			{
+				int btnChiSoX = X + W - 35;
+				int btnChiSoY = Y + 24;
+				int btnChiSoW = 32;
+				int btnChiSoH = 15;
+				g.setColor(0);
+				g.drawRect(btnChiSoX, btnChiSoY, btnChiSoW, btnChiSoH);
+				if (isShowChiSoView || isFocusBtnChiSo)
+				{
+					g.setColor(6805896);
+					g.fillRect(btnChiSoX + 1, btnChiSoY + 1, btnChiSoW - 1, btnChiSoH - 1);
+					mFont.tahoma_7b_white.drawString(g, isShowChiSoView ? "Đóng" : "Chi tiết", btnChiSoX + btnChiSoW / 2, btnChiSoY + 1, mFont.CENTER);
+				}
+				else
+				{
+					g.setColor(15196114);
+					g.fillRect(btnChiSoX + 1, btnChiSoY + 1, btnChiSoW - 1, btnChiSoH - 1);
+					g.setColor(16773296);
+					g.drawLine(btnChiSoX + 1, btnChiSoY + 1, btnChiSoX + btnChiSoW - 2, btnChiSoY + 1);
+					mFont.tahoma_7_grey.drawString(g, "Chi tiết", btnChiSoX + btnChiSoW / 2, btnChiSoY + 1, mFont.CENTER);
+				}
 			}
 			break;
 		case 25:
@@ -7254,6 +7322,7 @@ public class Panel : IActionListener, IChatable
 		TileMap.lastPlanetId = -1;
 		imgMap = null;
 		mSystem.gcc();
+		isShowChiSoView = false;
 		isClanOption = false;
 		isClose = true;
 		cleanCombine();
@@ -7274,6 +7343,7 @@ public class Panel : IActionListener, IChatable
 
 	public void hide()
 	{
+		isShowChiSoView = false;
 		if (timeShow > 0)
 		{
 			isClose = false;
@@ -11245,4 +11315,388 @@ public class Panel : IActionListener, IChatable
 		}
 		setTabInventory(resetSelect);
 	}
+
+	public class ChiSoItem
+	{
+		public string name;
+		public string value;
+		public int type;
+
+		public ChiSoItem(string name, string value, int type)
+		{
+			this.name = name;
+			this.value = value;
+			this.type = type;
+		}
+	}
+
+	public List<ChiSoItem> listChiSo = new List<ChiSoItem>();
+
+	public void setTabChiSo()
+	{
+		listChiSo.Clear();
+		Char c = Char.myCharz();
+		if (c != null)
+		{
+			listChiSo.Add(new ChiSoItem("--- CHỈ SỐ CƠ BẢN ---", string.Empty, 0));
+			listChiSo.Add(new ChiSoItem("Sức mạnh", NinjaUtil.getMoneys(c.cPower), 4));
+			listChiSo.Add(new ChiSoItem("HP Tối đa", NinjaUtil.formatShortNumber(c.cHPFull) + " (" + NinjaUtil.formatShortNumber(c.cHPGoc) + ")", 5));
+			listChiSo.Add(new ChiSoItem("KI Tối đa", NinjaUtil.formatShortNumber(c.cMPFull) + " (" + NinjaUtil.formatShortNumber(c.cMPGoc) + ")", 2));
+			listChiSo.Add(new ChiSoItem("Sức đánh", NinjaUtil.formatShortNumber(c.cDamFull) + " (" + NinjaUtil.formatShortNumber(c.cDamGoc) + ")", 3));
+			listChiSo.Add(new ChiSoItem("Giáp", c.cDefull + " (" + c.cDefGoc + ")", 5));
+			listChiSo.Add(new ChiSoItem("Chí mạng", c.cCriticalFull + "% (" + c.cCriticalGoc + "%)", 4));
+
+			List<int> tlHp = new List<int>();
+			List<int> tlMp = new List<int>();
+			List<int> tlDame = new List<int>();
+			List<int> tlDef = new List<int>();
+			List<int> tlCritDame = new List<int>();
+			List<int> tlTNSM = new List<int>();
+			int tlSDDep = 0;
+			int tlNeDon = 0;
+			int tlPST = 0;
+			int tlHutHp = 0;
+			int tlHutHpMob = 0;
+			int tlHutMp = 0;
+			int tlHutHpMpXQ = 0;
+			int tlHpHoi = 0;
+			int tlMpHoi = 0;
+			int tlGold = 0;
+			int tlDameMob = 0;
+
+			if (c.arrItemBody != null)
+			{
+				for (int i = 0; i < c.arrItemBody.Length; i++)
+				{
+					addItemOptionsToStats(c.arrItemBody[i], tlHp, tlMp, tlDame, tlDef, tlCritDame, tlTNSM,
+						ref tlSDDep, ref tlNeDon, ref tlPST, ref tlHutHp, ref tlHutHpMob, ref tlHutMp,
+						ref tlHutHpMpXQ, ref tlHpHoi, ref tlMpHoi, ref tlGold, ref tlDameMob);
+				}
+			}
+
+			if (c.arrItemBag != null && c.isNhapThe)
+			{
+				for (int i = 0; i < c.arrItemBag.Length; i++)
+				{
+					Item it = c.arrItemBag[i];
+					if (it != null && it.template != null)
+					{
+						int tid = it.template.id;
+						if (tid == 1388 || tid == 2074 || tid == 2075 || tid == 2117)
+						{
+							addItemOptionsToStats(it, tlHp, tlMp, tlDame, tlDef, tlCritDame, tlTNSM,
+								ref tlSDDep, ref tlNeDon, ref tlPST, ref tlHutHp, ref tlHutHpMob, ref tlHutMp,
+								ref tlHutHpMpXQ, ref tlHpHoi, ref tlMpHoi, ref tlGold, ref tlDameMob);
+							break;
+						}
+					}
+				}
+			}
+
+			List<ChiSoItem> listBuff = new List<ChiSoItem>();
+			if (Char.vItemTime != null)
+			{
+				for (int i = 0; i < Char.vItemTime.size(); i++)
+				{
+					ItemTime itTime = (ItemTime)Char.vItemTime.elementAt(i);
+					if (itTime != null)
+					{
+						switch (itTime.idIcon)
+						{
+						case 2755:
+							listBuff.Add(new ChiSoItem("Bổ huyết", "+100% HP", 5));
+							break;
+						case 14424:
+							listBuff.Add(new ChiSoItem("Bổ huyết SC", "+200% HP", 5));
+							break;
+						case 2756:
+							listBuff.Add(new ChiSoItem("Bổ khí", "+100% KI", 2));
+							break;
+						case 14425:
+							listBuff.Add(new ChiSoItem("Bổ khí SC", "+200% KI", 2));
+							break;
+						case 2754:
+							listBuff.Add(new ChiSoItem("Cuồng nộ", "+100% SĐ", 3));
+							break;
+						case 14426:
+							listBuff.Add(new ChiSoItem("Cuồng nộ SC", "+200% SĐ", 3));
+							break;
+						case 2757:
+							listBuff.Add(new ChiSoItem("Giáp xên", "+100% Giáp", 5));
+							break;
+						case 10712:
+							listBuff.Add(new ChiSoItem("Giáp xên SC", "+200% Giáp", 5));
+							break;
+						case 5138:
+							listBuff.Add(new ChiSoItem("Bí ngô", "+20% HP/KI/SĐ", 4));
+							break;
+						case 22727:
+							listBuff.Add(new ChiSoItem("Xí muội", "+20% SĐ", 3));
+							break;
+						case 4042:
+							listBuff.Add(new ChiSoItem("Bánh Trung Thu cấp 1", "+10% HP/KI/SĐ", 4));
+							break;
+						case 4043:
+							listBuff.Add(new ChiSoItem("Bánh Trung Thu cấp 2", "+20% HP/KI/SĐ", 4));
+							break;
+						case 4125:
+							listBuff.Add(new ChiSoItem("Bánh Trung Thu cấp 3", "+30% HP/KI/SĐ", 4));
+							break;
+						case 4126:
+							listBuff.Add(new ChiSoItem("Bánh Trung Thu cấp 4", "+50% HP/KI/SĐ", 4));
+							break;
+						default:
+							for (short fid = 663; fid <= 667; fid++)
+							{
+								ItemTemplate t = ItemTemplates.get(fid);
+								if (t != null && t.iconID == itTime.idIcon)
+								{
+									listBuff.Add(new ChiSoItem(t.name, "+10% SĐ", 3));
+									break;
+								}
+							}
+							break;
+						}
+					}
+				}
+			}
+
+			if (c.isMonkey == 1)
+			{
+				int monkeyLevel = 1;
+				if (c.vSkill != null)
+				{
+					for (int i = 0; i < c.vSkill.size(); i++)
+					{
+						Skill sk = (Skill)c.vSkill.elementAt(i);
+						if (sk != null && sk.template != null && sk.template.id == 13)
+						{
+							monkeyLevel = sk.point;
+							break;
+						}
+					}
+				}
+				if (monkeyLevel < 1) monkeyLevel = 1;
+				if (monkeyLevel > 7) monkeyLevel = 7;
+				int hpPercent = 100 + (monkeyLevel - 1) * 10;
+				int damePercent = monkeyLevel * 10;
+				listBuff.Add(new ChiSoItem("Biến khỉ cấp " + monkeyLevel, "+" + hpPercent + "% HP, +" + damePercent + "% SĐ", 5));
+			}
+
+			listChiSo.Add(new ChiSoItem("--- TỈ LỆ +% TRANG BỊ ---", string.Empty, 0));
+			listChiSo.Add(new ChiSoItem("% HP", formatPercent(tlHp), 5));
+			listChiSo.Add(new ChiSoItem("% KI", formatPercent(tlMp), 2));
+			string sdStr = formatPercent(tlDame);
+			if (tlSDDep > 0)
+			{
+				sdStr += " (+" + tlSDDep + "% Đẹp)";
+			}
+			listChiSo.Add(new ChiSoItem("% Sức đánh", sdStr, 3));
+			listChiSo.Add(new ChiSoItem("% Giáp", formatPercent(tlDef), 5));
+			listChiSo.Add(new ChiSoItem("% SĐ Chí mạng", formatPercent(tlCritDame), 4));
+
+			listChiSo.Add(new ChiSoItem("--- THUỘC TÍNH ẨN & CHIẾN ĐẤU ---", string.Empty, 0));
+			listChiSo.Add(new ChiSoItem("Né đòn", tlNeDon + "%", 2));
+			listChiSo.Add(new ChiSoItem("Phản sát thương", tlPST + "%", 3));
+			string hutHpStr = tlHutHp + "%";
+			if (tlHutHpMob > 0)
+			{
+				hutHpStr += " (Quái: " + tlHutHpMob + "%)";
+			}
+			listChiSo.Add(new ChiSoItem("Hút HP", hutHpStr, 5));
+			listChiSo.Add(new ChiSoItem("Hút KI", tlHutMp + "%", 2));
+			if (tlHutHpMpXQ > 0)
+			{
+				listChiSo.Add(new ChiSoItem("Hút XQ / 5s", tlHutHpMpXQ + "%", 4));
+			}
+			listChiSo.Add(new ChiSoItem("Hồi HP / 30s", tlHpHoi + "%", 5));
+			listChiSo.Add(new ChiSoItem("Hồi KI / 30s", tlMpHoi + "%", 2));
+			listChiSo.Add(new ChiSoItem("Tăng SM / TN", formatPercent(tlTNSM), 4));
+			listChiSo.Add(new ChiSoItem("Tăng Vàng quái", "+" + tlGold + "%", 4));
+			if (tlDameMob > 0)
+			{
+				listChiSo.Add(new ChiSoItem("Tăng SĐ đánh quái", "+" + tlDameMob + "%", 3));
+			}
+
+			if (listBuff.Count > 0)
+			{
+				listChiSo.Add(new ChiSoItem("--- BÙA & ITEM BUFF ĐANG DÙNG ---", string.Empty, 0));
+				for (int i = 0; i < listBuff.Count; i++)
+				{
+					listChiSo.Add(listBuff[i]);
+				}
+			}
+		}
+
+		currentListLength = listChiSo.Count;
+		ITEM_HEIGHT = 24;
+		cmyLim = currentListLength * ITEM_HEIGHT - hScroll;
+		if (cmyLim < 0)
+		{
+			cmyLim = 0;
+		}
+		cmy = (cmtoY = cmyChiSo);
+		if (cmy < 0)
+		{
+			cmy = (cmtoY = 0);
+		}
+		if (cmy > cmyLim)
+		{
+			cmy = (cmtoY = cmyLim);
+		}
+		selected = (GameCanvas.isTouch ? (-1) : 0);
+	}
+
+	private string formatPercent(List<int> list)
+	{
+		return "+" + sumPercent(list) + "%";
+	}
+
+	private int sumPercent(List<int> list)
+	{
+		if (list == null || list.Count == 0)
+		{
+			return 0;
+		}
+		int sum = 0;
+		for (int i = 0; i < list.Count; i++)
+		{
+			sum += list[i];
+		}
+		return sum;
+	}
+
+	private void paintChiSo(mGraphics g)
+	{
+		g.setClip(xScroll, yScroll, wScroll, hScroll);
+		g.translate(0, -cmy);
+		for (int i = 0; i < listChiSo.Count; i++)
+		{
+			int num = xScroll;
+			int num2 = yScroll + i * ITEM_HEIGHT;
+			int num3 = wScroll - 1;
+			int h = ITEM_HEIGHT - 1;
+			if (num2 - cmy > yScroll + hScroll || num2 - cmy < yScroll - ITEM_HEIGHT)
+			{
+				continue;
+			}
+			ChiSoItem item = listChiSo[i];
+			if (item.type == 0)
+			{
+				g.setColor(13524492);
+				g.fillRect(num, num2, num3, h);
+				mFont.tahoma_7b_white.drawString(g, item.name, xScroll + wScroll / 2, num2 + 6, mFont.CENTER);
+			}
+			else
+			{
+				g.setColor((i != selected) ? 15196114 : 16383818);
+				g.fillRect(num, num2, num3, h);
+				mFont.tahoma_7b_dark.drawString(g, item.name, xScroll + 8, num2 + 6, mFont.LEFT);
+				mFont fVal = mFont.tahoma_7b_blue;
+				if (item.type == 2)
+				{
+					fVal = mFont.tahoma_7b_green2;
+				}
+				else if (item.type == 3)
+				{
+					fVal = mFont.tahoma_7b_red;
+				}
+				else if (item.type == 4)
+				{
+					fVal = mFont.tahoma_7b_yellow;
+				}
+				else if (item.type == 5)
+				{
+					fVal = mFont.tahoma_7b_blue;
+				}
+				fVal.drawString(g, item.value, xScroll + wScroll - 8, num2 + 6, mFont.RIGHT);
+			}
+		}
+		paintScrollArrow(g);
+	}
+
+	private void addItemOptionsToStats(Item it, List<int> tlHp, List<int> tlMp, List<int> tlDame, List<int> tlDef, List<int> tlCritDame, List<int> tlTNSM,
+		ref int tlSDDep, ref int tlNeDon, ref int tlPST, ref int tlHutHp, ref int tlHutHpMob, ref int tlHutMp,
+		ref int tlHutHpMpXQ, ref int tlHpHoi, ref int tlMpHoi, ref int tlGold, ref int tlDameMob)
+	{
+		if (it == null || it.itemOption == null)
+		{
+			return;
+		}
+		for (int j = 0; j < it.itemOption.Length; j++)
+		{
+			ItemOption op = it.itemOption[j];
+			if (op != null && op.optionTemplate != null)
+			{
+				int id = op.optionTemplate.id;
+				int p = op.param;
+				switch (id)
+				{
+				case 77:
+				case 224:
+					tlHp.Add(p);
+					break;
+				case 103:
+				case 220:
+					tlMp.Add(p);
+					break;
+				case 49:
+				case 50:
+				case 147:
+				case 221:
+					tlDame.Add(p);
+					break;
+				case 117:
+					tlSDDep += p;
+					break;
+				case 94:
+					tlDef.Add(p);
+					break;
+				case 5:
+				case 222:
+					tlCritDame.Add(p);
+					break;
+				case 108:
+					tlNeDon += p;
+					break;
+				case 97:
+					tlPST += p;
+					break;
+				case 95:
+					tlHutHp += p;
+					break;
+				case 104:
+					tlHutHpMob += p;
+					break;
+				case 96:
+					tlHutMp += p;
+					break;
+				case 8:
+					tlHutHpMpXQ += p;
+					break;
+				case 80:
+					tlHpHoi += p;
+					break;
+				case 81:
+					tlMpHoi += p;
+					break;
+				case 100:
+					tlGold += p;
+					break;
+				case 88:
+				case 101:
+					tlTNSM.Add(p);
+					break;
+				case 19:
+					tlDameMob += p;
+					break;
+				}
+			}
+		}
+	}
+
+	private void doFireChiSo()
+	{
+	}
 }
+
