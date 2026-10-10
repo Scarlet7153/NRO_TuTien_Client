@@ -53,7 +53,7 @@ namespace NRO.UIBridge
             if (_hudInstance == null)
             {
                 UiRoot.EnsureInitialized();
-                _hudInstance = new GameObject("InGameHud", typeof(HudView));
+                _hudInstance = new GameObject("InGameHud", typeof(RectTransform), typeof(HudView));
                 var view = _hudInstance.GetComponent<HudView>();
                 view.Bind(ViewModel);
                 UiRouter.Instance.NavigateTo("HUD", _hudInstance);

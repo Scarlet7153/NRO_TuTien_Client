@@ -47,7 +47,7 @@ namespace NRO.UIBridge
             if (_viewInstance == null)
             {
                 UiRoot.EnsureInitialized();
-                _viewInstance = new GameObject("CharCreationScreen", typeof(CharCreationView));
+                _viewInstance = new GameObject("CharCreationScreen", typeof(RectTransform), typeof(CharCreationView));
                 var view = _viewInstance.GetComponent<CharCreationView>();
                 view.Bind(ViewModel);
                 UiRouter.Instance.NavigateTo("CharCreation", _viewInstance);

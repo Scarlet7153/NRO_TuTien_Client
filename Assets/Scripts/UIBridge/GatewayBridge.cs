@@ -49,7 +49,7 @@ namespace NRO.UIBridge
             if (_viewInstance == null)
             {
                 UiRoot.EnsureInitialized();
-                _viewInstance = new GameObject("GatewayScreen", typeof(GatewayView));
+                _viewInstance = new GameObject("GatewayScreen", typeof(RectTransform), typeof(GatewayView));
                 var view = _viewInstance.GetComponent<GatewayView>();
                 view.Bind(ViewModel);
                 UiRouter.Instance.NavigateTo("Gateway", _viewInstance);

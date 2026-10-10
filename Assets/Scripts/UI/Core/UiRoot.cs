@@ -18,10 +18,11 @@ namespace NRO.UI
         public RectTransform ScreensContainer { get; private set; }
         public RectTransform ModalsContainer { get; private set; }
         public RectTransform ToastsContainer { get; private set; }
+        private bool _isInitialized;
 
         public static void EnsureInitialized()
         {
-            if (_instance != null)
+            if (_instance != null && _instance._isInitialized)
             {
                 return;
             }
@@ -30,21 +31,28 @@ namespace NRO.UI
             if (existing != null)
             {
                 _instance = existing;
+                _instance.InitializeImmediate();
                 return;
             }
 
-            var rootGo = new GameObject("[UiRoot]");
-            _instance = rootGo.AddComponent<UiRoot>();
+            var rootGo = new GameObject("[UiRoot]", typeof(RectTransform), typeof(Canvas), typeof(CanvasScaler), typeof(GraphicRaycaster), typeof(UiRoot));
+            _instance = rootGo.GetComponent<UiRoot>();
+            _instance.InitializeImmediate();
             DontDestroyOnLoad(rootGo);
         }
 
         private void Awake()
         {
-            if (_instance != null && _instance != this)
+            InitializeImmediate();
+        }
+
+        public void InitializeImmediate()
+        {
+            if (_isInitialized)
             {
-                Destroy(gameObject);
                 return;
             }
+            _isInitialized = true;
             _instance = this;
             DontDestroyOnLoad(gameObject);
 

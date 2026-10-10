@@ -117,7 +117,7 @@ namespace NRO.UI.Views
 
         private void BuildUI()
         {
-            var rootRect = gameObject.AddComponent<RectTransform>();
+            var rootRect = gameObject.GetComponent<RectTransform>() ?? gameObject.AddComponent<RectTransform>();
             rootRect.anchorMin = Vector2.zero;
             rootRect.anchorMax = Vector2.one;
             rootRect.offsetMin = Vector2.zero;
