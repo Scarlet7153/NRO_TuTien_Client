@@ -147,6 +147,13 @@ public class Main : MonoBehaviour
 				timefps = mSystem.currentTimeMillis();
 			}
 			fps++;
+
+			// D1.4: Neu man hinh L0 moi (Login, Tao/Chon nhan vat) dang bat thi ngat input va ve cua IMGUI cu
+			if (NRO.UIBridge.GatewayBridge.ShouldInterceptOnGUI() || NRO.UIBridge.CharacterBridge.ShouldInterceptOnGUI())
+			{
+				return;
+			}
+
 			checkInput();
 
 			if (Event.current.type.Equals(EventType.Repaint))

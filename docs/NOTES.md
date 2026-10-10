@@ -1,7 +1,7 @@
 # NRO_TuTien_Client — Tài Liệu Kiến Trúc & Tái Cấu Trúc Tổng Hợp
 
 > Tài liệu đầu mối tổng hợp cho cả 2 luồng công việc: **Track N** (Network & Performance Refactor) và **Track U** (UI/UX Tu Tiên Redesign).  
-> Cập nhật: 10/10/2026 — **Sprint 3 (Wave 3 - Technical Infrastructure & Spike Layering) ĐÃ HOÀN TẤT CODE**.
+> Cập nhật: 10/10/2026 — **Sprint 4 (Wave 4 - S1 Cổng Vào & S2 Chọn/Tạo Nhân Vật) ĐÃ HOÀN TẤT CODE**.
 
 ---
 
@@ -55,8 +55,21 @@ docs/
 - **P2.2:** Triển khai giải phóng VRAM GPU: Bổ sung `DestroyTexture()` vào [Image.cs](../Assets/Scripts/Image.cs) và cơ chế thu hồi an toàn trong [Small.cs](../Assets/Scripts/Assets.src.e/Small.cs) và [SmallImage.cs](../Assets/Scripts/SmallImage.cs) (ngưỡng 200 lowGraphic / 800 normal), triệt tiêu rò rỉ GPU Texture `[A]`.
 - **D1.1:** Hoàn thành báo cáo thực nghiệm [SPIKE_LAYERING.md](ui/SPIKE_LAYERING.md) (Gate G-C): Phân định rõ L0 (Pre-Game Canvas không bị che khuất) và L1 (In-Game HUD cần P4.3 backend) `[A]`.
 - **D1.3:** Hiện thực bộ khung điều hướng UI: [UiRoot.cs](../Assets/Scripts/UI/Core/UiRoot.cs) (CanvasScaler 1280x720, EventSystem), [UiRouter.cs](../Assets/Scripts/UI/Core/UiRouter.cs) (Navigation Stack), [ModalManager.cs](../Assets/Scripts/UI/Core/ModalManager.cs) (Dim Backdrop), [ToastService.cs](../Assets/Scripts/UI/Core/ToastService.cs) (Thông báo nổi) `[A]`.
-- **D1.7:** Hiện thực [DialogBridge.cs](../Assets/Scripts/UIBridge/DialogBridge.cs) và gắn móc an toàn trong `GameCanvas.startOKDlg/startYesNoDlg` (chuyển hướng sang Modal/Toast khi `UiFlags.EnableNewDialogs == true`, giữ 100% logic cũ khi tắt) `[A]`.
-- **Unit Tests:** Bổ sung [UiFrameworkTests.cs](../Assets/Scripts/UI/Tests/UiFrameworkTests.cs) kiểm thử toàn diện `UiFlags`, `UiRouter`, `ModalManager` `[A]`.
+- **D1.7:** Hiện thực [DialogBridge.cs](../Assets/Scripts/UIBridge/DialogBridge.cs) và gắn móc an toàn trong `GameCanvas.startOKDlg/startYesNoDlg` `[A]`.
+- **Unit Tests:** Bổ sung [UiFrameworkTests.cs](../Assets/Scripts/UI/Tests/UiFrameworkTests.cs) `[A]`.
+
+### Sprint 4: Lát Cắt S1 (Cổng Vào) & S2 (Chọn/Tạo Nhân Vật) (Wave 4)
+- **D2.1:** Khởi tạo [ThemeTokens.cs](../Assets/Scripts/UI/Core/ThemeTokens.cs) cung cấp bảng màu Tu Tiên chuẩn mực (Thanh Bích, Hoàng Kim, Tử Khí, Bạch Vân, Sương Mù) `[A]`.
+- **D1.4:** Thiết lập cầu nối ngắt vẽ & input IMGUI cũ tại [Main.cs](../Assets/Scripts/Main.cs) khi các màn hình L0 mới kích hoạt `[A]`.
+- **Lát cắt S1 (Cổng Vào):**
+  - [GatewayViewModel.cs](../Assets/Scripts/UI/Core/ViewModels/GatewayViewModel.cs): Quản lý tài khoản, mật khẩu, danh sách máy chủ `[A]`.
+  - [GatewayView.cs](../Assets/Scripts/UI/Core/Views/GatewayView.cs): Giao diện uGUI Greybox Cổng Vào tự sinh component động không cần prefab `[A]`.
+  - [GatewayBridge.cs](../Assets/Scripts/UIBridge/GatewayBridge.cs): Kết nối với `Session_ME` và `ServerListScreen` `[A]`.
+- **Lát cắt S2 (Chọn & Tạo Nhân Vật):**
+  - [CharCreationViewModel.cs](../Assets/Scripts/UI/Core/ViewModels/CharCreationViewModel.cs): Quản lý 3 Môn Phái (Kiếm Tông, Linh Tộc, Ma Tộc), kiểu tóc, validation đạo hiệu `[A]`.
+  - [CharCreationView.cs](../Assets/Scripts/UI/Core/Views/CharCreationView.cs): Giao diện uGUI Greybox tạo nhân vật mới `[A]`.
+  - [CharacterBridge.cs](../Assets/Scripts/UIBridge/CharacterBridge.cs): Kết nối với `CreateCharScr` và `Service.gI().createChar` `[A]`.
+- **Unit Tests:** Bổ sung [SliceViewModelsTests.cs](../Assets/Scripts/UI/Tests/SliceViewModelsTests.cs) kiểm thử toàn diện logic đăng nhập và tạo nhân vật `[A]`.
 
 ---
 
@@ -68,53 +81,53 @@ docs/
 | **P1.3, P1.4** | `GameConnection` & Facade `Session_ME` | Code hoàn thành `[A]` | **CHƯA TÍNH LÀ XONG** — Cần người dùng playtest **P1-PT** không lỗi mạng (Gate G-B) `[H]`. |
 | **P0.3** | Đo đạc Baseline | Code hoàn thành `[A]` | Người dùng đo 4 kịch bản trên tag `baseline-before-refactor` để lập mốc so sánh (Gate G-A) `[H]`. |
 | **Gate G-C** | Spike Layering (D1.1) | **ĐÃ THÔNG QUA `[A]`** | Đã kết luận tại [SPIKE_LAYERING.md](ui/SPIKE_LAYERING.md): S1-S2 đi trước trên L0, S3 chờ L1 (P4.3). |
-| **D1.3, D1.7** | UI Framework & DialogBridge | Code hoàn thành `[A]` | Unity compile 0 error, Test Runner EditMode `NRO.UI.Tests` pass `[H]`. |
+| **Parity S1 & S2** | Gateway & Character Screens | Code hoàn thành `[A]` | Người dùng bật cờ `UiFlags.EnableNewLogin` / `EnableNewCharSelect` thử nghiệm `[H]`. |
 
 ---
 
 ## 5. Hai Phiếu Kiểm Thử Độc Lập Cho Người Dùng (Theo G13)
 
-### Phiếu 1: Unity Test Card — Track N (P2.2 LRU Texture Cache)
+### Phiếu 1: Unity Test Card — Track N (P2.4/P2.7 Performance & Memory Test)
 
 ```text
-## Unity Test Card — P2.2 (LRU Texture Cache & VRAM Cleanup)
+## Unity Test Card — Track N (P2.4/P2.7 Performance & Memory)
 Nhánh: docs/analysis   Unity: 6000.0.57f1
 Loại: [Track N]
 
 1. Mở project Unity, chờ nạp mã nguồn.
    Kỳ vọng: 0 compile errors trên Console.
-2. Kiểm tra giải phóng Texture:
+2. Kiểm tra chỉ số GC Alloc trên Game:
    - Bấm Play scene game.
-   - Bấm `~` (BackQuote) hoặc F12 để mở PerfProbe OSD quan sát chỉ số Heap và Memory.
-   - Di chuyển qua 3-5 map khác nhau (để nạp nhiều icon quái và NPC vào SmallImage).
-   - Mở Panel Hành Trang lướt xem các item.
-   - Quan sát Memory: Sau khi chuyển map hoặc sau chu kỳ dọn dẹp, VRAM/Heap không bị tăng đột biến không kiểm soát.
+   - Bấm `~` hoặc F12 để mở PerfProbe OSD.
+   - Di chuyển trong làng và đánh chiêu thức.
 3. Kết quả mong đợi:
-   - Game chạy mượt mà, không gặp lỗi MissingReferenceException của Texture.
-   - Icon vật phẩm và sprite nhân vật hiển thị đầy đủ, sắc nét, không bị trắng/mất hình.
+   - Chỉ số GC Alloc/Frame duy trì ổn định, không bị gai đột biến (Lag Spike).
+   - Game chạy mượt mà, FPS duy trì ở mức tối đa màn hình (60 FPS).
 ```
 
 ---
 
-### Phiếu 2: Unity Test Card — Track U (D1.1, D1.3 & D1.7 UI Core Framework)
+### Phiếu 2: Unity Test Card — Track U (S1 Cổng Vào & S2 Tạo Nhân Vật Greybox)
 
 ```text
-## Unity Test Card — D1.1, D1.3 & D1.7 (UI Router, Modals & DialogBridge)
+## Unity Test Card — S1 & S2 (Gateway & Character Creation Screens)
 Nhánh: docs/analysis   Unity: 6000.0.57f1
 Loại: [Track U]
 
 1. Mở project Unity trên nhánh docs/analysis, chờ compile hoàn tất.
    Kỳ vọng: 0 compile errors.
-2. Kiểm tra Test Runner:
-   - Mở Window > General > Test Runner > Tab EditMode > Bấm 'Run All'.
-   Kỳ vọng:
-   - NRO.Net.Tests tiếp tục XANH LÁ (Passed).
-   - NRO.UI.Tests (LocalizerTests, UiFrameworkTests) XANH LÁ (Passed 100%).
-3. Đọc tài liệu Spike Layering:
-   - Xem file docs/ui/SPIKE_LAYERING.md để nắm rõ kết luận về cơ chế IMGUI vs uGUI Canvas.
-4. Kiểm tra độ an toàn hồi quy (Regression Test):
+2. Kiểm thử an toàn khi cờ TẮT (Default Regression Test):
    - Bấm Play scene game.
-   - Đăng nhập và trải nghiệm các tính năng hiện hành.
-5. Kết quả mong đợi:
-   - Do UiFlags mặc định tắt toàn bộ, game chạy 100% như cũ, không có lỗi ngoại lệ trên Console.
+   - Màn hình đăng nhập và chọn nhân vật cũ hiển thị 100% bình thường như trước.
+3. Kiểm thử giao diện mới khi BẬT cờ (New UI Test):
+   - Mở file Assets/Scripts/UI/Core/UiFlags.cs.
+   - Đặt tạm: EnableNewLogin = true; EnableNewCharSelect = true;
+   - Bấm Play scene game.
+   Kỳ vọng:
+   - Màn hình Cổng Vào uGUI mới xuất hiện với bố cục Greybox chuẩn mực (Ô nhập tài khoản, mật khẩu, nút chọn máy chủ).
+   - Thử chọn máy chủ > Đăng nhập > Màn hình Chọn / Tạo nhân vật uGUI mới hiển thị mượt mà.
+   - Bấm phím Escape hoặc nút Back điều hướng trơn tru qua UiRouter.
+4. Chạy Test Runner:
+   - Window > General > Test Runner > Run All Tests.
+   Kỳ vọng: Toàn bộ Unit Test NRO.UI.Tests và NRO.Net.Tests đều XANH LÁ (Passed).
 ```
